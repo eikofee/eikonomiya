@@ -1,113 +1,134 @@
-import Image from 'next/image'
+import StatCard, { ILine } from './components/StatCard';
+import { IEquipCardInfo } from './interfaces/IEquipCardInfo';
+import { Stat } from './classes/Stat';
+import EquipmentCard from './components/EquipmentCard';
+import { ICharacter } from './interfaces/ICharacter';
+import CharacterCard from './components/CharacterCard';
+import Icon from './components/Icon';
+import AscensionCard from './components/AscensionCard';
+import { hostUrl } from './host';
 
-export default function Home() {
+function parseArtefact(data: any, artefactName: string) : IEquipCardInfo {
+  let arte = data["artefacts"][artefactName];
+  let name = arte["set"]
+  let image = "https://enka.network/ui/" + arte["icon"] + ".png";
+  let level = 0;
+  let refinement = 0;
+  let stats : Stat[] = [];
+  let n = arte["mainStatName"];
+  let v = parseFloat(arte["mainStatValue"]);
+  let factor = false;
+  if (n.includes("%")) {
+    factor = true;
+  }
+  stats.push({name:n, value:v, potential:0, type:"main", isPercentage: factor})
+  for (let i = 0; i < arte["subStatValues"].length; ++i) {
+    let n = arte["subStatNames"][i];
+    let v = parseFloat(arte["subStatValues"][i]);
+    let factor = n.includes("%");
+    stats.push({name: n, value: v, type: "sub", potential:parseFloat(arte["rolls"][i]), isPercentage: factor})
+  }
+  return {
+    name: name,
+    image: image,
+    level: level,
+    refinement: refinement,
+    stats: stats
+  }
+
+}
+
+function parseWeapon(data: any) : IEquipCardInfo {
+  let weap = data["weapon"]
+  let name = weap["name"]
+  let stats : Stat[] = []
+  stats.push({name: "ATK", value: weap["mainStatValue"], isPercentage:false, type:"main", potential:0})
+  let level = weap["level"]
+  let image = "https://enka.network/ui/" + weap["icon"] + ".png";
+  stats.push({name: weap["subStatName"], value: weap["subStatValue"], isPercentage : weap["subStatName"].includes("%"), type: "sub", potential: 0})
+  let refinement = weap["refinement"]
+  return {
+    name: name,
+    image: image,
+    level: level,
+    refinement: refinement,
+    stats: stats
+  }
+}
+
+async function getData() {
+  const data = await fetch(hostUrl().concat("char?name=Furina"));
+  return data.json()
+}
+
+export default async function Home() {
+  
+  let data : Record<string, any> = await getData();
+  let fleur = parseArtefact(data, "fleur");
+  let plume = parseArtefact(data, "plume");
+  let sablier = parseArtefact(data, "sablier");
+  let coupe = parseArtefact(data, "coupe");
+  let couronne = parseArtefact(data, "couronne");
+  let weapon = parseWeapon(data)
+
+  let char: ICharacter = {name: "Furina", iconName: "furina"}
+  char.baseHP = data["baseHP"]
+  char.baseATK = data["baseATK"] - weapon.stats[0].value
+  char.baseDEF = data["baseDEF"]
+  char.ascensionStatName = data["ascension"]["statNames"]
+  char.ascensionStatValue = data["ascension"]["statValues"]
+  char.level = data["level"]
+  let basicStatsLines : ILine[] = []
+  let charStats = data["equipStats"]
+  let baseStatNames = ["HP", "ATK", "DEF"]
+  for (let i = 0; i < baseStatNames.length; ++i) {
+    let s = baseStatNames[i]
+    let name = <div className="flex flex-row px-1 items-center"><Icon n={s}/> <span className="pl-1">{s}</span></div>
+    let value = <div>{(data["base" + s] * (1 + charStats[s + "%"]) + charStats[s]).toFixed(0)}</div>
+    basicStatsLines.push({name: name, value: value})
+  }
+  baseStatNames = ["ER%", "EM", "Crit Rate%", "Crit DMG%"]
+  for (let i = 0; i < baseStatNames.length; ++i) {
+    let s = baseStatNames[i]
+    let name = <div className="flex flex-row px-1 items-center"><Icon n={s}/> <span className="pl-1">{s}</span></div>
+    let v = charStats[s] * (s.includes("%") ? 100 : 1)
+    let fv = (s.includes("%") ? 1 : 0)
+    let value = <div>{v.toFixed(fv).toString().concat(s.includes("%") ? "%":"")}</div>
+    basicStatsLines.push({name: name, value: value})
+  }
+
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <main>
+      <div className="flex h-full flex-row bg-slate-100">
+        <div className="basis-1/4 m-1 p-1 bg-slate-200">
+          <CharacterCard char={char} />
         </div>
+        <div className="flex flex-col m-1 p-1 bg-slate-200">
+          <div className="basis-1/4 grid lg:grid-cols-6 sm:grid-cols-3 gap-2 p-1 m-1 bg-slate-300">
+            <div className="flex flex-col">
+              <AscensionCard char={char} />
+              <EquipmentCard equip={weapon} />
+            </div>
+            <EquipmentCard equip={fleur} />
+            <EquipmentCard equip={plume} />
+            <EquipmentCard equip={sablier} />
+            <EquipmentCard equip={coupe} />
+            <EquipmentCard equip={couronne} />
+          </div>
+          <div className="basis-3/4 h-full grid grid-cols-3 m-1 p-1 bg-slate-300">
+            <div className="flex flex-col gap-4 m-1">
+              <StatCard name={"Basic Stats"} lines={basicStatsLines} />
+            </div>
+            <div className="flex flex-col gap-4 m-1">
+            </div>
+            <div className="flex flex-col gap-4 m-1">
+            </div>
+          </div>
+        </div>
+
       </div>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
     </main>
   )
 }

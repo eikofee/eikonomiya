@@ -25,3 +25,7 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+.grad-5star {
+  background-image: linear-gradient(to bottom right,#695453,#e6ac54)
+}

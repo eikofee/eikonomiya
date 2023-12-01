@@ -1,9 +1,12 @@
+"use client";
+
+import { ICharacterRule } from "../interfaces/ICharacterRule";
 import { IEquipCardInfo } from "../interfaces/IEquipCardInfo";
 import { Card } from "./Card";
 import Icon from "./Icon";
 import InfoDiv from "./Tooltip";
 
-export default function EquipmentCard({equip} : {equip: IEquipCardInfo}) {
+export default function EquipmentCard({equip, rule} : {equip: IEquipCardInfo, rule: ICharacterRule}) {
 
     let statList = []
     for (let i = 0; i < equip.stats.length; ++i) {
@@ -28,7 +31,7 @@ export default function EquipmentCard({equip} : {equip: IEquipCardInfo}) {
                             <div className="text-left basis-3/5 max-h-4">
                                 <Icon n={equip.stats[i].name}/>
                             </div>
-                            <div className="text-right basis-2/5">
+                            <div className={"text-right basis-2/5"}>
                                 {equip.stats[i].isPercentage ? (equip.stats[i].value * 100).toFixed(1): equip.stats[i].value}{equip.stats[i].isPercentage ? "%" : ""}
                             </div>
                         </div>

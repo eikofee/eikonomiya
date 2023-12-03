@@ -1,11 +1,7 @@
-interface RuleKV {
-    name: string,
-    value: number
-}
+import { KVStats } from "../classes/KVStats";
 
 export interface ICharacterRule {
     ruleName: string,
     character: string,
-    minimalValues: RuleKV[]
-    values: RuleKV[]
+    stats: KVStats
 }

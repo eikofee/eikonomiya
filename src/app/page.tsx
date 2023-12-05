@@ -9,21 +9,21 @@ async function getCharacterData(name: string) {
     return data.json()
 }
 
-async function getRules() {
-    const data = await fetch(hostUrl().concat("rules"));
+async function getRules(name: string) {
+    const data = await fetch(hostUrl().concat("rule?name=", name));
     return data.json()
 }
 
 async function loadCharacterRules(name: string) {
-    let rules: Record<string, any> = await getRules();
-    return rules[name]["rule"]
+    let rules: Record<string, any> = await getRules(name);
+    return rules
 }
 
 export default async function Home() {
 
     let characterName = "Furina"
     let data: Record<string, any> = await getCharacterData(characterName);
-    let rules: Record<string, any> = await loadCharacterRules("Yelan")
+    let rules: Record<string, any> = await getRules(characterName)
     
 
 

@@ -14,11 +14,11 @@ export default function AscensionCard({char} : {char: ICharacter}) {
                             </div>
                         </div>
         </li>
-    let content = <div className="flex flex-row h-full">
-    <div className="grad-5star basis-3/5 flex items-center justify-center h-full rounded-l-md">
+    let content = <div className="flex flex-col h-full">
+    <div className="aspect-square grad-5star basis-1/5 flex items-center justify-center h-full rounded-t-md">
         <img src={"/characterPortraits/".concat(char.iconName, ".png")} className="max-w-full max-h-full"/>
     </div>
-    <div className="basis-2/5 px-1 py-2">
+    <div className="basis-3/5 px-1 py-2">
         <ul>
             <li><div className="w-full flex flex-row items-baseline font-semibold">
                             <div className="text-left  basis-3/5 max-h-4">

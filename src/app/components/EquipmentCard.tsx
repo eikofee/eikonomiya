@@ -14,13 +14,12 @@ export default function EquipmentCard({equip} : {equip: IEquipCardInfo}) {
     const {defaultRule, ruleCallback} = useContext(RootContext);
     let div = 0;
     let mvs = defaultRule.stats.maxValues()
-    console.log(mvs)
     let mainIndex = 0
     if (mvs[mainIndex].k == equip.stats[0].name) {
         mainIndex += 1
     }
 
-    div = 5 * mvs[mainIndex].v
+    div = 6 * mvs[mainIndex].v
     for (let i = mainIndex + 1; i < mainIndex + 4; ++i) {
         div += mvs[i].v
     }
@@ -55,7 +54,7 @@ export default function EquipmentCard({equip} : {equip: IEquipCardInfo}) {
                                 {equip.stats[i].isPercentage ? (equip.stats[i].value * 100).toFixed(1): equip.stats[i].value}{equip.stats[i].isPercentage ? "%" : ""}
                             </div>
                         </div>
-        let infoLine = <p>{equip.stats[i].name.concat(" P=", (equip.stats[i].potential).toFixed(1), " S=", (equip.stats[i].potential * defaultRule.stats.get(equip.stats[i].name)).toString())}</p>
+        let infoLine = <p>{equip.stats[i].name.concat(" P=", (equip.stats[i].potential).toFixed(1), " S=", (equip.stats[i].potential * defaultRule.stats.get(equip.stats[i].name)).toFixed(1))}</p>
         statList.push(
         <li className={liClassName}>
             <div className="flex flex-col w-full py-1">
@@ -73,29 +72,42 @@ export default function EquipmentCard({equip} : {equip: IEquipCardInfo}) {
     }
     // let context = useContext(RootContext);
     
-
+    let infoLine = <p>{score.toFixed(1)}/{div}</p>
     let scoreLine = <div className="w-full flex flex-row items-center align-baseline font-semibold">
-    <div className="text-left basis-3/5">
-        Score :
+        <div className="text-left basis-3/5">
+            Score :
+        </div>
+        <div className={"text-right basis-2/5"}>
+            {(score/div*100).toFixed(0).concat("%")}
+        </div>
     </div>
-    <div className={"text-right basis-2/5"}>
-        {(score/div*100).toFixed(0).concat("%")}
+
+    // let content = <div className="flex flex-row h-full">
+    //     <div className="grad-5star basis-3/5 flex items-center justify-center h-full rounded-l-md">
+    //         <img src={equip.image} className="max-w-full max-h-full"/>
+    //     </div>
+    //     <div className="basis-2/5 px-1 py-2">
+    //         <ul>
+    //             {statList}
+    //         </ul>
+    //         <div>
+    //             {equip.refinement == 0 ? scoreLine : ""}
+    //         </div>
+    //     </div>
+    // </div>
+    let content = <div className="flex flex-col">
+    <div className="aspect-square grad-5star basis-1/5 flex items-center justify-center rounded-t-md">
+        <img src={equip.image} className="max-w-full max-h-full"/>
+    </div>
+    <div className="basis-4/5 px-1 py-2">
+        <ul>
+            {statList}
+        </ul>
+        <div className="w-full flex flex-row">
+            {equip.refinement == 0 ? <InfoDiv child={scoreLine} info={infoLine} /> : ""}
+        </div>
     </div>
 </div>
-
-    let content = <div className="flex flex-row h-full">
-        <div className="grad-5star basis-3/5 flex items-center justify-center h-full rounded-l-md">
-            <img src={equip.image} className="max-w-full max-h-full"/>
-        </div>
-        <div className="basis-2/5 px-1 py-2">
-            <ul>
-                {statList}
-            </ul>
-            <div>
-                {equip.refinement == 0 ? scoreLine : ""}
-            </div>
-        </div>
-    </div>
 
     return (
         <Card c={content}/>

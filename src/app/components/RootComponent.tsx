@@ -100,6 +100,15 @@ export default function RootComponent({data, rule} : ({data: any, rule: any})) {
     }
 
     const [defaultRule, changeDefaultRuleFactor] = useState(generateDefaultRule())
+    if (rule == null) {
+        defaultRule.character = characterName
+    } else {
+        defaultRule.character = rule["name"]
+        const labels = ["HP%", "ATK%", "DEF%", "EM", "ER%", "Crit Rate%", "Crit DMG%"]
+        for (let i = 0; i < labels.length; ++i) {
+            defaultRule.stats.set(labels[i], rule["rule"][labels[i]])
+        }
+    }
 
     function ruleCallback(arg0: ICharacterRule) {
         changeDefaultRuleFactor(arg0)
@@ -108,15 +117,13 @@ export default function RootComponent({data, rule} : ({data: any, rule: any})) {
     return <RootContext.Provider value={{defaultRule, ruleCallback}}>
 
     <div className="flex h-full flex-row bg-slate-100">
-            <div className="basis-1/4 m-1 p-1 bg-slate-200">
+            <div className="max-w-sm basis-1/4 m-1 p-1 bg-slate-200">
                 <CharacterCard char={char} />
             </div>
             <div className="flex flex-col m-1 p-1 bg-slate-200">
-                <div className="basis-1/4 grid lg:grid-cols-6 sm:grid-cols-3 gap-2 p-1 m-1 bg-slate-300">
-                    <div className="flex flex-col">
-                        <AscensionCard char={char} />
-                        <EquipmentCard equip={weapon} />
-                    </div>
+                <div className="max-w-5xl basis-1/4 grid lg:grid-cols-7 md:grid-cols-3 sm:grid-cols-2 gap-2 p-1 m-1 bg-slate-300">
+                    <AscensionCard char={char} />
+                    <EquipmentCard equip={weapon} />
                     <EquipmentCard equip={fleur} />
                     <EquipmentCard equip={plume} />
                     <EquipmentCard equip={sablier} />
@@ -126,7 +133,6 @@ export default function RootComponent({data, rule} : ({data: any, rule: any})) {
                 <div className="basis-3/4 h-full grid grid-cols-3 m-1 p-1 bg-slate-300">
                     <div className="flex flex-col gap-4 m-1">
                         <StatCard name={"Basic Stats"} lines={basicStatsLines} />
-                        <RuleCard />
                     </div>
                     <div className="flex flex-col gap-4 m-1">
                         
@@ -134,6 +140,9 @@ export default function RootComponent({data, rule} : ({data: any, rule: any})) {
                     <div className="flex flex-col gap-4 m-1">
                     </div>
                 </div>
+            </div>
+            <div className="flex flex-col m-1 p-1 bg-slate-200 grow">
+                <RuleCard />
             </div>
 
         </div>

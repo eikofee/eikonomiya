@@ -1,14 +1,13 @@
 "use client";
 
-import { useContext, useState } from "react";
 import { ICharacterRule } from "../interfaces/ICharacterRule";
 import { Card } from "./Card";
-import { RootContext } from "./RootContext";
 import { hostUrl } from "../host";
+import { useState } from "react";
 
 
 
-export default function RuleCard() {
+export default function RuleCard({rule, ruleSetterCallback}: {rule: ICharacterRule, ruleSetterCallback: (_x : ICharacterRule) => void}) {
     let ls = []
     const colors = [
         "bg-red-400",
@@ -21,23 +20,27 @@ export default function RuleCard() {
     ]
 
     let [hiddableClassname, setHiddableClassname] = useState("hidden")
-    const {defaultRule, ruleCallback} = useContext(RootContext)
     const labels = ["HP%", "ATK%", "DEF%", "EM", "ER%", "Crit Rate%", "Crit DMG%"]
     
     for (let i = 0; i < labels.length; ++i) {
         let label = labels[i]
-            const [currentSliderValue, setCurrentSliderValue] = useState(defaultRule.stats.get(label))
+            const [currentSliderValue, setCurrentSliderValue] = useState(rule.stats.get(label))
             const handleSliderChange = (n:number) => (e: any) => {
                 let newValue = n
+                console.log(label.concat(" set to ", n.toString()))
                 setCurrentSliderValue(newValue)
-                let kv = defaultRule.stats.copy()
+                let kv = rule.stats.copy()
+                console.log(kv)
+                console.log("set ", label, " to ", newValue.toString())
                 kv.set(label, newValue)
                 let newRule : ICharacterRule = {
-                    character: defaultRule.character,
-                    ruleName: defaultRule.ruleName,
+                    character: rule.character,
+                    ruleName: rule.ruleName,
                     stats: kv
                 }
-                ruleCallback(newRule)
+                console.log(newRule.stats)
+                ruleSetterCallback(newRule)
+                console.log(rule.stats)
             }
             let classname = "w-64 flex flex-row justify-between items " + (i%2 == 0 ? "bg-slate-50" : "bg-slate-100")
             if (i == labels.length - 1) {
@@ -52,12 +55,6 @@ export default function RuleCard() {
                 } else {
                     bClassName = bClassName.concat(" bg-current")
                 }
-                // if (j == 0) {
-                //     bClassName = bClassName.concat(" rounded-l-lg")
-                // }
-                // if (j == 6) {
-                //     bClassName = bClassName.concat(" rounded-r-lg")
-                // }
                 buttons.push(
                     <button id={i.toString().concat(" ", j.toString())} className={bClassName} onClick={handleSliderChange(j)} />
                     )
@@ -78,11 +75,10 @@ export default function RuleCard() {
                                 </ul>
                         </div>
     let saveRule = () => {
-        let url = hostUrl().concat("ratingRule?name=", defaultRule.character)
+        let url = hostUrl("/api/rules?mode=edit&name=".concat(rule.character))
         for (let i = 0; i < labels.length; ++i) {
-            url = url.concat("&", labels[i].replaceAll(" ", "+"), "=", defaultRule.stats.get(labels[i]).toString())
+            url = url.concat("&", labels[i].replaceAll(" ", "+"), "=", rule.stats.get(labels[i]).toString())
         }
-        console.log(url)
         fetch(url);
     }
     let saveButton = <button onClick={saveRule}>
@@ -93,7 +89,7 @@ export default function RuleCard() {
     let toggleHiddableContent = () => {setHiddableClassname(hiddableClassname == "" ? "hidden" : "")}
     
     let content = <div className="">
-            <div className="grow px-1 font-semibold" onClick={toggleHiddableContent}>{defaultRule.ruleName}</div>
+            <div className="grow px-1 font-semibold" onClick={toggleHiddableContent}>{rule.ruleName}</div>
         <div className={"px-1 flex flex-row ".concat(hiddableClassname)}>
             {saveButton}
         </div>

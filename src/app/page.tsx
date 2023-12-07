@@ -1,22 +1,17 @@
-import { hostUrl } from './host';
 import RootComponent from './components/RootComponent';
+import { hostUrl } from './host';
 
 
 
 
 async function getCharacterData(name: string) {
-    const data = await fetch(hostUrl().concat("char?name=", name));
+    const data = await fetch(hostUrl("/api/characters?name=".concat(name)));
     return data.json()
 }
 
 async function getRules(name: string) {
-    const data = await fetch(hostUrl().concat("rule?name=", name));
+    const data = await fetch(hostUrl("/api/rules?name=".concat(name)));
     return data.json()
-}
-
-async function loadCharacterRules(name: string) {
-    let rules: Record<string, any> = await getRules(name);
-    return rules
 }
 
 export default async function Home() {
@@ -29,7 +24,7 @@ export default async function Home() {
 
     return (
         <main>
-            <RootComponent data={data} rule={rules} />
+            <RootComponent data={data} defaultRule={rules} />
         </main>
     )
 }

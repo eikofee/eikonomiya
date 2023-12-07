@@ -10,7 +10,7 @@ import EquipmentCard from "./EquipmentCard";
 import Icon from "./Icon";
 import RuleCard from "./RuleCard";
 import StatCard, { ILine } from "./StatCard";
-import { RootContext, generateDefaultRule } from "./RootContext";
+import { KVStats } from "../classes/KVStats";
 
 function parseWeapon(data: any): IEquipCardInfo {
     let weap = data["weapon"]
@@ -62,7 +62,7 @@ function parseArtefact(data: any, artefactName: string): IEquipCardInfo {
 
 }
 
-export default function RootComponent({data, rule} : ({data: any, rule: any})) {
+export default function RootComponent({data, defaultRule} : ({data: Record<string, any>, defaultRule: Record<string, any>})) {
 
     let characterName = data["name"]
     let fleur = parseArtefact(data, "fleur");
@@ -99,36 +99,38 @@ export default function RootComponent({data, rule} : ({data: any, rule: any})) {
         basicStatsLines.push({ name: name, value: value })
     }
 
-    const [defaultRule, changeDefaultRuleFactor] = useState(generateDefaultRule())
-    if (rule == null) {
-        defaultRule.character = characterName
-    } else {
-        defaultRule.character = rule["name"]
-        const labels = ["HP%", "ATK%", "DEF%", "EM", "ER%", "Crit Rate%", "Crit DMG%"]
-        for (let i = 0; i < labels.length; ++i) {
-            defaultRule.stats.set(labels[i], rule["rule"][labels[i]])
-        }
+    const labels = ["HP", "ATK", "DEF", "HP%", "ATK%", "DEF%", "ER%", "EM", "Crit Rate%", "Crit DMG%"]
+    let kv = new KVStats()
+    for (let i = 0; i < labels.length; ++i){
+        kv.set(labels[i], defaultRule["rule"][labels[i]])
+    }
+    if (defaultRule["ruleName"] == null) {
+        defaultRule["ruleName"] = "defaultRuleName"
+    }
+    let defaultRuleObject : ICharacterRule = {
+        character: defaultRule["characterName"] as string,
+        ruleName: defaultRule["ruleName"] as string,
+        stats: kv
+    }
+    const [rule, setRule] = useState(defaultRuleObject as ICharacterRule)
+
+    function setRuleCallback(x: ICharacterRule) {
+        setRule(x)
     }
 
-    function ruleCallback(arg0: ICharacterRule) {
-        changeDefaultRuleFactor(arg0)
-    }
-
-    return <RootContext.Provider value={{defaultRule, ruleCallback}}>
-
-    <div className="flex h-full flex-row bg-slate-100">
+    return <div className="flex h-full flex-row bg-slate-100">
             <div className="max-w-sm basis-1/4 m-1 p-1 bg-slate-200">
                 <CharacterCard char={char} />
             </div>
             <div className="flex flex-col m-1 p-1 bg-slate-200">
                 <div className="max-w-5xl basis-1/4 grid lg:grid-cols-7 md:grid-cols-3 sm:grid-cols-2 gap-2 p-1 m-1 bg-slate-300">
                     <AscensionCard char={char} />
-                    <EquipmentCard equip={weapon} />
-                    <EquipmentCard equip={fleur} />
-                    <EquipmentCard equip={plume} />
-                    <EquipmentCard equip={sablier} />
-                    <EquipmentCard equip={coupe} />
-                    <EquipmentCard equip={couronne} />
+                    <EquipmentCard equip={weapon} rule={rule}/>
+                    <EquipmentCard equip={fleur} rule={rule}/>
+                    <EquipmentCard equip={plume} rule={rule}/>
+                    <EquipmentCard equip={sablier} rule={rule}/>
+                    <EquipmentCard equip={coupe} rule={rule}/>
+                    <EquipmentCard equip={couronne} rule={rule}/>
                 </div>
                 <div className="basis-3/4 h-full grid grid-cols-3 m-1 p-1 bg-slate-300">
                     <div className="flex flex-col gap-4 m-1">
@@ -142,9 +144,8 @@ export default function RootComponent({data, rule} : ({data: any, rule: any})) {
                 </div>
             </div>
             <div className="flex flex-col m-1 p-1 bg-slate-200 grow">
-                <RuleCard />
+                <RuleCard rule={rule} ruleSetterCallback={setRuleCallback}/>
             </div>
 
         </div>
-    </RootContext.Provider>
 }

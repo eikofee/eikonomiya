@@ -1,19 +1,17 @@
 "use client";
 
-import { useContext, useState } from "react";
 import { ICharacterRule } from "../interfaces/ICharacterRule";
 import { IEquipCardInfo } from "../interfaces/IEquipCardInfo";
 import { Card } from "./Card";
 import Icon from "./Icon";
 import InfoDiv from "./Tooltip";
-import { RootContext } from "./RootContext";
 
-export default function EquipmentCard({equip} : {equip: IEquipCardInfo}) {
+export default function EquipmentCard({equip, rule} : {equip: IEquipCardInfo, rule: ICharacterRule}) {
 
     let statList = []
-    const {defaultRule, ruleCallback} = useContext(RootContext);
     let div = 0;
-    let mvs = defaultRule.stats.maxValues()
+    console.log(rule)
+    let mvs = rule.stats.maxValues()
     let mainIndex = 0
     if (mvs[mainIndex].k == equip.stats[0].name) {
         mainIndex += 1
@@ -54,7 +52,7 @@ export default function EquipmentCard({equip} : {equip: IEquipCardInfo}) {
                                 {equip.stats[i].isPercentage ? (equip.stats[i].value * 100).toFixed(1): equip.stats[i].value}{equip.stats[i].isPercentage ? "%" : ""}
                             </div>
                         </div>
-        let infoLine = <p>{equip.stats[i].name.concat(" P=", (equip.stats[i].potential).toFixed(1), " S=", (equip.stats[i].potential * defaultRule.stats.get(equip.stats[i].name)).toFixed(1))}</p>
+        let infoLine = <p>{equip.stats[i].name.concat(" P=", (equip.stats[i].potential).toFixed(1), " S=", (equip.stats[i].potential * rule.stats.get(equip.stats[i].name)).toFixed(1))}</p>
         statList.push(
         <li className={liClassName}>
             <div className="flex flex-col w-full py-1">
@@ -68,7 +66,7 @@ export default function EquipmentCard({equip} : {equip: IEquipCardInfo}) {
     }
     let score = 0
     for (let i = 1; i < equip.stats.length; ++i) {
-        score += equip.stats[i].potential * defaultRule.stats.get(equip.stats[i].name)
+        score += equip.stats[i].potential * rule.stats.get(equip.stats[i].name)
     }
     // let context = useContext(RootContext);
     

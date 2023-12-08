@@ -27,20 +27,16 @@ export default function RuleCard({rule, ruleSetterCallback}: {rule: ICharacterRu
             const [currentSliderValue, setCurrentSliderValue] = useState(rule.stats.get(label))
             const handleSliderChange = (n:number) => (e: any) => {
                 let newValue = n
-                console.log(label.concat(" set to ", n.toString()))
                 setCurrentSliderValue(newValue)
                 let kv = rule.stats.copy()
-                console.log(kv)
-                console.log("set ", label, " to ", newValue.toString())
                 kv.set(label, newValue)
                 let newRule : ICharacterRule = {
                     character: rule.character,
                     ruleName: rule.ruleName,
                     stats: kv
                 }
-                console.log(newRule.stats)
+
                 ruleSetterCallback(newRule)
-                console.log(rule.stats)
             }
             let classname = "w-64 flex flex-row justify-between items " + (i%2 == 0 ? "bg-slate-50" : "bg-slate-100")
             if (i == labels.length - 1) {

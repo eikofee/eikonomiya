@@ -1,0 +1,1 @@
+export const hostUrl = (path: string = "") => ("http://localhost:3000").concat(path)

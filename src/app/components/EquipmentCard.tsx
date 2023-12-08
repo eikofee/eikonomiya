@@ -10,7 +10,6 @@ export default function EquipmentCard({equip, rule} : {equip: IEquipCardInfo, ru
 
     let statList = []
     let div = 0;
-    console.log(rule)
     let mvs = rule.stats.maxValues()
     let mainIndex = 0
     if (mvs[mainIndex].k == equip.stats[0].name) {

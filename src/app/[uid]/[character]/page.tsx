@@ -1,5 +1,5 @@
-import RootComponent from './components/RootComponent';
-import { hostUrl } from './host';
+import RootComponent from '../../components/RootComponent';
+import { hostUrl } from '../../host';
 
 
 
@@ -14,9 +14,10 @@ async function getRules(name: string) {
     return data.json()
 }
 
-export default async function Home() {
+export default async function Page({ params }: { params: { character: string, uid: string } }) {
 
-    let characterName = "Furina"
+    let characterName = params.character
+    console.log(params.uid)
     let data: Record<string, any> = await getCharacterData(characterName);
     let rules: Record<string, any> = await getRules(characterName)
     

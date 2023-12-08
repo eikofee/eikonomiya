@@ -45,13 +45,28 @@ function parseArtefact(data: any, artefactName: string): IEquipCardInfo {
     if (n.includes("%")) {
         factor = true;
     }
-    stats.push({ name: n, value: v, potential: 0, type: "main", isPercentage: factor })
+    
+    stats.push({
+        name: n,
+        value: v,
+        potential: 0,
+        type: "main",
+        isPercentage: factor
+    })
+
     for (let i = 0; i < arte["subStatValues"].length; ++i) {
         let n = arte["subStatNames"][i];
         let v = parseFloat(arte["subStatValues"][i]);
         let factor = n.includes("%");
-        stats.push({ name: n, value: v, type: "sub", potential: parseFloat(arte["rolls"][i]), isPercentage: factor })
+        stats.push({
+            name: n,
+            value: v,
+            type: "sub",
+            potential: parseFloat(arte["rolls"][i]),
+            isPercentage: factor
+        })
     }
+
     return {
         name: name,
         image: image,

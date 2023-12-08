@@ -1,10 +1,15 @@
+import { useContext } from "react";
 import { ICharacter } from "../interfaces/ICharacter";
+import { ThemeContext } from "./ThemeContext";
 
 export default function CharacterCard({char} : {char: ICharacter}) {
+    const {colorDirector} = useContext(ThemeContext)
+    let bgClass = "w-full h-full flex flex-col ".concat(colorDirector.bg(1))
+    // let bgClass = "flex flex-col bg-blue-100"
     return (
-        <div className="flex flex-col">
+        <div className={bgClass}>
             <div>
-                <img src={"/characterCards/".concat(char.iconName, ".jpeg")} />
+                <img src={"/characterCards/".concat(char.name.toLocaleLowerCase(), ".jpeg")} />
             </div>
             <div className="grid grid-cols-3">
                 <div>Skill 1</div>

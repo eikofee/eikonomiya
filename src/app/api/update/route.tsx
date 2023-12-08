@@ -22,7 +22,6 @@ export async function GET(request: Request) {
 
     const changeIdIfTraveler = (charId: string, skills: string[], j: Record<string, any>) => {
         let res = charId
-        console.log(skills.length)
         if (skills.length > 0 && (charId == "10000007" || charId == "10000005")) {
             let subCharId = 500
             if (charId == "10000007") {
@@ -31,7 +30,6 @@ export async function GET(request: Request) {
             
             for (let x = 1; x < 9; ++x) {
                 let cid = charId.concat("-", (subCharId + x).toString())
-                console.log(cid)
                 if (j[cid].length > 0) {
                     let ss = (j[cid]["SkillOrder"]).toString()
                     if (ss.includes(skills[0])) {
@@ -219,7 +217,6 @@ export async function GET(request: Request) {
 
             const charData = await getCharacterData(avatar["avatarId"], skillLevelMapKeys)
             const fpmData = avatar["fightPropMap"]
-            console.log(fpmData)
             const elmData = avatar["equipList"]
             const fpm = (id: number) => {
                 if (fpmData[id] == undefined) {
@@ -238,7 +235,7 @@ export async function GET(request: Request) {
                 "skills" : {
 
                     "levelAA" : parseFloat(avatar["skillLevelMap"][charData["skillIdAA"]]),
-                    "levelevelSkill" : parseFloat(avatar["skillLevelMap"][charData["skillIdSkill"]]),
+                    "leveSkill" : parseFloat(avatar["skillLevelMap"][charData["skillIdSkill"]]),
                     "levelUlt" : parseFloat(avatar["skillLevelMap"][charData["skillIdUlt"]])
                 },
 
@@ -352,8 +349,6 @@ export async function GET(request: Request) {
     const getAnormalStats = (data: Record<string, any>) => {
 
         let sumStats = mergeEquipData(data)
-        console.log(data["name"])
-        console.log(sumStats)
         const keys = ["HP%","ATK%","DEF%","Crit Rate%","Crit DMG%","ER%","Heal%","EM","Phys%","Elem%"]
         for (let i = 0; i < keys.length; ++i) {
             const k = keys[i]

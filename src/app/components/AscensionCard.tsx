@@ -3,8 +3,8 @@ import { Card } from "./Card";
 import Icon from "./Icon";
 
 export default function AscensionCard({char} : {char: ICharacter}) {
-    let statLine = (statName : string, statValue : number) =>
-        <li className="flex justify-between place-items-center">
+    let statLine = (statName : string, statValue : number) =>{
+        return <li className="flex justify-between place-items-center">
             <div className="w-full flex flex-row items-center">
                             <div className="text-left basis-3/5 max-h-4">
                                 <Icon n={statName}/>
@@ -14,9 +14,10 @@ export default function AscensionCard({char} : {char: ICharacter}) {
                             </div>
                         </div>
         </li>
+    }
     let content = <div className="flex flex-col h-full">
     <div className="aspect-square grad-5star basis-1/5 flex items-center justify-center h-full rounded-t-md">
-        <img src={"/characterPortraits/".concat(char.iconName, ".png")} className="max-w-full max-h-full"/>
+        <img src={"/characterPortraits/".concat(char.name.toLowerCase(), ".png")} className="max-w-full max-h-full"/>
     </div>
     <div className="basis-3/5 px-1 py-2">
         <ul>
@@ -28,10 +29,10 @@ export default function AscensionCard({char} : {char: ICharacter}) {
                                 {char.level}
                             </div>
             </div></li>
-            {statLine("HP", char.baseHP!)}
-            {statLine("ATK", char.baseATK!)}
-            {statLine("DEF", char.baseDEF!)}
-            {statLine(char.ascensionStatName!, char.ascensionStatValue!)}
+            {statLine("HP", char.character.baseHP)}
+            {statLine("ATK", char.character.baseATK)}
+            {statLine("DEF", char.character.baseDEF)}
+            {statLine(char.character.ascensionStatName, char.character.ascensionStatValue)}
         </ul>
     </div>
 </div>

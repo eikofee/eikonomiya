@@ -3,6 +3,7 @@ import { useState } from "react"
 
 interface InfoDivProps {
     child: React.ReactNode,
+    childClassname?: string
     info: React.ReactNode
 }
 
@@ -15,8 +16,12 @@ export default function InfoDiv(c: InfoDivProps) {
     function hideTT() {
         setTTClassName("transition duration-300 hidden")
     }
-
-    return(<div className="relative inline-block hover:bg-violet-500/10 w-full" onMouseEnter={displayTT} onMouseLeave={hideTT}>
+    let cn = c.childClassname
+    if (c.childClassname == undefined)
+    {
+        cn = "w-full hover:bg-violet-500/10"
+    }
+    return(<div className={cn?.concat(" relative")} onMouseEnter={displayTT} onMouseLeave={hideTT}>
         {c.child}
         <div className={ttClassName} onMouseEnter={hideTT}>
             {c.info}

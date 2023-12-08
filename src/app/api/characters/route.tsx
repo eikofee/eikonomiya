@@ -13,7 +13,6 @@ export async function GET(request: Request) {
             content = JSON.parse((await fsPromises.readFile(p.concat("/", characterName))).toString())
         }
     } else {
-        console.log(fileList)
         for (let i = 0; i < fileList.length; ++i) {
             let f = fileList[i]
             content[f] = JSON.parse((await fsPromises.readFile(p.concat("/", f))).toString())

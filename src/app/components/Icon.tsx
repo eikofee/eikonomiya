@@ -1,5 +1,6 @@
 import { ReactElement } from "react";
 import InfoDiv from "./Tooltip";
+import Tooltip from "./Tooltip";
 
 
 export default function Icon({n}: {n: string}) {
@@ -40,5 +41,5 @@ export default function Icon({n}: {n: string}) {
     let svg = <svg viewBox="0 0 24 24" className="h-4 w-4">
                     {content}
                 </svg>
-    return svg
+    return <Tooltip child={svg} info={n} childClassname="" />
 }

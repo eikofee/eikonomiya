@@ -14,12 +14,18 @@ export default function ArtefactCard({equip, rule} : {equip: IArtefact, rule: IC
     const isPercentage = (s: string) => s.includes("%")
     const {colorDirector} = useContext(ThemeContext)
     const fontWeight = [
-        "font-light", //0-1
+        // "font-light", //0-1
         "font-normal", //1-2
+        "font-normal", //1-2
+        // "font-normal", //1-2
         "font-medium", // 2-3
-        "font-semibold", //3-4
+        "font-medium", //3-4
         "font-bold", //4-5
         "font-bold"
+    ]
+
+    const badStats = [
+        "HP","ATK","DEF"
     ]
 
     let statList = []
@@ -59,22 +65,22 @@ export default function ArtefactCard({equip, rule} : {equip: IArtefact, rule: IC
         let bar = 0
         if (equip.rolls[i] > 0) {
             for (bar = 1; bar < equip.rolls[i]; ++bar) {
-                rolls.push(<div className={"h-1 col-span-1 ".concat(colorDirector.bgAccent(4))} />)
+                rolls.push(<div className={"h-1 col-span-1 ".concat(colorDirector.bgAccent(3))} />)
             }
 
             let rest = equip.rolls[i] - bar + 1;
-            rolls.push(<div className={"h-1 w-full col-span-1 flex flex-row ".concat(colorDirector.bgAccent(6))}>
-                <div className={"h-1 ".concat(colorDirector.bgAccent(4))} style={{width: (rest*100).toString().concat("%")}}/>
+            rolls.push(<div className={"h-1 w-full col-span-1 flex flex-row ".concat(colorDirector.bgAccent(5))}>
+                <div className={"h-1 ".concat(colorDirector.bgAccent(3))} style={{width: (rest*100).toString().concat("%")}}/>
                 </div>)
 
-            for (bar = bar + 1; bar <= 5; ++bar) {
-                rolls.push(<div className={"h-1 col-span-1 ".concat(colorDirector.bgAccent(6))} />)
+            for (bar = bar + 1; bar <= 6; ++bar) {
+                rolls.push(<div className={"h-1 col-span-1 ".concat(colorDirector.bgAccent(5))} />)
             }
         }
 
-        let statLineClassname = "w-full flex flex-row items-center ".concat(fontWeight[Math.floor(equip.rolls[i])])
+        let statLineClassname = "w-full flex flex-row items-center ".concat(fontWeight[Math.floor(equip.rolls[i])], " ", badStats.includes(equip.subStatNames[i]) ? "text-slate-500/50 fill-slate-500/50 " : "text-current")
         let statLine = <div className={statLineClassname}>
-                            <div className="text-left basis-3/5 max-h-4">
+                            <div className={"text-left basis-3/5 max-h-4"}>
                                 <Icon n={equip.subStatNames[i]}/>
                             </div>
                             <div className={"text-right basis-2/5"}>
@@ -88,7 +94,7 @@ export default function ArtefactCard({equip, rule} : {equip: IArtefact, rule: IC
                 {"Score = ".concat((equip.rolls[i] * rule.stats.get(equip.subStatNames[i])).toFixed(1))}
                 </p>
             </div>
-        let scoreLineDisplay = <div className="grid grid-cols-5 gap-x-0.5">
+        let scoreLineDisplay = <div className="grid grid-cols-6 gap-x-0.5">
             {rolls}
         </div>
         statList.push(

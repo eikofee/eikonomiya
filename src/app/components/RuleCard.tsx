@@ -3,7 +3,9 @@
 import { ICharacterRule } from "../interfaces/ICharacterRule";
 import { Card } from "./Card";
 import { hostUrl } from "../host";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import Icon from "./Icon";
+import { ThemeContext } from "./ThemeContext";
 
 
 
@@ -19,7 +21,18 @@ export default function RuleCard({rule, ruleSetterCallback}: {rule: ICharacterRu
         "bg-sky-400",
     ]
 
+    const colorsDown = [
+        "bg-red-400/20",
+        "bg-orange-400/20",
+        "bg-yellow-400/20",
+        "bg-lime-400/20",
+        "bg-green-400/20",
+        "bg-teal-400/20",
+        "bg-sky-400/20",
+    ]
+
     let [hiddableClassname, setHiddableClassname] = useState("hidden")
+    const {colorDirector} = useContext(ThemeContext)
     const labels = ["HP%", "ATK%", "DEF%", "EM", "ER%", "Crit Rate%", "Crit DMG%"]
     
     for (let i = 0; i < labels.length; ++i) {
@@ -38,7 +51,7 @@ export default function RuleCard({rule, ruleSetterCallback}: {rule: ICharacterRu
 
                 ruleSetterCallback(newRule)
             }
-            let classname = "w-64 flex flex-row justify-between items " + (i%2 == 0 ? "bg-slate-50" : "bg-slate-100")
+            let classname = "w-full flex flex-row justify-between items pr-4"
             if (i == labels.length - 1) {
                 classname += " rounded-md"
             }
@@ -47,9 +60,11 @@ export default function RuleCard({rule, ruleSetterCallback}: {rule: ICharacterRu
             for (let j = 0; j < 7; ++j) {
                 let bClassName = "h-1/2 rounded-md"
                 if (j <= currentSliderValue) {
-                    bClassName = bClassName.concat(" ", colors[currentSliderValue])
+                    bClassName = bClassName.concat(" ", colorDirector.bgAccent(3))
+                    // bClassName = bClassName.concat(" ", colors[currentSliderValue])
                 } else {
-                    bClassName = bClassName.concat(" bg-current")
+                    // bClassName = bClassName.concat(" ", colorsDown[currentSliderValue])
+                    bClassName = bClassName.concat(" ", colorDirector.bgAccent(6))
                 }
                 buttons.push(
                     <button id={i.toString().concat(" ", j.toString())} className={bClassName} onClick={handleSliderChange(j)} />
@@ -58,14 +73,20 @@ export default function RuleCard({rule, ruleSetterCallback}: {rule: ICharacterRu
                 
                 ls.push(
                     <li className={classname}>
-            <div className="text-left basis-2/5 px-1 items-center">{labels[i]}</div>
-            <div className="grid basis-3/5 grid-cols-7 items-center px-2">
+            <div className="text-left basis-2/5 items-center m-1 flex flex-row">
+                <div className="mr-1">
+                    <Icon n={labels[i]} />
+                </div><p>
+                    {labels[i]}
+                </p>
+            </div>
+            <div className="grid basis-3/5 grid-cols-7 items-center">
                 {buttons}
             </div>
         </li>)
     }
     
-    let hiddableContent = <div>
+    let hiddableContent = <div className="w-full">
                                 <ul className={hiddableClassname}>
                                     {ls}
                                 </ul>
@@ -84,10 +105,12 @@ export default function RuleCard({rule, ruleSetterCallback}: {rule: ICharacterRu
     </button>
     let toggleHiddableContent = () => {setHiddableClassname(hiddableClassname == "" ? "hidden" : "")}
     
-    let content = <div className="">
-            <div className="grow px-1 font-semibold" onClick={toggleHiddableContent}>{rule.ruleName}</div>
-        <div className={"px-1 flex flex-row ".concat(hiddableClassname)}>
-            {saveButton}
+    let content = <div className="bg-inherit">
+            <div className="grow px-1 font-semibold" onClick={toggleHiddableContent}>Artefact Rating Rule</div>
+        <div className={"px-1 gap-x-1 flex flex-row ".concat(hiddableClassname)}>
+        <select className="w-full" defaultValue={rule.ruleName}>
+            {<option>Add...</option>}
+        </select>{saveButton}
         </div>
         {hiddableContent}
     </div>;

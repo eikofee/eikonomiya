@@ -22,8 +22,9 @@ export default function StatCard({character} : {character: ICharacter}) {
     let baseStat = ["HP", "ATK", "DEF"]
     let baseValues = [finalHP, finalATK, finalDEF]
     for (let i = 0; i < baseStat.length; ++i) {
-        let classname = "flex flex-row justify-between items ".concat(i%2 == 0 ? colorDirector.bg(0) : colorDirector.bg(1))
-        let n = <div className="flex flex-row px-1 items-center"><Icon n={baseStat[i]} /> <span className="pl-1">{baseStat[i]}</span></div>
+        // let classname = "flex flex-row justify-between items ".concat(i%2 == 0 ? colorDirector.bg(0) : colorDirector.bg(1))
+        let classname = "flex flex-row justify-between items p-1"
+        let n = <div className="flex flex-row items-center"><Icon n={baseStat[i]} /> <span className="pl-1">{baseStat[i]}</span></div>
         let v = <div>{baseValues[i].toFixed(0).toString()}</div>
         let info = <p></p>
         switch (baseStat[i]) {
@@ -41,9 +42,9 @@ export default function StatCard({character} : {character: ICharacter}) {
         }
         ls.push(
         <li className={classname}>
-            <div className="text-left basis-3/5 px-1 items-center">{n}</div>
+            <div className="text-left basis-3/5 items-center">{n}</div>
             <Tooltip child={
-                <div className="text-right basis-2/5 px-1">{v}</div>
+                <div className="text-right basis-2/5 pr-2">{v}</div>
             } info={info} />
         </li>)
     }
@@ -52,23 +53,24 @@ export default function StatCard({character} : {character: ICharacter}) {
     let statValues = [character.totalStats.EM, character.totalStats["ER%"], character.totalStats["Crit Rate%"], character.totalStats["Crit DMG%"], character.totalStats["Elem%"]]
     for (let i = 0; i < statNames.length; ++i) {
         let s = statNames[i]
-        let classname = "flex flex-row justify-between items ".concat(i%2 == 1 ? colorDirector.bg(0) : colorDirector.bg(1))
+        // let classname = "flex flex-row justify-between items ".concat(i%2 == 1 ? colorDirector.bg(0) : colorDirector.bg(1))
+        let classname = "flex flex-row justify-between items p-1"
         if (i == statNames.length - 1) {
             classname += " rounded-b-md"
         }
-        let n = <div className="flex flex-row px-1 items-center"><Icon n={s} /> <span className="pl-1">{s}</span></div>
+        let n = <div className="flex flex-row items-center"><Icon n={s} /> <span className="pl-1">{s}</span></div>
         let value = statValues[i] * (s.includes("%") ? 100 : 1)
         let fv = (s.includes("%") ? 1 : 0)
         let v = <div>{value.toFixed(fv).toString().concat(s.includes("%") ? "%" : "")}</div>
         ls.push(
         <li className={classname}>
-            <div className="text-left basis-3/5 px-1 items-center">{n}</div>
-            <div className="text-right basis-2/5 px-1">{v}</div>
+            <div className="text-left basis-3/5 items-center">{n}</div>
+            <div className="text-right basis-2/5 pr-2">{v}</div>
         </li>)
     }
     
-    let content = <div className="">
-        <div className="px-1 font-semibold">{"Basic Stats"}</div>
+    let content = <div className="bg-inherit">
+        <div className="pl-2 font-semibold">{"Basic Stats"}</div>
         <ul>
             {ls}
         </ul>

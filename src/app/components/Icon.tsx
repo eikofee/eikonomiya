@@ -119,6 +119,7 @@ const sablierIcon = () => {
 
 export default function Icon({n}: {n: string}) {
     let content : ReactElement[] = []
+    let svgClassname = "h-4 w-4"
 
     switch (n) {
         case "ATK":
@@ -163,34 +164,42 @@ export default function Icon({n}: {n: string}) {
         case "Anemo%":
         case "Anemo":
             content = anemoIcon()
+            svgClassname = svgClassname.concat(" fill-lime-500")
             break;
         case "Geo%":
         case "Geo":
             content = geoIcon()
+            svgClassname = svgClassname.concat(" fill-yellow-500")
             break;
         case "Electro%":
         case "Electro":
             content = electroIcon()
+            svgClassname = svgClassname.concat(" fill-violet-500")
             break;
         case "Dendro%":
         case "Dendro":
             content = dendroIcon()
+            svgClassname = svgClassname.concat(" fill-green-500")
             break;
         case "Hydro%":
         case "Hydro":
             content = hydroIcon()
+            svgClassname = svgClassname.concat(" fill-blue-500")
             break;
         case "Pyro%":
         case "Pyro":
             content = pyroIcon()
+            svgClassname = svgClassname.concat(" fill-red-500")
             break;
         case "Cryo%":
         case "Cryo":
             content = cryoIcon()
+            svgClassname = svgClassname.concat(" fill-cyan-500")
             break;
         case "Phys%":
         case "Phys":
             content = physIcon()
+            svgClassname = svgClassname.concat(" fill-slate-500")
             break;
         case "Fleur":
             content = fleurIcon()
@@ -209,7 +218,7 @@ export default function Icon({n}: {n: string}) {
             break;
 
     }
-    let svg = <svg viewBox="0 0 24 24" className="h-4 w-4">
+    let svg = <svg viewBox="0 0 24 24" className={svgClassname}>
                     {content}
                 </svg>
     return <Tooltip child={svg} info={n} childClassname="" />

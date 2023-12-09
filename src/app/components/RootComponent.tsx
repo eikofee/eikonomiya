@@ -9,6 +9,7 @@ import { ColorDirector } from "../classes/ColorDirector";
 import { ThemeContext } from "./ThemeContext";
 import StatCard from "./StatCard";
 import { FullEquipCard } from "./FullEquipCard";
+import BackgroundComponent from "./BackgroundComponent";
 
 
 export default function RootComponent({data, defaultRule} : ({data: Record<string, any>, defaultRule: Record<string, any>})) {
@@ -38,27 +39,28 @@ export default function RootComponent({data, defaultRule} : ({data: Record<strin
     }
 
     return <ThemeContext.Provider value={{colorDirector}}>
-        <div className={"flex h-full flex-row ".concat(colorDirector.bg(0))}>
-                <div className={"basis-1/4 p-1"}>
+        <BackgroundComponent character={char}/>
+        <div className={"flex flex-row"}>
+                <div className={"basis-1/5 p-1 grow"}>
                     <CharacterCard char={char} />
                 </div>
-                <div className={"flex flex-col p-1"}>
-                    <div className="">
-                        <FullEquipCard character={char} rule={rule}/>
-                    </div>
-                    <div className="basis-3/4 h-full grid grid-cols-3 p-1 bg-slate-300">
-                        <div className="flex flex-col gap-4 m-1">
+
+                <div className={"basis-3/5 flex flex-col p-1"}>
+                    <FullEquipCard character={char} rule={rule}/>
+                    <div className="grid grid-cols-3 p-1">
+                        <div className="flex flex-col gap-4">
                             <StatCard character={char} />
+                            <RuleCard rule={rule} ruleSetterCallback={setRuleCallback}/>
                         </div>
-                        <div className="flex flex-col gap-4 m-1">
-                            
+                        <div className="flex flex-col gap-4">
                         </div>
-                        <div className="flex flex-col gap-4 m-1">
+                        <div className="flex flex-col gap-4">
+
                         </div>
                     </div>
                 </div>
-                <div className="flex flex-col m-1 p-1 bg-slate-200 grow">
-                    <RuleCard rule={rule} ruleSetterCallback={setRuleCallback}/>
+                <div className="basis-1/5 flex flex-col p-1 grow">
+
                 </div>
 
         </div>

@@ -1,19 +1,6 @@
 import RootComponent from '../../components/RootComponent';
 import { hostUrl } from '../../host';
 
-
-
-
-// async function getCharacterData(name: string) {
-//     const data = await fetch(hostUrl("/api/characters?uid=".concat(uid, "name=", name)));
-//     return data.json()
-// }
-
-// async function getRules(name: string) {
-//     const data = await fetch(hostUrl("/api/rules?name=".concat(name)));
-//     return data.json()
-// }
-
 async function fetchDataToApi(endpoint: string, uid: string, name: string) {
     const path = "/api/".concat(endpoint, "?uid=", uid, "&name=", name)
     const data = await fetch(hostUrl(path));
@@ -29,15 +16,13 @@ export default async function Page({ params }: { params: { character: string, ui
     
     if (data == undefined || rules == undefined) {
         return (
-            <div className="bg-blue-500 w-full h-full">
+            <div className="bg-blue-500 w-full">
                 Fetching data, please wait...
             </div>
         )
     }
 
     return (
-        <main>
             <RootComponent data={data} defaultRule={rules} />
-        </main>
     )
 }

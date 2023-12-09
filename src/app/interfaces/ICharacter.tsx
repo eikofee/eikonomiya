@@ -7,6 +7,7 @@ import { IWeapon } from "./IWeapon";
 export interface ICharacter {
     name: string
     element: string
+    region?: string
     level: number
     friendshipLevel: number
     skills: {
@@ -100,6 +101,7 @@ export const buildCharacter = (data: Record<string, any>) => {
     const res : ICharacter = {
         name: data["name"],
         element: data["element"],
+        region: data["region"],
         level: parseInt(data["level"]),
         friendshipLevel: parseInt(data["friendshipLevel"]),
         skills: {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { IArtefact } from "../interfaces/IArtefact";
 import { ICharacterRule } from "../interfaces/ICharacterRule";
 import { Card } from "./Card";
@@ -8,7 +8,7 @@ import Icon from "./Icon";
 import InfoDiv from "./Tooltip";
 import { ThemeContext } from "./ThemeContext";
 
-export default function ArtefactCard({equip, rule} : {equip: IArtefact, rule: ICharacterRule}) {
+export default function ArtefactCard({equip, rule, scoreState} : {equip: IArtefact, rule: ICharacterRule, scoreState: (a: number) => void}) {
 
 
     const isPercentage = (s: string) => s.includes("%")
@@ -111,14 +111,16 @@ export default function ArtefactCard({equip, rule} : {equip: IArtefact, rule: IC
     for (let i = 0; i < equip.subStatNames.length; ++i) {
         score += equip.rolls[i] * rule.stats.get(equip.subStatNames[i])
     }
-    
+
+    let scoreValue = score/div*100
+    scoreState(scoreValue)
     let infoLine = <p>{score.toFixed(1)}/{div}</p>
     let scoreLine = <div className="w-full flex flex-row items-center align-baseline font-semibold">
         <div className="text-left basis-3/5 truncate">
             Score :
         </div>
         <div className={"text-right basis-2/5"}>
-            {(score/div*100).toFixed(0).concat("%")}
+            {scoreValue.toFixed(0).concat("%")}
         </div>
     </div>
 

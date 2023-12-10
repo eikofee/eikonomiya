@@ -15,7 +15,7 @@ export default function AscensionCard({char} : {char: ICharacter}) {
                         </div>
         </li>
     }
-    let content = <div className="flex flex-col h-full">
+    let content = <div className="flex flex-col">
     <div className="aspect-square grad-5star basis-1/5 flex items-center justify-center h-full rounded-t-md">
         <img src={"/characterPortraits/".concat(char.name.toLowerCase(), ".png")} className="max-w-full max-h-full"/>
     </div>

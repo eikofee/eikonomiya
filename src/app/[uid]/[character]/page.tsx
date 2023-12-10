@@ -19,7 +19,6 @@ export default async function Page({ params }: { params: { character: string, ui
     const uid = params.uid
     let data: Record<string, any> = await fetchAllData("characters", uid);
     let rules: Record<string, any> = await fetchDataToApi("rules", uid, characterName);
-    
     if (data == undefined || rules == undefined) {
         return (
             <div className="bg-blue-500 w-full">

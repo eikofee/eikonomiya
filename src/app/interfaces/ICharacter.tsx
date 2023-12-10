@@ -8,6 +8,11 @@ export interface ICharacter {
     name: string
     element: string
     region?: string
+    assets?: {
+        characterCard?: string
+        characterPortrait?: string
+    }
+
     level: number
     friendshipLevel: number
     skills: {
@@ -49,8 +54,20 @@ function parseWeapon(data: Record<string, any>): IWeapon {
 
 function parseArtefact(data: Record<string, any>, artefactName: string): IArtefact {
     let arte = data["artefacts"][artefactName];
+    let res : IArtefact = {
+        type: "missing",
+        icon: "",
+        mainStatName: "",
+        mainStatValue: 0,
+        subtype: "",
+        subStatNames: [],
+        subStatValues: [],
+        rolls: [],
+        set: ""
+    }
+
     if (arte != undefined) {
-        let res : IArtefact = {
+        res = {
             type: "artefact",
             icon: "https://enka.network/ui/" + arte["icon"] + ".png",
             mainStatName: arte["mainStatName"],
@@ -62,9 +79,9 @@ function parseArtefact(data: Record<string, any>, artefactName: string): IArtefa
             set: arte["set"]
         }
         
-        return res
     }
-
+    
+    return res
 }
 
 export const buildCharacter = (data: Record<string, any>) => {
@@ -127,6 +144,10 @@ export const buildCharacter = (data: Record<string, any>) => {
         anormalStats: {
             statNames: data["anormalStats"]["statNames"],
             statValues: data["anormalStats"]["statValues"]
+        },
+        assets : {
+            characterPortrait : data["assets"]["characterPortrait"],
+            characterCard : data["assets"]["characterCard"],
         }
     }
 

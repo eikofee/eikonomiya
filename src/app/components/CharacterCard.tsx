@@ -6,9 +6,10 @@ import { Card } from "./Card";
 export default function CharacterCard({char} : {char: ICharacter}) {
     const {colorDirector} = useContext(ThemeContext)
     let bgClass = "max-w-md flex flex-col"
+    let fname = char.assets!.characterCard
     let content = <div className={bgClass}>
     <div>
-        <img className="rounded-t-md" src={"/characterCards/".concat(char.name.toLocaleLowerCase(), ".jpeg")} />
+        <img className="rounded-t-md" src={fname} />
     </div>
     <div className="grid grid-cols-3 items-center">
         <p>Skill 1</p>

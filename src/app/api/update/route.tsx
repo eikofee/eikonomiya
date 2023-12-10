@@ -1,6 +1,7 @@
 import { promises as fsPromises } from 'fs';
 import * as yaml from 'yaml';
 import path from 'path'
+import { hostUrl } from '@/app/host';
 
 
 
@@ -542,6 +543,15 @@ export async function GET(request: Request) {
     for (let i = 0; i < characterStats.length; ++i) {
         const characterName = characterStats[i]["name"]
         characterStats[i]["region"] = reg[characterName]
+        const characterCardQuery = await fetch(hostUrl("/api/assets/characterCards?name=".concat(characterName.toLowerCase())))
+        const characterCardPath = (await characterCardQuery.json())["fname"]
+        const characterPortraitQuery = await fetch(hostUrl("/api/assets/characterPortraits?name=".concat(characterName.toLowerCase())))
+        const characterPortraitPath = (await characterPortraitQuery.json())["fname"]
+        characterStats[i]["assets"] = {
+            "characterCard": characterCardPath,
+            "characterPortrait": characterPortraitPath
+        }
+
         await fsPromises.writeFile(p.concat("/", characterName), JSON.stringify(characterStats[i]))
     }
 

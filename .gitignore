@@ -15,6 +15,7 @@
 
 # production
 /build
+*.tar
 
 # misc
 .DS_Store
@@ -35,7 +36,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-/public
-# /src/app/host.tsx
 /data
 .vscode/settings.json

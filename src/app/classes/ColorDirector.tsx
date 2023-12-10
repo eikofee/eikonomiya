@@ -76,6 +76,201 @@ const borderElectro = [
     "border-violet-950",
 ]
 
+const bgAnemo = [
+    "bg-teal-50",
+    "bg-teal-100",
+    "bg-teal-200",
+    "bg-teal-300",
+    "bg-teal-400",
+    "bg-teal-500",
+    "bg-teal-600",
+    "bg-teal-700",
+    "bg-teal-800",
+    "bg-teal-950",
+]
+
+const textAnemo = [
+    "text-teal-50",
+    "text-teal-100",
+    "text-teal-200",
+    "text-teal-300",
+    "text-teal-400",
+    "text-teal-500",
+    "text-teal-600",
+    "text-teal-700",
+    "text-teal-800",
+    "text-teal-950",
+]
+
+const borderAnemo = [
+    "border-teal-50",
+    "border-teal-100",
+    "border-teal-200",
+    "border-teal-300",
+    "border-teal-400",
+    "border-teal-500",
+    "border-teal-600",
+    "border-teal-700",
+    "border-teal-800",
+    "border-teal-950",
+]
+
+const bgDendro = [
+    "bg-lime-50",
+    "bg-lime-100",
+    "bg-lime-200",
+    "bg-lime-300",
+    "bg-lime-400",
+    "bg-lime-500",
+    "bg-lime-600",
+    "bg-lime-700",
+    "bg-lime-800",
+    "bg-lime-950",
+]
+
+const textDendro = [
+    "text-lime-50",
+    "text-lime-100",
+    "text-lime-200",
+    "text-lime-300",
+    "text-lime-400",
+    "text-lime-500",
+    "text-lime-600",
+    "text-lime-700",
+    "text-lime-800",
+    "text-lime-950",
+]
+
+const borderDendro = [
+    "border-lime-50",
+    "border-lime-100",
+    "border-lime-200",
+    "border-lime-300",
+    "border-lime-400",
+    "border-lime-500",
+    "border-lime-600",
+    "border-lime-700",
+    "border-lime-800",
+    "border-lime-950",
+]
+
+const bgPyro = [
+    "bg-red-50",
+    "bg-red-100",
+    "bg-red-200",
+    "bg-red-300",
+    "bg-red-400",
+    "bg-red-500",
+    "bg-red-600",
+    "bg-red-700",
+    "bg-red-800",
+    "bg-red-950",
+]
+
+const textPyro = [
+    "text-red-50",
+    "text-red-100",
+    "text-red-200",
+    "text-red-300",
+    "text-red-400",
+    "text-red-500",
+    "text-red-600",
+    "text-red-700",
+    "text-red-800",
+    "text-red-950",
+]
+
+const borderPyro = [
+    "border-red-50",
+    "border-red-100",
+    "border-red-200",
+    "border-red-300",
+    "border-red-400",
+    "border-red-500",
+    "border-red-600",
+    "border-red-700",
+    "border-red-800",
+    "border-red-950",
+]
+
+const bgCryo = [
+    "bg-cyan-50",
+    "bg-cyan-100",
+    "bg-cyan-200",
+    "bg-cyan-300",
+    "bg-cyan-400",
+    "bg-cyan-500",
+    "bg-cyan-600",
+    "bg-cyan-700",
+    "bg-cyan-800",
+    "bg-cyan-950",
+]
+
+const textCryo = [
+    "text-cyan-50",
+    "text-cyan-100",
+    "text-cyan-200",
+    "text-cyan-300",
+    "text-cyan-400",
+    "text-cyan-500",
+    "text-cyan-600",
+    "text-cyan-700",
+    "text-cyan-800",
+    "text-cyan-950",
+]
+
+const borderCryo = [
+    "border-cyan-50",
+    "border-cyan-100",
+    "border-cyan-200",
+    "border-cyan-300",
+    "border-cyan-400",
+    "border-cyan-500",
+    "border-cyan-600",
+    "border-cyan-700",
+    "border-cyan-800",
+    "border-cyan-950",
+]
+
+const bgGeo = [
+    "bg-yellow-50",
+    "bg-yellow-100",
+    "bg-yellow-200",
+    "bg-yellow-300",
+    "bg-yellow-400",
+    "bg-yellow-500",
+    "bg-yellow-600",
+    "bg-yellow-700",
+    "bg-yellow-800",
+    "bg-yellow-950",
+]
+
+const textGeo = [
+    "text-yellow-50",
+    "text-yellow-100",
+    "text-yellow-200",
+    "text-yellow-300",
+    "text-yellow-400",
+    "text-yellow-500",
+    "text-yellow-600",
+    "text-yellow-700",
+    "text-yellow-800",
+    "text-yellow-950",
+]
+
+const borderGeo = [
+    "border-yellow-50",
+    "border-yellow-100",
+    "border-yellow-200",
+    "border-yellow-300",
+    "border-yellow-400",
+    "border-yellow-500",
+    "border-yellow-600",
+    "border-yellow-700",
+    "border-yellow-800",
+    "border-yellow-950",
+]
+
 export class ColorDirector {
     elementalColorPicker(element: string) {
         switch(element) {
@@ -107,19 +302,19 @@ export class ColorDirector {
     public bg(level: number) : string {
         switch (this.element) {
             case "Anemo":
-                return "teal";
+                return bgAnemo[level];
             case "Geo":
-                return "yellow";
+                return bgGeo[level];
             case "Electro":
                 return bgElectro[level];
             case "Dendro":
-                return "lime";
+                return bgDendro[level];
             case "Hydro":
                 return bgHydro[level]
             case "Pyro":
-                return "red";
+                return bgPyro[level];
             case "Cryo":
-                return "cyan";
+                return bgCryo[level];
             default:
                 return "neutral";
         }
@@ -128,19 +323,19 @@ export class ColorDirector {
     public bgAccent(light: number) : string {
         switch (this.element) {
             case "Anemo":
-                return "teal";
+                return bgAnemo[9 - light];
             case "Geo":
-                return "yellow";
+                return bgGeo[9 - light];
             case "Electro":
                 return bgElectro[9 - light];
             case "Dendro":
-                return "lime";
+                return bgDendro[9 - light];
             case "Hydro":
                 return bgHydro[9 - light]
             case "Pyro":
-                return "red";
+                return bgPyro[9 - light];
             case "Cryo":
-                return "cyan";
+                return bgCryo[9 - light];
             default:
                 return "neutral";
         }
@@ -149,19 +344,19 @@ export class ColorDirector {
     public textAccent(light: number) : string {
         switch (this.element) {
             case "Anemo":
-                return "teal";
+                return textAnemo[9 - light];
             case "Geo":
-                return "yellow";
+                return textGeo[9 - light];
             case "Electro":
                 return textElectro[9 - light];
             case "Dendro":
-                return "lime";
+                return textDendro[9 - light];
             case "Hydro":
                 return textHydro[9 - light]
             case "Pyro":
-                return "red";
+                return textPyro[9 - light];
             case "Cryo":
-                return "cyan";
+                return textCryo[9 - light];
             default:
                 return "neutral";
         }
@@ -170,19 +365,19 @@ export class ColorDirector {
     public borderAccent(light: number) : string {
         switch (this.element) {
             case "Anemo":
-                return "teal";
+                return borderAnemo[9 - light];
             case "Geo":
-                return "yellow";
+                return borderGeo[9 - light];
             case "Electro":
                 return borderElectro[9 - light];
             case "Dendro":
-                return "lime";
+                return borderDendro[9 - light];
             case "Hydro":
                 return borderHydro[9 - light]
             case "Pyro":
-                return "red";
+                return borderPyro[9 - light];
             case "Cryo":
-                return "cyan";
+                return borderCryo[9 - light];
             default:
                 return "neutral";
         }

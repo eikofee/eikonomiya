@@ -164,7 +164,7 @@ export default function Icon({n}: {n: string}) {
         case "Anemo%":
         case "Anemo":
             content = anemoIcon()
-            svgClassname = svgClassname.concat(" fill-green-500")
+            svgClassname = svgClassname.concat(" fill-teal-500")
             break;
         case "Geo%":
         case "Geo":

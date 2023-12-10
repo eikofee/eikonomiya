@@ -16,7 +16,7 @@ This is a piece of software aiming at:
 
 ## Installation
 
-Build Docker image by running
+Grab the Docker image on [DockerHub](https://hub.docker.com/repository/docker/eikofee/eikonomiya-front/) or build it yourself by running
 ```
 docker build -t eikonomiya-front .
 ```

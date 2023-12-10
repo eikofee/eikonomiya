@@ -7,8 +7,8 @@ export async function GET(request: Request) {
     const p = path.join(process.cwd(), "/data/", uid, "/rules")
     const fileList = await fsPromises.readdir(p)
     let content : any = {}
-    if (searchParams.has("name")) {
-        let characterName = searchParams.get("name")!
+    if (searchParams.has("characterName")) {
+        let characterName = searchParams.get("characterName")!
         if (fileList.includes(characterName)) {
             content = JSON.parse((await fsPromises.readFile(p.concat("/", characterName))).toString())
             if (searchParams.has("mode") && searchParams.get("mode") == "edit") {

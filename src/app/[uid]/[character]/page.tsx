@@ -2,8 +2,8 @@ import RootComponent from '../../components/RootComponent';
 import { hostUrl } from '../../host';
 
 async function fetchDataToApi(endpoint: string, uid: string, name: string) {
-    const path = "/api/".concat(endpoint, "?uid=", uid, "&name=", name)
-    const data = await fetch(hostUrl(path));
+    const path = "/api/".concat(endpoint, "?uid=", uid, "&characterName=", name)
+    const data = await fetch(hostUrl(path), { cache: 'no-store'});
     return data.json()
 }
 

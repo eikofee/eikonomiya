@@ -37,7 +37,7 @@ export default function RootComponent({data, currentCharacter, defaultRule, uid}
         defaultRule["ruleName"] = "defaultRuleName"
     }
     let defaultRuleObject : ICharacterRule = {
-        character: defaultRule["characterName"] as string,
+        character: char.name as string,
         ruleName: defaultRule["ruleName"] as string,
         stats: kv
     }
@@ -69,7 +69,7 @@ export default function RootComponent({data, currentCharacter, defaultRule, uid}
                         </div>
                     </div>
                     <div className="basis-1/5 flex flex-col p-1">
-                        <RuleCard rule={rule} ruleSetterCallback={setRuleCallback}/>
+                        <RuleCard rule={rule} ruleSetterCallback={setRuleCallback} uid={uid}/>
                     </div>
 
             </div>

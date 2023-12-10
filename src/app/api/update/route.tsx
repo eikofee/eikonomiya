@@ -1,4 +1,5 @@
 import {promises as fsPromises} from 'fs';
+import * as yaml from 'yaml';
 import path from 'path'
 
 
@@ -410,10 +411,14 @@ export async function GET(request: Request) {
     let data : Record<string, any> = await loadPlayerData()
     let characterStats : Record<string, any> = await loadCharacterStats(data)
     characterStats = processCharacters(characterStats)
+    const regionRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/regions.yml")).text()
+    const reg = yaml.parse(regionRawData)
     for (let i = 0; i < characterStats.length; ++i) {
         const characterName = characterStats[i]["name"]
+        characterStats[i]["region"] = reg[characterName]
         await fsPromises.writeFile(p.concat("/", characterName), JSON.stringify(characterStats[i]))
     }
+
     let content = { message: "Character data updated."}
     return Response.json(content)
   }

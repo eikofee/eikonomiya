@@ -12,7 +12,13 @@ export interface IStatSet {
     "Heal%": number;
     "EM": number;
     "Phys%": number;
-    "Elem%": number;
+    "Anemo%": number;
+    "Geo%": number;
+    "Electro%": number;
+    "Dendro%": number;
+    "Hydro%": number;
+    "Pyro%": number;
+    "Cryo%": number;
 }
 
 export const listStatSetLabels = [
@@ -28,7 +34,6 @@ export const listStatSetLabels = [
     "Heal%",
     "EM",
     "Phys%",
-    "Elem%"
 ]
 
 export const listStatSetValues = (set: IStatSet) => {
@@ -45,6 +50,5 @@ export const listStatSetValues = (set: IStatSet) => {
         set["Heal%"],
         set["EM"],
         set["Phys%"],
-        set["Elem%"]
     ]
 }

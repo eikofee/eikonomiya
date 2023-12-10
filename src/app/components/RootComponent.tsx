@@ -50,17 +50,15 @@ export default function RootComponent({data, defaultRule} : ({data: Record<strin
                     <div className="grid grid-cols-3 p-1">
                         <div className="flex flex-col gap-4">
                             <StatCard character={char} />
-                            <RuleCard rule={rule} ruleSetterCallback={setRuleCallback}/>
                         </div>
                         <div className="flex flex-col gap-4">
                         </div>
                         <div className="flex flex-col gap-4">
-
                         </div>
                     </div>
                 </div>
-                <div className="basis-1/5 flex flex-col p-1 grow">
-
+                <div className="basis-1/5 flex flex-col p-1">
+                    <RuleCard rule={rule} ruleSetterCallback={setRuleCallback}/>
                 </div>
 
         </div>

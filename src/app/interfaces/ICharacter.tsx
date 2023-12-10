@@ -79,7 +79,13 @@ export const buildCharacter = (data: Record<string, any>) => {
         "Heal%": data["equipStats"]["Heal%"],
         EM: data["equipStats"]["EM"],
         "Phys%": data["equipStats"]["Phys%"],
-        "Elem%": data["equipStats"]["Elem%"]
+        "Anemo%": data["equipStats"]["Anemo%"],
+        "Geo%": data["equipStats"]["Geo%"],
+        "Electro%": data["equipStats"]["Electro%"],
+        "Dendro%": data["equipStats"]["Dendro%"],
+        "Hydro%": data["equipStats"]["Hydro%"],
+        "Pyro%": data["equipStats"]["Pyro%"],
+        "Cryo%": data["equipStats"]["Cryo%"]
     }
     let artefactSet : IArtefactSet = {
         fleur: parseArtefact(data, "fleur"),

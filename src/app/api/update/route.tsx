@@ -89,13 +89,13 @@ export async function GET(request: Request) {
             case "FIGHT_PROP_HEAL_ADD": return "Heal%";
             case "FIGHT_PROP_ELEMENT_MASTERY": return "EM";
             case "FIGHT_PROP_PHYSICAL_ADD_HURT": return "Phys%";
-            case "FIGHT_PROP_FIRE_ADD_HURT": return "Elem%";
-            case "FIGHT_PROP_ELEC_ADD_HURT": return "Elem%";
-            case "FIGHT_PROP_WATER_ADD_HURT": return "Elem%";
-            case "FIGHT_PROP_WIND_ADD_HURT": return "Elem%";
-            case "FIGHT_PROP_ICE_ADD_HURT": return "Elem%";
-            case "FIGHT_PROP_ROCK_ADD_HURT": return "Elem%";
-            case "FIGHT_PROP_GRASS_ADD_HURT": return "Elem%";
+            case "FIGHT_PROP_FIRE_ADD_HURT": return "Pyro%";
+            case "FIGHT_PROP_ELEC_ADD_HURT": return "Electro%";
+            case "FIGHT_PROP_WATER_ADD_HURT": return "Hydro%";
+            case "FIGHT_PROP_WIND_ADD_HURT": return "Anemo%";
+            case "FIGHT_PROP_ICE_ADD_HURT": return "Cryo%";
+            case "FIGHT_PROP_ROCK_ADD_HURT": return "Geo%";
+            case "FIGHT_PROP_GRASS_ADD_HURT": return "Dendro%";
             case "FIGHT_PROP_BASE_ATTACK": return "ATK";
             default: return "Unknown StatName"
         }
@@ -260,7 +260,13 @@ export async function GET(request: Request) {
                     "Heal%": fpm(26),
                     "EM": fpm(28),
                     "Phys%": fpm(30),
-                    "Elem%": fpm(40) + fpm(41) + fpm(42) + fpm(43) + fpm(44) + fpm(45) + fpm(46),
+                    "Pyro%": fpm(40),
+                    "Electro%": fpm(41),
+                    "Hydro%": fpm(42),
+                    "Dendro%": fpm(43),
+                    "Anemo%": fpm(44),
+                    "Geo%": fpm(45),
+                    "Cryo%": fpm(46),
                 },
                 "lastUpdated": Date.now()
             }
@@ -320,7 +326,13 @@ export async function GET(request: Request) {
             "Heal%": 0.0,
             "EM": 0.0,
             "Phys%": 0.0,
-            "Elem%": 0.0
+            "Anemo%": 0.0,
+            "Geo%": 0.0,
+            "Electro%": 0.0,
+            "Dendro%": 0.0,
+            "Hydro%": 0.0,
+            "Pyro%": 0.0,
+            "Cryo%": 0.0,
         }
 
         let w = characterData["weapon"]
@@ -350,20 +362,17 @@ export async function GET(request: Request) {
     const getAnormalStats = async (data: Record<string, any>) => {
 
         let sumStats = mergeEquipData(data)
-        const keys = ["HP%", "ATK%", "DEF%", "Crit Rate%", "Crit DMG%", "ER%", "Heal%", "EM", "Phys%", "Elem%"]
+        const keys = ["HP%", "ATK%", "DEF%", "Crit Rate%", "Crit DMG%", "ER%", "Heal%", "EM", "Phys%", "Anemo%", "Geo%", "Electro%", "Dendro%", "Hydro%", "Pyro%", "Cryo%"]
         for (let i = 0; i < keys.length; ++i) {
             const k = keys[i]
             sumStats[k] -= data["equipStats"][k]
         }
 
         const setBonus = await getArtefactSetBonus(data)
-        console.log(setBonus)
         const bonusKeys = Object.keys(setBonus)
-        console.log(sumStats)
         for (let i = 0; i < bonusKeys.length; ++i) {
             sumStats[bonusKeys[i]] += setBonus[bonusKeys[i]]
         }
-        console.log(sumStats)
 
         let res = []
         for (let i = 0; i < keys.length; ++i) {

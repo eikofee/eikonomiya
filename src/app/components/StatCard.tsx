@@ -50,7 +50,7 @@ export default function StatCard({character} : {character: ICharacter}) {
     }
 
     let statNames = ["EM", "ER%", "Crit Rate%", "Crit DMG%"]
-    let statValues = [character.totalStats.EM, character.totalStats["ER%"], character.totalStats["Crit Rate%"], character.totalStats["Crit DMG%"], character.totalStats["Elem%"]]
+    let statValues = [character.totalStats.EM, character.totalStats["ER%"], character.totalStats["Crit Rate%"], character.totalStats["Crit DMG%"]]
     for (let i = 0; i < statNames.length; ++i) {
         let s = statNames[i]
         // let classname = "flex flex-row justify-between items ".concat(i%2 == 1 ? colorDirector.bg(0) : colorDirector.bg(1))
@@ -67,6 +67,28 @@ export default function StatCard({character} : {character: ICharacter}) {
             <div className="text-left basis-3/5 items-center">{n}</div>
             <div className="text-right basis-2/5 pr-2">{v}</div>
         </li>)
+    }
+
+    statNames = ["Phys%", "Anemo%", "Geo%", "Electro%", "Dendro%", "Hydro%", "Pyro%", "Cryo%", "Heal%"]
+    statValues = [character.totalStats["Phys%"], character.totalStats["Anemo%"], character.totalStats["Geo%"], character.totalStats["Electro%"], character.totalStats["Dendro%"], character.totalStats["Hydro%"], character.totalStats["Pyro%"], character.totalStats["Cryo%"], character.totalStats["Heal%"]]
+    for (let i = 0; i < statNames.length; ++i) {
+        let s = statNames[i]
+        if (statValues[i] > 0) {
+
+            let classname = "flex flex-row justify-between items p-1"
+            if (i == statNames.length - 1) {
+                classname += " rounded-b-md"
+            }
+            let n = <div className="flex flex-row items-center"><Icon n={s} /> <span className="pl-1">{s}</span></div>
+            let value = statValues[i] * (s.includes("%") ? 100 : 1)
+            let fv = (s.includes("%") ? 1 : 0)
+            let v = <div>{value.toFixed(fv).toString().concat(s.includes("%") ? "%" : "")}</div>
+            ls.push(
+                <li className={classname}>
+            <div className="text-left basis-3/5 items-center">{n}</div>
+            <div className="text-right basis-2/5 pr-2">{v}</div>
+        </li>)
+        }
     }
     
     let content = <div className="bg-inherit">

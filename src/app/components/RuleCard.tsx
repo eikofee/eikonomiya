@@ -106,7 +106,7 @@ export default function RuleCard({rule, ruleSetterCallback}: {rule: ICharacterRu
     let toggleHiddableContent = () => {setHiddableClassname(hiddableClassname == "" ? "hidden" : "")}
     
     let content = <div className="bg-inherit">
-            <div className="grow px-1 font-semibold" onClick={toggleHiddableContent}>Artefact Rating Rule</div>
+            <div className="grow px-1 font-semibold cursor-pointer" onClick={toggleHiddableContent}>Artefact Rating Rule</div>
         <div className={"px-1 gap-x-1 flex flex-row ".concat(hiddableClassname)}>
         <select className="w-full" defaultValue={rule.ruleName}>
             {<option>Add...</option>}

@@ -7,11 +7,17 @@ async function fetchDataToApi(endpoint: string, uid: string, name: string) {
     return data.json()
 }
 
+async function fetchAllData(endpoint: string, uid: string) {
+    const path = "/api/".concat(endpoint, "?uid=", uid)
+    const data = await fetch(hostUrl(path));
+    return data.json()
+}
+
 export default async function Page({ params }: { params: { character: string, uid: string } }) {
 
-    const characterName = params.character
+    const characterName = params.character.replaceAll("%20", " ")
     const uid = params.uid
-    let data: Record<string, any> = await fetchDataToApi("characters", uid, characterName);
+    let data: Record<string, any> = await fetchAllData("characters", uid);
     let rules: Record<string, any> = await fetchDataToApi("rules", uid, characterName);
     
     if (data == undefined || rules == undefined) {
@@ -23,6 +29,6 @@ export default async function Page({ params }: { params: { character: string, ui
     }
 
     return (
-            <RootComponent data={data} defaultRule={rules} />
+            <RootComponent data={data} currentCharacter={characterName} defaultRule={rules} uid={uid}/>
     )
 }

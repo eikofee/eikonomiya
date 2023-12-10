@@ -49,19 +49,21 @@ function parseWeapon(data: Record<string, any>): IWeapon {
 
 function parseArtefact(data: Record<string, any>, artefactName: string): IArtefact {
     let arte = data["artefacts"][artefactName];
-    let res : IArtefact = {
-        type: "artefact",
-        icon: "https://enka.network/ui/" + arte["icon"] + ".png",
-        mainStatName: arte["mainStatName"],
-        mainStatValue: parseFloat(arte["mainStatValue"]),
-        subtype: arte["subtype"],
-        subStatNames: arte["subStatNames"],
-        subStatValues: arte["subStatValues"],
-        rolls: arte["rolls"],
-        set: arte["set"]
+    if (arte != undefined) {
+        let res : IArtefact = {
+            type: "artefact",
+            icon: "https://enka.network/ui/" + arte["icon"] + ".png",
+            mainStatName: arte["mainStatName"],
+            mainStatValue: parseFloat(arte["mainStatValue"]),
+            subtype: arte["subtype"],
+            subStatNames: arte["subStatNames"],
+            subStatValues: arte["subStatValues"],
+            rolls: arte["rolls"],
+            set: arte["set"]
+        }
+        
+        return res
     }
-
-    return res
 
 }
 

@@ -553,6 +553,29 @@ export async function GET(request: Request) {
         }
 
         await fsPromises.writeFile(p.concat("/", characterName), JSON.stringify(characterStats[i]))
+        
+        const pr = path.join(process.cwd(), "/data/", uid, "/rules")
+        const fileList = await fsPromises.readdir(pr)
+        if (!fileList.includes(characterName)) {
+                let content = {
+                    "name":characterName,
+                    "rule": {
+                        "DEF%": 3,
+                        "Crit DMG%": 3,
+                        "ATK%": 3,
+                        "ER%": 3,
+                        "Crit Rate%": 3,
+                        "EM": 3,
+                        "HP": 0,
+                        "ATK": 0,
+                        "HP%": 3,
+                        "DEF": 0
+                    },
+                    "lastUpdated": Date.now()
+                }
+
+                await fsPromises.writeFile(pr.concat("/", characterName), JSON.stringify(content))
+        }
     }
 
     let content = { message: "Character data updated." }

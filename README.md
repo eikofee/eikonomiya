@@ -24,7 +24,7 @@ then run it using
 ```
 docker run -p 3000:3000 -v <full path to data folder>:/app/data eikonomiya-front
 ```
-Then go to `localhost:3000/<your uid>/<character name>` to see stuff.
+Then go to `localhost:3000/<your uid>` to see stuff.
 
 ## API
 (to be documented, maybe use swagger ?)

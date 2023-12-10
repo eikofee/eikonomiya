@@ -10,6 +10,7 @@ async function fetchAllData(endpoint: string, uid: string) {
 
 export default async function Page({ params }: { params: { uid: string } }) {
     const uid = params.uid
+    await fetch(hostUrl("/api/update?uid=".concat(uid)))
     let data: Record<string, any> = await fetchAllData("characters", uid);
     if (data == undefined) {
         return (

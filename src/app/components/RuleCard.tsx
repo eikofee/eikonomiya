@@ -6,71 +6,23 @@ import { hostUrl } from "../host";
 import { useContext, useState } from "react";
 import Icon from "./Icon";
 import { ThemeContext } from "./ThemeContext";
+import InteractiveGaugeComponent from "./InteractiveGaugeComponent";
 
 
 
-export default function RuleCard({rule, ruleSetterCallback}: {rule: ICharacterRule, ruleSetterCallback: (_x : ICharacterRule) => void}) {
+export default function RuleCard({rule, ruleSetterCallback, uid}: {rule: ICharacterRule, ruleSetterCallback: (_x : ICharacterRule) => void, uid: string}) {
     let ls = []
-    const colors = [
-        "bg-red-400",
-        "bg-orange-400",
-        "bg-yellow-400",
-        "bg-lime-400",
-        "bg-green-400",
-        "bg-teal-400",
-        "bg-sky-400",
-    ]
-
-    const colorsDown = [
-        "bg-red-400/20",
-        "bg-orange-400/20",
-        "bg-yellow-400/20",
-        "bg-lime-400/20",
-        "bg-green-400/20",
-        "bg-teal-400/20",
-        "bg-sky-400/20",
-    ]
 
     let [hiddableClassname, setHiddableClassname] = useState("hidden")
-    const {colorDirector} = useContext(ThemeContext)
     const labels = ["HP%", "ATK%", "DEF%", "EM", "ER%", "Crit Rate%", "Crit DMG%"]
     
     for (let i = 0; i < labels.length; ++i) {
         let label = labels[i]
-            const [currentSliderValue, setCurrentSliderValue] = useState(rule.stats.get(label))
-            const handleSliderChange = (n:number) => (e: any) => {
-                let newValue = n
-                setCurrentSliderValue(newValue)
-                let kv = rule.stats.copy()
-                kv.set(label, newValue)
-                let newRule : ICharacterRule = {
-                    character: rule.character,
-                    ruleName: rule.ruleName,
-                    stats: kv
-                }
-
-                ruleSetterCallback(newRule)
-            }
             let classname = "w-full flex flex-row justify-between items pr-4"
             if (i == labels.length - 1) {
                 classname += " rounded-md"
             }
             
-            let buttons = []
-            for (let j = 0; j < 7; ++j) {
-                let bClassName = "h-1/2 rounded-md"
-                if (j <= currentSliderValue) {
-                    bClassName = bClassName.concat(" ", colorDirector.bgAccent(3))
-                    // bClassName = bClassName.concat(" ", colors[currentSliderValue])
-                } else {
-                    // bClassName = bClassName.concat(" ", colorsDown[currentSliderValue])
-                    bClassName = bClassName.concat(" ", colorDirector.bgAccent(6))
-                }
-                buttons.push(
-                    <button id={i.toString().concat(" ", j.toString())} className={bClassName} onClick={handleSliderChange(j)} />
-                    )
-                }
-                
                 ls.push(
                     <li className={classname}>
             <div className="text-left basis-2/5 items-center m-1 flex flex-row">
@@ -81,7 +33,7 @@ export default function RuleCard({rule, ruleSetterCallback}: {rule: ICharacterRu
                 </p>
             </div>
             <div className="grid basis-3/5 grid-cols-7 items-center">
-                {buttons}
+                {<InteractiveGaugeComponent label={label} rule={rule} ruleSetterCallback={ruleSetterCallback} />}
             </div>
         </li>)
     }
@@ -92,7 +44,7 @@ export default function RuleCard({rule, ruleSetterCallback}: {rule: ICharacterRu
                                 </ul>
                         </div>
     let saveRule = () => {
-        let url = hostUrl("/api/rules?mode=edit&name=".concat(rule.character))
+        let url = hostUrl("/api/rules?mode=edit&characterName=".concat(rule.character,"&uid=",uid))
         for (let i = 0; i < labels.length; ++i) {
             url = url.concat("&", labels[i].replaceAll(" ", "+"), "=", rule.stats.get(labels[i]).toString())
         }

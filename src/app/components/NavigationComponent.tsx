@@ -20,7 +20,7 @@ export default function NavigationComponent({currentCharacter, characterList, ui
         } else {
             return content
         }
-        }
+    }
 
     let charList = []
     for (let i = 0; i < characterList.length; ++i) {

@@ -8,7 +8,14 @@ import { hostUrl } from '@/app/host';
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const uid = searchParams.get("uid")!
-    const p = path.join(process.cwd(), "/data/", uid, "/characters")
+    const uidList = await fsPromises.readdir(path.join(process.cwd(), "/data/"))
+    if (!uidList.includes(uid)) {
+        fsPromises.mkdir(path.join(process.cwd(), "/data/", uid))
+        fsPromises.mkdir(path.join(process.cwd(), "/data/", uid, "/characters"))
+        fsPromises.mkdir(path.join(process.cwd(), "/data/", uid, "/rules"))
+    }
+
+    let p = path.join(process.cwd(), "/data/", uid, "/characters")
     const loadLocalizationTable = async () => {
         let localizationTable = await (await fetch("https://raw.githubusercontent.com/EnkaNetwork/API-docs/master/store/loc.json")).json()
         localizationTable = localizationTable["en"]

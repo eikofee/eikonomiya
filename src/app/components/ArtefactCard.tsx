@@ -43,10 +43,10 @@ export default function ArtefactCard({equip, rule, scoreState} : {equip: IArtefa
     div = Math.max(1, div)
 
     let statLine = <div className="w-full flex flex-row items-center">
-                        <div className="text-left basis-3/5 max-h-4">
+                        <div className="text-left max-h-4">
                             <Icon n={equip.mainStatName}/>
                         </div>
-                        <div className={"text-right basis-2/5"}>
+                        <div className={"text-right grow"}>
                             {isPercentage(equip.mainStatName) ? (equip.mainStatValue * 100).toFixed(1): equip.mainStatValue}{isPercentage(equip.mainStatName) ? "%" : ""}
                         </div>
                     </div>
@@ -80,10 +80,10 @@ export default function ArtefactCard({equip, rule, scoreState} : {equip: IArtefa
 
         let statLineClassname = "w-full flex flex-row items-center ".concat(fontWeight[Math.floor(equip.rolls[i])], " ", badStats.includes(equip.subStatNames[i]) ? "text-slate-500/50 fill-slate-500/50 " : "text-current")
         let statLine = <div className={statLineClassname}>
-                            <div className={"text-left basis-3/5 max-h-4"}>
+                            <div className={"text-left max-h-4"}>
                                 <Icon n={equip.subStatNames[i]}/>
                             </div>
-                            <div className={"text-right basis-2/5"}>
+                            <div className={"text-right grow"}>
                                 {isPercentage(equip.subStatNames[i]) ? (equip.subStatValues[i] * 100).toFixed(1): equip.subStatValues[i]}{isPercentage(equip.subStatNames[i]) ? "%" : ""}
                             </div>
                         </div>

@@ -24,10 +24,10 @@ export default function WeaponCard({equip, rule} : {equip: IWeapon, rule: IChara
         subLine = <li className="flex justify-between place-items-center font-bold">
         <div className="flex flex-col w-full py-1">
         <div className="w-full flex flex-row items-center">
-                <div className="text-left basis-3/5 max-h-4">
+                <div className="text-left max-h-4">
                     <Icon n={equip.subStatName}/>
                 </div>
-                <div className={"text-right basis-2/5"}>
+                <div className={"text-right grow"}>
                     {isPercentage(equip.subStatName) ? (equip.subStatValue! * 100).toFixed(1): equip.subStatValue}{isPercentage(equip.subStatName) ? "%" : ""}
                 </div>
             </div>
@@ -36,17 +36,17 @@ export default function WeaponCard({equip, rule} : {equip: IWeapon, rule: IChara
     }
     let content = <div className="flex flex-col">
     <div className="aspect-square grad-5star basis-1/5 flex items-center justify-center rounded-t-md">
-        <img src={equip.icon} className="max-w-full max-h-full"/>
+        <InfoDiv child={<img src={equip.icon} className="max-w-full max-h-full"/>} info={<p>{equip.name}</p>} infoClassname="transition duration-300 z-10 absolute bg-gray-800 text-white font-normal text-sm rounded p-2 whitespace-nowrap top-full left-1/2 transform -translate-x-1/2" />
     </div>
     <div className="basis-4/5 px-1 py-2">
         <ul>
         <li className="flex justify-between place-items-center font-bold">
                 <div className="flex flex-col w-full py-1">
                 <div className="w-full flex flex-row items-center">
-                        <div className="text-left basis-3/5 max-h-4">
+                        <div className="text-left max-h-4">
                             <Icon n={equip.mainStatName}/>
                         </div>
-                        <div className={"text-right basis-2/5"}>
+                        <div className={"text-right grow"}>
                             {isPercentage(equip.mainStatName) ? (equip.mainStatValue * 100).toFixed(1): equip.mainStatValue}{isPercentage(equip.mainStatName) ? "%" : ""}
                         </div>
                     </div>

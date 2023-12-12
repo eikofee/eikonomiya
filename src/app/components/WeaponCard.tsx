@@ -21,8 +21,8 @@ export default function WeaponCard({equip, rule} : {equip: IWeapon, rule: IChara
 
     let subLine = <p></p>
     if (equip.subStatName != undefined) {
-        subLine = <li className="flex justify-between place-items-center font-bold">
-        <div className="flex flex-col w-full py-1">
+        subLine = <li className="flex justify-between place-items-center">
+        <div className="flex flex-col w-full">
         <div className="w-full flex flex-row items-center">
                 <div className="text-left max-h-4">
                     <Icon n={equip.subStatName}/>
@@ -40,9 +40,17 @@ export default function WeaponCard({equip, rule} : {equip: IWeapon, rule: IChara
     </div>
     <div className="basis-4/5 px-1 py-2">
         <ul>
-        <li className="flex justify-between place-items-center font-bold">
-                <div className="flex flex-col w-full py-1">
-                <div className="w-full flex flex-row items-center">
+        <li className="flex justify-between place-items-center">
+                <div className="flex flex-col w-full">
+                <div className="w-full flex flex-row items-baseline font-semibold">
+                        <div className="text-left max-h-4">
+                            Level
+                        </div>
+                        <div className={"text-right grow"}>
+                            {equip.level}
+                        </div>
+                    </div>
+                    <div className="w-full flex flex-row items-center">
                         <div className="text-left max-h-4">
                             <Icon n={equip.mainStatName}/>
                         </div>

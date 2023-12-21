@@ -31,7 +31,7 @@ for (let i = 0; i < uids.length; ++i) {
         <div className="mt-10">
             Saved UIDs :
         </div>
-        <div className={"rounded-md border backdrop-blur-xl bg-white/25 p-2 grid grid-cols-5 w-1/2 gap-2 mb-2 z-10 border-slate-400"}>
+        <div className={"rounded-md border backdrop-blur-xl bg-white/25 p-2 grid grid-cols-5 w-2/3 gap-2 mb-2 z-10 border-slate-400"}>
                                 {uidList}
                             </div>
     </div>

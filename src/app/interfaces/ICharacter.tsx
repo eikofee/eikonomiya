@@ -119,8 +119,8 @@ export const buildCharacter = (data: Record<string, any>) => {
         baseHP: data["baseHP"],
         baseATK: data["baseATK"],
         baseDEF: data["baseDEF"],
-        ascensionStatName: data["ascension"]["statNames"],
-        ascensionStatValue: parseFloat(data["ascension"]["statValues"])
+        ascensionStatName: data["ascension"]["statName"],
+        ascensionStatValue: parseFloat(data["ascension"]["statValue"])
     }
 
     const res : ICharacter = {

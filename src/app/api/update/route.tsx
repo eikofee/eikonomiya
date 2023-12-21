@@ -29,6 +29,41 @@ export async function GET(request: Request) {
         return res
     }
 
+    const getAscensionStatName = async (name: string) => {
+        const ascensionRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/character-ascensions.yml")).text()
+        const sets = yaml.parse(ascensionRawData)
+        return sets[name]["stat"]
+    }
+
+    const getAscensionStatValue = async (statName: string, rarity: number, ascLevel: number) => {
+        const values = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/ascension-values.yml")).text()
+        const sets = yaml.parse(values)
+        const baseValue = sets[statName]
+        const leveledValue = baseValue * (rarity == 5 ? 1.2 : 1)
+        let ascendedFactor = 1
+        switch (ascLevel) {
+            case 0:
+            case 1:
+                ascendedFactor = 0;
+                break;
+            case 2:
+                ascendedFactor = 1;
+                break;
+            case 3:
+            case 4:
+                ascendedFactor = 2;
+                break;
+            case 5:
+                ascendedFactor = 3;
+                break;
+            case 6:
+                ascendedFactor = 4;
+                break;
+        }
+
+        return leveledValue * ascendedFactor;
+    }
+
     const changeIdIfTraveler = (charId: string, skills: string[], j: Record<string, any>) => {
         let res = charId
         if (skills.length > 0 && (charId == "10000007" || charId == "10000005")) {
@@ -137,16 +172,32 @@ export async function GET(request: Request) {
         return value * statMultiplier
     }
 
-    const getCharacterData = async (charId: number, skillLevelMap: string[]) => {
+    const getCharacterData = async (charId: number, skillLevelMap: string[], ascLevel: number) => {
         const c = await (await fetch("https://raw.githubusercontent.com/EnkaNetwork/API-docs/master/store/characters.json")).json()
         const id = changeIdIfTraveler(charId.toString(), skillLevelMap, c)
+        const name = translate(c[id]["NameTextMapHash"])
+        const ascensionStatName = await getAscensionStatName(name)
+        const rarityLabel = c[id]["QualityType"]
+        let rarity=4
+        switch (rarityLabel) {
+            case "QUALITY_PURPLE":
+                rarity = 4;
+                break;
+            case "QUALITY_ORANGE":
+            case "QUALITY_ORANGE_SP":
+                rarity = 5;
+                break;
+        }
+        const ascensionStatValue = await getAscensionStatValue(ascensionStatName, rarity, ascLevel)
         return {
             "id": id,
-            "name": translate(c[id]["NameTextMapHash"]),
+            "name": name,
             "element": c[id]["Element"],
             "skillIdAA": c[id]["SkillOrder"][0],
             "skillIdSkill": c[id]["SkillOrder"][1],
-            "skillIdUlt": c[id]["SkillOrder"][2]
+            "skillIdUlt": c[id]["SkillOrder"][2],
+            "ascensionStatName": yamlDataStatTranslation(ascensionStatName),
+            "ascensionStatValue": ascensionStatValue
         }
     }
 
@@ -224,7 +275,7 @@ export async function GET(request: Request) {
             const avatar = data["avatarInfoList"][i]
             const skillLevelMapKeys = Object.keys(avatar["skillLevelMap"])
 
-            const charData = await getCharacterData(avatar["avatarId"], skillLevelMapKeys)
+            const charData = await getCharacterData(avatar["avatarId"], skillLevelMapKeys, parseInt(avatar["propMap"]["1002"]["val"]))
             const fpmData = avatar["fightPropMap"]
             const elmData = avatar["equipList"]
             const fpm = (id: number) => {
@@ -275,6 +326,10 @@ export async function GET(request: Request) {
                     "Anemo%": fpm(44),
                     "Geo%": fpm(45),
                     "Cryo%": fpm(46),
+                },
+                "ascension" : {
+                    "statName": charData["ascensionStatName"],
+                    "statValue":charData["ascensionStatValue"]
                 },
                 "lastUpdated": Date.now()
             }
@@ -514,20 +569,20 @@ export async function GET(request: Request) {
             let asv = 0
             let xsn = []
             let xsv = []
-            if (anormalStats.length == 1) {
-                asn = anormalStats[0].name
-                asv = anormalStats[0].value
-            } else {
+            // if (anormalStats.length == 1) {
+            //     asn = anormalStats[0].name
+            //     asv = anormalStats[0].value
+            // } else {
                 for (let j = 0; j < anormalStats.length; ++j) {
                     xsn.push(anormalStats[j].name)
                     xsv.push(anormalStats[j].value)
                 }
-            }
+            // }
 
-            char["ascension"] = {
-                "statNames": asn,
-                "statValues": asv
-            }
+            // char["ascension"] = {
+            //     "statNames": asn,
+            //     "statValues": asv
+            // }
 
             char["anormalStats"] = {
 

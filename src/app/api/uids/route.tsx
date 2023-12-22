@@ -4,5 +4,5 @@ import { getUIDFolderList } from './server';
 
 
 export async function GET(request: Request) {
-    return await Response.json(getUIDFolderList())
+    return Response.json(await getUIDFolderList())
   }

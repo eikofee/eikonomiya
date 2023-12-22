@@ -1,3 +1,4 @@
+import { getUIDFolderList } from "./api/uids/server"
 import { hostUrl } from "./host"
 
 export default async function Page() {
@@ -18,8 +19,8 @@ const buildUIDCards = (uid: string) => {
     return <a href={"/".concat(uid)}>{content}</a>
 }
 
-const uidData = await fetch(hostUrl("/api/uids"))
-const uids = (await uidData.json())["uids"]
+const uidData = await getUIDFolderList()
+const uids = uidData["uids"]
 
 let uidList = []
 for (let i = 0; i < uids.length; ++i) {

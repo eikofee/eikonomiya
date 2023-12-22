@@ -1,1 +1,1 @@
-export const hostUrl = (path: string = "") => ("http://localhost:3000").concat(path)
+export const hostUrl = (path: string = "") => (process.env.NEXT_PUBLIC_BASE_URL!).concat(path)

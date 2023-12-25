@@ -1,10 +1,10 @@
-    import { ReactNode, useContext } from "react";
+import { ReactNode, useContext } from "react";
 import { Card } from "./Card";
-import { ICharacter } from "../interfaces/ICharacter";
-import { listStatSetLabels } from "../interfaces/IStatSet";
 import Icon from "./Icon";
 import { ThemeContext } from "./ThemeContext";
 import Tooltip from "./Tooltip";
+import { ICharacterData } from "@/server/gamedata/ICharacterData";
+import { EStat } from "@/server/gamedata/enums/EStat";
 
 export interface ILine {
     name: ReactNode
@@ -12,13 +12,22 @@ export interface ILine {
     info?: ReactNode
 }
 
-export default function StatCard({character} : {character: ICharacter}) {
+export default function StatCard({character} : {character: ICharacterData}) {
 
     let ls = []
+    const getStat = (name: EStat) => {
+        for (let i = 0; i < character.totalStats.names.length; ++i) {
+            if (character.totalStats.names[i] == name) {
+                return character.totalStats.values[i]
+            }
+        }
+
+        return 0
+    }
     const {colorDirector} = useContext(ThemeContext)
-    const finalHP = character.character.baseHP * (1+character.totalStats["HP%"]) + character.totalStats["HP"]
-    const finalATK = (character.character.baseATK + character.weapon.mainStatValue) * (1+character.totalStats["ATK%"]) + character.totalStats["ATK"]
-    const finalDEF = character.character.baseDEF * (1+character.totalStats["DEF%"]) + character.totalStats["DEF"]
+    const finalHP = character.commonData.baseStats.hp * (1+getStat(EStat.HP_P)) + getStat(EStat.HP)
+    const finalATK = (character.commonData.baseStats.atk_nw! + character.weapon.mainStat.value) * (1+getStat(EStat.ATK_P)) + getStat(EStat.ATK)
+    const finalDEF = character.commonData.baseStats.def * (1+getStat(EStat.DEF_P)) + getStat(EStat.DEF)
     let baseStat = ["HP", "ATK", "DEF"]
     let baseValues = [finalHP, finalATK, finalDEF]
     for (let i = 0; i < baseStat.length; ++i) {
@@ -29,13 +38,13 @@ export default function StatCard({character} : {character: ICharacter}) {
         let info = <p></p>
         switch (baseStat[i]) {
             case "HP":
-                info = <p>{character.character.baseHP.toFixed(0)} * (100% + {(character.totalStats["HP%"] * 100).toFixed(1)}%) + {character.totalStats["HP"].toFixed(0)}</p>
+                info = <p>{character.commonData.baseStats.hp.toFixed(0)} * (100% + {(getStat(EStat.HP_P) * 100).toFixed(1)}%) + {getStat(EStat.HP).toFixed(0)}</p>
                 break;
             case "ATK":
-                info = <p>({character.character.baseATK.toFixed(0)} + {character.weapon.mainStatValue.toFixed(0)}) * (100% + {(character.totalStats["ATK%"] * 100).toFixed(1)}%) + {character.totalStats["ATK"].toFixed(0)}</p>
+                info = <p>({character.commonData.baseStats.atk.toFixed(0)} + {character.weapon.mainStat.value.toFixed(0)}) * (100% + {(getStat(EStat.ATK_P) * 100).toFixed(1)}%) + {getStat(EStat.ATK).toFixed(0)}</p>
                 break;
             case "DEF":
-                info = <p>{character.character.baseDEF.toFixed(0)} * (100% + {(character.totalStats["DEF%"] * 100).toFixed(1)}%) + {character.totalStats["DEF"].toFixed(0)}</p>
+                info = <p>{character.commonData.baseStats.def.toFixed(0)} * (100% + {(getStat(EStat.DEF_P) * 100).toFixed(1)}%) + {getStat(EStat.DEF).toFixed(0)}</p>
                 break;
             default:
                 break;
@@ -50,7 +59,7 @@ export default function StatCard({character} : {character: ICharacter}) {
     }
 
     let statNames = ["EM", "ER%", "Crit Rate%", "Crit DMG%"]
-    let statValues = [character.totalStats.EM, character.totalStats["ER%"], character.totalStats["Crit Rate%"], character.totalStats["Crit DMG%"]]
+    let statValues = [getStat(EStat.EM), getStat(EStat.ER_P), getStat(EStat.CR_P), getStat(EStat.CDMG_P)]
     for (let i = 0; i < statNames.length; ++i) {
         let s = statNames[i]
         // let classname = "flex flex-row justify-between items ".concat(i%2 == 1 ? colorDirector.bg(0) : colorDirector.bg(1))
@@ -70,7 +79,7 @@ export default function StatCard({character} : {character: ICharacter}) {
     }
 
     statNames = ["Phys%", "Anemo%", "Geo%", "Electro%", "Dendro%", "Hydro%", "Pyro%", "Cryo%", "Heal%"]
-    statValues = [character.totalStats["Phys%"], character.totalStats["Anemo%"], character.totalStats["Geo%"], character.totalStats["Electro%"], character.totalStats["Dendro%"], character.totalStats["Hydro%"], character.totalStats["Pyro%"], character.totalStats["Cryo%"], character.totalStats["Heal%"]]
+    statValues = [getStat(EStat.PHYS_DMG_P), getStat(EStat.ANEMO_DMG_P), getStat(EStat.GEO_DMG_P), getStat(EStat.ELECTRO_DMG_P), getStat(EStat.DENDRO_DMG_P), getStat(EStat.HYDRO_DMG_P), getStat(EStat.PYRO_DMG_P), getStat(EStat.CRYO_DMG_P), getStat(EStat.HEAL_OUT_P)]
     for (let i = 0; i < statNames.length; ++i) {
         let s = statNames[i]
         if (statValues[i] > 0) {

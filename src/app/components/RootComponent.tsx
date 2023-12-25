@@ -1,7 +1,5 @@
 "use client";
 import { useState } from "react";
-import { ICharacter, buildCharacter } from "../interfaces/ICharacter";
-import { ICharacterRule } from "../interfaces/ICharacterRule";
 import CharacterCard from "./CharacterCard";
 import RuleCard from "./RuleCard";
 import { KVStats } from "../classes/KVStats";
@@ -11,37 +9,84 @@ import StatCard from "./StatCard";
 import { FullEquipCard } from "./FullEquipCard";
 import BackgroundComponent from "./BackgroundComponent";
 import NavigationComponent from "./NavigationComponent";
+import { ICharacterData } from "@/server/gamedata/ICharacterData";
+import { ICharacterRule } from "../interfaces/ICharacterRule";
+import { EElement } from "@/server/gamedata/enums/EElement";
+import { EWeaponType } from "@/server/gamedata/enums/EWeaponType";
+import { ERarity } from "@/server/gamedata/enums/ERarity";
+import { EStat } from "@/server/gamedata/enums/EStat";
 
 
-export default function RootComponent({data, currentCharacter, defaultRule, uid} : ({data: Record<string, any>, currentCharacter: string, defaultRule: Record<string, any>, uid: string})) {
-    const charKeys = Object.keys(data)
-    let characters :ICharacter[] = []
-    let indexes: Record<string, number> = {}
-    for (let i = 0; i < charKeys.length; ++i) {
-        let c = data[charKeys[i]]
-        characters.push(buildCharacter(c))
-        indexes[charKeys[i]] = i
+export default function RootComponent({data: characters, currentCharacterName: currentCharacter, rules, uid} : ({data: ICharacterData[], currentCharacterName: string, rules: ICharacterRule[], uid: string})) {
+    
+    // let char = characters.find(v => v.name == currentCharacter)!
+    let char: ICharacterData = {
+        name: "Default Character",
+        element: EElement.NONE,
+        level: 0,
+        ascensionLevel: 0,
+        friendshipLevel: 0,
+        skills: {
+            levelAA: 0,
+            levelSkill: 0,
+            levelUlt: 0
+        },
+        commonData: {
+            name: "",
+            element: EElement.NONE,
+            rarity: ERarity.I,
+            weaponType: EWeaponType.SWORD,
+            ascensionStatName: EStat.UNKNOWN,
+            ascensionStatBaseValue: 0,
+            baseStats: {
+                hp: 0,
+                atk: 0,
+                def: 0
+            }
+        },
+        weapon: {
+            type: EWeaponType.SWORD,
+            name: "Default Weapon Name",
+            mainStat: {
+                name: EStat.UNKNOWN,
+                value: 0
+            },
+            level: 0,
+            rarity: ERarity.I
+        },
+        artefacts: [],
+        totalStats: {
+            names: [],
+            values: []
+        },
+        lastUpdated: 0,
+        anormalStats: {
+            names: [],
+            values: []
+        },
+        staticEffects: [],
+        dynamicEffects: [],
+        ascensionStatName: EStat.UNKNOWN,
+        ascensionStatValue: 0
     }
 
-    let char = characters[indexes[currentCharacter]]
-    let element = char["element"]
-    let colorDirector = new ColorDirector(element)
-    char.level = char["level"]
-
-    const labels = ["HP", "ATK", "DEF", "HP%", "ATK%", "DEF%", "ER%", "EM", "Crit Rate%", "Crit DMG%"]
-    let kv = new KVStats()
-    for (let i = 0; i < labels.length; ++i){
-        kv.set(labels[i], defaultRule["rule"][labels[i]])
-    }
-    if (defaultRule["ruleName"] == null) {
-        defaultRule["ruleName"] = "defaultRuleName"
-    }
-    let defaultRuleObject : ICharacterRule = {
+    let defaultRule : ICharacterRule = {
         character: char.name as string,
-        ruleName: defaultRule["ruleName"] as string,
-        stats: kv
+        ruleName: "defaultRuleName",
+        stats: []
     }
-    const [rule, setRule] = useState(defaultRuleObject as ICharacterRule)
+
+
+    for (let i = 0; i < characters.length; ++i) {
+        if (characters[i].name == currentCharacter) {
+            char = characters[i]
+            defaultRule = rules[i]
+        }
+    }
+
+    let colorDirector = new ColorDirector(char.element)
+
+    const [rule, setRule] = useState(defaultRule as ICharacterRule)
 
     function setRuleCallback(x: ICharacterRule) {
         setRule(x)

@@ -149,10 +149,10 @@ export default function Icon({n}: {n: string}) {
         case "CD Red.":
             content = cdRedIcon()
             break;
-        case "HealIn%":
+        case "Heal in%":
             content = healBonusIcon()
             break;
-        case "Heal%":
+        case "Heal out%":
             content = healBonusIcon()
             break;
         case "Shield%":
@@ -161,42 +161,42 @@ export default function Icon({n}: {n: string}) {
         case "Stamina":
             content = staminaIcon()
             break;
-        case "Anemo%":
+        case "Anemo DMG%":
         case "Anemo":
             content = anemoIcon()
             svgClassname = svgClassname.concat(" fill-teal-500")
             break;
-        case "Geo%":
+        case "Geo DMG%":
         case "Geo":
             content = geoIcon()
             svgClassname = svgClassname.concat(" fill-yellow-500")
             break;
-        case "Electro%":
+        case "Electro DMG%":
         case "Electro":
             content = electroIcon()
             svgClassname = svgClassname.concat(" fill-violet-500")
             break;
-        case "Dendro%":
+        case "Dendro DMG%":
         case "Dendro":
             content = dendroIcon()
             svgClassname = svgClassname.concat(" fill-lime-500")
             break;
-        case "Hydro%":
+        case "Hydro DMG%":
         case "Hydro":
             content = hydroIcon()
             svgClassname = svgClassname.concat(" fill-blue-500")
             break;
-        case "Pyro%":
+        case "Pyro DMG%":
         case "Pyro":
             content = pyroIcon()
             svgClassname = svgClassname.concat(" fill-red-500")
             break;
-        case "Cryo%":
+        case "Cryo DMG%":
         case "Cryo":
             content = cryoIcon()
             svgClassname = svgClassname.concat(" fill-cyan-500")
             break;
-        case "Phys%":
+        case "Phys DMG%":
         case "Phys":
             content = physIcon()
             svgClassname = svgClassname.concat(" fill-slate-500")

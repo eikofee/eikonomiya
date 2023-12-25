@@ -1,3 +1,5 @@
+import { EElement } from "@/server/gamedata/enums/EElement"
+
 const bgHydro = [
     "bg-blue-50",
     "bg-blue-100",
@@ -272,48 +274,48 @@ const borderGeo = [
 ]
 
 export class ColorDirector {
-    elementalColorPicker(element: string) {
+    elementalColorPicker(element: EElement) {
         switch(element) {
-            case "Anemo":
+            case EElement.ANEMO:
                 return "teal";
-            case "Geo":
+            case EElement.GEO:
                 return "yellow";
-            case "Electro":
+            case EElement.ELECTRO:
                 return "violet";
-            case "Dendro":
+            case EElement.DENDRO:
                 return "lime";
-            case "Hydro":
+            case EElement.HYDRO:
                 return "blue";
-            case "Pyro":
+            case EElement.PYRO:
                 return "red";
-            case "Cryo":
+            case EElement.CRYO:
                 return "cyan";
             default:
                 return "neutral";
         }
     }
 
-    element = "neutral";
+    element = EElement.NONE;
 
-    constructor(element: string) {
+    constructor(element: EElement) {
         this.element = element
     }
 
     public bg(level: number) : string {
         switch (this.element) {
-            case "Anemo":
+            case EElement.ANEMO:
                 return bgAnemo[level];
-            case "Geo":
+            case EElement.GEO:
                 return bgGeo[level];
-            case "Electro":
+            case EElement.ELECTRO:
                 return bgElectro[level];
-            case "Dendro":
+            case EElement.DENDRO:
                 return bgDendro[level];
-            case "Hydro":
+            case EElement.HYDRO:
                 return bgHydro[level]
-            case "Pyro":
+            case EElement.PYRO:
                 return bgPyro[level];
-            case "Cryo":
+            case EElement.CRYO:
                 return bgCryo[level];
             default:
                 return "neutral";
@@ -322,19 +324,19 @@ export class ColorDirector {
 
     public bgAccent(light: number) : string {
         switch (this.element) {
-            case "Anemo":
+            case EElement.ANEMO:
                 return bgAnemo[9 - light];
-            case "Geo":
+            case EElement.GEO:
                 return bgGeo[9 - light];
-            case "Electro":
+            case EElement.ELECTRO:
                 return bgElectro[9 - light];
-            case "Dendro":
+            case EElement.DENDRO:
                 return bgDendro[9 - light];
-            case "Hydro":
+            case EElement.HYDRO:
                 return bgHydro[9 - light]
-            case "Pyro":
+            case EElement.PYRO:
                 return bgPyro[9 - light];
-            case "Cryo":
+            case EElement.CRYO:
                 return bgCryo[9 - light];
             default:
                 return "neutral";
@@ -343,19 +345,19 @@ export class ColorDirector {
 
     public textAccent(light: number) : string {
         switch (this.element) {
-            case "Anemo":
+            case EElement.ANEMO:
                 return textAnemo[9 - light];
-            case "Geo":
+            case EElement.GEO:
                 return textGeo[9 - light];
-            case "Electro":
+            case EElement.ELECTRO:
                 return textElectro[9 - light];
-            case "Dendro":
+            case EElement.DENDRO:
                 return textDendro[9 - light];
-            case "Hydro":
+            case EElement.HYDRO:
                 return textHydro[9 - light]
-            case "Pyro":
+            case EElement.PYRO:
                 return textPyro[9 - light];
-            case "Cryo":
+            case EElement.CRYO:
                 return textCryo[9 - light];
             default:
                 return "neutral";
@@ -364,19 +366,19 @@ export class ColorDirector {
 
     public borderAccent(light: number) : string {
         switch (this.element) {
-            case "Anemo":
+            case EElement.ANEMO:
                 return borderAnemo[9 - light];
-            case "Geo":
+            case EElement.GEO:
                 return borderGeo[9 - light];
-            case "Electro":
+            case EElement.ELECTRO:
                 return borderElectro[9 - light];
-            case "Dendro":
+            case EElement.DENDRO:
                 return borderDendro[9 - light];
-            case "Hydro":
+            case EElement.HYDRO:
                 return borderHydro[9 - light]
-            case "Pyro":
+            case EElement.PYRO:
                 return borderPyro[9 - light];
-            case "Cryo":
+            case EElement.CRYO:
                 return borderCryo[9 - light];
             default:
                 return "neutral";

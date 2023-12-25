@@ -1,21 +1,22 @@
-import { ICharacter } from "../interfaces/ICharacter";
+import { ICharacterData } from "@/server/gamedata/ICharacterData";
+import { ERegion } from "@/server/gamedata/enums/ERegion";
 
-export default function BackgroundComponent({character} : {character: ICharacter}) {
+export default function BackgroundComponent({character} : {character: ICharacterData}) {
     let bg = "bg-fontaine"
     switch (character.region) {
-        case "mondstadt":
+        case ERegion.MONDSTADT:
             bg = "bg-mondstadt"
             break;
-        case "liyue":
+        case ERegion.LIYUE:
             bg = "bg-liyue"
             break;
-        case "inazuma":
+        case ERegion.INAZUMA:
             bg = "bg-inazuma"
             break;
-        case "sumeru":
+        case ERegion.SUMERU:
             bg = "bg-sumeru"
             break;
-        case "fontaine":
+        case ERegion.FONTAINE:
             bg = "bg-fontaine"
             break;
             

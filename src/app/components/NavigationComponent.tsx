@@ -1,17 +1,17 @@
 import { useContext, useState } from "react";
-import { ICharacter } from "../interfaces/ICharacter";
 import { Card } from "./Card";
 import { ThemeContext } from "./ThemeContext";
+import { ICharacterData } from "@/server/gamedata/ICharacterData";
 
-export default function NavigationComponent({currentCharacter, characterList, uid}:{currentCharacter: ICharacter, characterList: ICharacter[], uid: string}) {
+export default function NavigationComponent({currentCharacter, characterList, uid}:{currentCharacter: ICharacterData, characterList: ICharacterData[], uid: string}) {
 
     const {colorDirector} = useContext(ThemeContext)
-    const buildCharacterCard = (c: ICharacter, useHref: boolean, useLargeFont: boolean) => {
+    const buildCharacterCard = (c: ICharacterData, useHref: boolean, useLargeFont: boolean) => {
         let content = <div className="basis-1/4 items-center h-full flex flex-row cursor-pointer">
-                    <div className="h-12 basis-1/2 overflow-hidden">
+                    <div key={Math.random()} className="h-12 basis-1/2 overflow-hidden">
                         <img className="aspect-square h-full" src={c.assets?.characterPortrait} />
                     </div>
-                    <div className={"items-center basis-1/2 ".concat(useLargeFont ? "font-bold text-xl" : "")}>
+                    <div key={Math.random()} className={"items-center basis-1/2 ".concat(useLargeFont ? "font-bold text-xl" : "")}>
                         {c.name}
                     </div>
                 </div>

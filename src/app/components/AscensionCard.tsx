@@ -1,8 +1,8 @@
-import { ICharacter } from "../interfaces/ICharacter";
+import { ICharacterData } from "@/server/gamedata/ICharacterData";
 import { Card } from "./Card";
 import Icon from "./Icon";
 
-export default function AscensionCard({char} : {char: ICharacter}) {
+export default function AscensionCard({char} : {char: ICharacterData}) {
     let statLine = (statName : string, statValue : number) =>{
         return <li className="flex justify-between place-items-center">
             <div className="w-full flex flex-row items-center">
@@ -29,10 +29,10 @@ export default function AscensionCard({char} : {char: ICharacter}) {
                                 {char.level}
                             </div>
             </div></li>
-            {statLine("HP", char.character.baseHP)}
-            {statLine("ATK", char.character.baseATK)}
-            {statLine("DEF", char.character.baseDEF)}
-            {statLine(char.character.ascensionStatName, char.character.ascensionStatValue)}
+            {statLine("HP", char.commonData.baseStats.hp)}
+            {statLine("ATK", char.commonData.baseStats.atk_nw!)}
+            {statLine("DEF", char.commonData.baseStats.def)}
+            {statLine(char.ascensionStatName, char.ascensionStatValue)}
         </ul>
     </div>
 </div>

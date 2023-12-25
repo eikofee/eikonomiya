@@ -1,16 +1,27 @@
 "use client";
 
 import { useContext, useState } from "react";
-import { IArtefact } from "../interfaces/IArtefact";
 import { ICharacterRule } from "../interfaces/ICharacterRule";
 import { Card } from "./Card";
 import Icon from "./Icon";
 import InfoDiv from "./Tooltip";
 import { ThemeContext } from "./ThemeContext";
+import { IArtefact } from "@/server/gamedata/IArtefact";
+import { EStat, eStatToReadable } from "@/server/gamedata/enums/EStat";
 
 export default function ArtefactCard({equip, rule, scoreState} : {equip: IArtefact, rule: ICharacterRule, scoreState: (a: number) => void}) {
 
 
+
+    const getRuleValue = (e: EStat) => {
+        for (let i = 0; i < rule.stats.length; ++i) {
+            if (rule.stats[i].name == e) {
+                return rule.stats[i].value
+            }
+        }
+
+        return 0;
+    }
     const isPercentage = (s: string) => s.includes("%")
     const {colorDirector} = useContext(ThemeContext)
     const fontWeight = [
@@ -30,24 +41,25 @@ export default function ArtefactCard({equip, rule, scoreState} : {equip: IArtefa
 
     let statList = []
     let div = 0;
-    let mvs = rule.stats.maxValues()
+    let mvs = rule.stats.toSorted((a, b) => a.value - b.value)
+    console.log(mvs)
     let mainIndex = 0
-    if (mvs[mainIndex].k == equip.mainStatName) {
+    if (mvs[mainIndex].name == equip.mainStat.name) {
         mainIndex += 1
     }
 
-    div = 6 * mvs[mainIndex].v
+    div = 6 * mvs[mainIndex].value
     for (let i = mainIndex + 1; i < mainIndex + 4; ++i) {
-        div += mvs[i].v
+        div += mvs[i].value
     }
     div = Math.max(1, div)
 
     let statLine = <div className="w-full flex flex-row items-center">
                         <div className="text-left max-h-4">
-                            <Icon n={equip.mainStatName}/>
+                            <Icon n={eStatToReadable(equip.mainStat.name)}/>
                         </div>
                         <div className={"text-right grow"}>
-                            {isPercentage(equip.mainStatName) ? (equip.mainStatValue * 100).toFixed(1): equip.mainStatValue}{isPercentage(equip.mainStatName) ? "%" : ""}
+                            {isPercentage(equip.mainStat.name) ? (equip.mainStat.value * 100).toFixed(1): equip.mainStat.value}{isPercentage(equip.mainStat.name) ? "%" : ""}
                         </div>
                     </div>
 
@@ -59,16 +71,16 @@ export default function ArtefactCard({equip, rule, scoreState} : {equip: IArtefa
         </li>
     )
 
-    for (let i = 0; i < equip.subStatNames.length; ++i) {
+    for (let i = 0; i < equip.subStats.length; ++i) {
         let liClassName = "flex justify-between place-items-center"
         let rolls = []
         let bar = 0
-        if (equip.rolls[i] > 0) {
-            for (bar = 1; bar < equip.rolls[i]; ++bar) {
+        if (equip.subStats[i].rollValue > 0) {
+            for (bar = 1; bar < equip.subStats[i].rollValue; ++bar) {
                 rolls.push(<div className={"h-1 col-span-1 ".concat(colorDirector.bgAccent(3))} />)
             }
 
-            let rest = equip.rolls[i] - bar + 1;
+            let rest = equip.subStats[i].rollValue - bar + 1;
             rolls.push(<div className={"h-1 w-full col-span-1 flex flex-row ".concat(colorDirector.bgAccent(5))}>
                 <div className={"h-1 ".concat(colorDirector.bgAccent(3))} style={{width: (rest*100).toString().concat("%")}}/>
                 </div>)
@@ -78,20 +90,20 @@ export default function ArtefactCard({equip, rule, scoreState} : {equip: IArtefa
             }
         }
 
-        let statLineClassname = "w-full flex flex-row items-center ".concat(fontWeight[Math.floor(equip.rolls[i])], " ", badStats.includes(equip.subStatNames[i]) ? "text-slate-500/50 fill-slate-500/50 " : "text-current")
+        let statLineClassname = "w-full flex flex-row items-center ".concat(fontWeight[Math.floor(equip.subStats[i].rollValue)], " ", badStats.includes(equip.subStats[i].name) ? "text-slate-500/50 fill-slate-500/50 " : "text-current")
         let statLine = <div className={statLineClassname}>
                             <div className={"text-left max-h-4"}>
-                                <Icon n={equip.subStatNames[i]}/>
+                                <Icon n={eStatToReadable(equip.subStats[i].name)}/>
                             </div>
                             <div className={"text-right grow"}>
-                                {isPercentage(equip.subStatNames[i]) ? (equip.subStatValues[i] * 100).toFixed(1): equip.subStatValues[i]}{isPercentage(equip.subStatNames[i]) ? "%" : ""}
+                                {isPercentage(equip.subStats[i].name) ? (equip.subStats[i].value * 100).toFixed(1): equip.subStats[i].value}{isPercentage(equip.subStats[i].name) ? "%" : ""}
                             </div>
                         </div>
         let infoLine = <div>
             <p>
-            {"".concat("Rolls = ", (equip.rolls[i]).toFixed(1))}
+            {"".concat("Rolls = ", (equip.subStats[i].rollValue).toFixed(1))}
             </p><p>
-                {"Score = ".concat((equip.rolls[i] * rule.stats.get(equip.subStatNames[i])).toFixed(1))}
+                {"Score = ".concat((equip.subStats[i].rollValue * getRuleValue(equip.subStats[i].name!)).toFixed(1))}
                 </p>
             </div>
         let scoreLineDisplay = <div className="grid grid-cols-6 gap-x-0.5">
@@ -108,8 +120,8 @@ export default function ArtefactCard({equip, rule, scoreState} : {equip: IArtefa
         )
     }
     let score = 0
-    for (let i = 0; i < equip.subStatNames.length; ++i) {
-        score += equip.rolls[i] * rule.stats.get(equip.subStatNames[i])
+    for (let i = 0; i < equip.subStats.length; ++i) {
+        score += equip.subStats[i].rollValue * getRuleValue(equip.subStats[i].name)
     }
 
     let scoreValue = score/div*100
@@ -126,7 +138,7 @@ export default function ArtefactCard({equip, rule, scoreState} : {equip: IArtefa
 
     let content = <div className="flex flex-col">
     <div className="aspect-square grad-5star basis-1/5 flex items-center justify-center rounded-t-md">
-        <img src={equip.icon} className="max-w-full max-h-full"/>
+        <img src={equip.name} className="max-w-full max-h-full"/>
     </div>
     <div className="basis-4/5 px-1 py-2">
         <ul>

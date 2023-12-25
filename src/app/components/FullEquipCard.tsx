@@ -1,12 +1,14 @@
 import AscensionCard from "./AscensionCard";
 import { ICharacterRule } from "../interfaces/ICharacterRule";
-import { ICharacter } from "../interfaces/ICharacter";
 import ArtefactCard from "./ArtefactCard";
 import WeaponCard from "./WeaponCard";
 import { useState } from "react";
 import { Card } from "./Card";
+import { ICharacterData } from "@/server/gamedata/ICharacterData";
+import { EArtefact } from "@/server/gamedata/enums/EArtefact";
+import { IArtefact } from "@/server/gamedata/IArtefact";
 
-export function FullEquipCard({character, rule}:{character : ICharacter, rule: ICharacterRule}) {
+export function FullEquipCard({character, rule}:{character : ICharacterData, rule: ICharacterRule}) {
 
     let [scoreFleur, setScoreFleur] = useState(0)
     let [scorePlume, setScorePlume] = useState(0)
@@ -20,6 +22,16 @@ export function FullEquipCard({character, rule}:{character : ICharacter, rule: I
         Score : {totalScore.toFixed(0).concat("%")}
     </p>
 </div>
+
+    const arteTypes = [EArtefact.FLEUR, EArtefact.PLUME, EArtefact.SABLIER, EArtefact.COUPE, EArtefact.COURONNE]
+    let artes : IArtefact[] = []
+    for (let i = 0; i < arteTypes.length; ++i) {
+        for (let j = 0; j < character.artefacts.length; ++j) {
+            if (character.artefacts[j].type == arteTypes[i]) {
+                artes.push(character.artefacts[j])
+            }
+        }
+    }
     return (
         <div className="max-w-5xl basis-1/4 grid lg:grid-cols-7 md:grid-cols-3 sm:grid-cols-2 gap-2 p-1 bg-inherit h-full">
                         <div className="flex flex-col gap-y-1">
@@ -27,11 +39,11 @@ export function FullEquipCard({character, rule}:{character : ICharacter, rule: I
                             <Card c={totalScoreContent} cname={"grow items-center"} />
                         </div>
                         <WeaponCard equip={character.weapon} rule={rule}/>
-                        <ArtefactCard equip={character.artefacts.fleur} rule={rule} scoreState={setScoreFleur}/>
-                        <ArtefactCard equip={character.artefacts.plume} rule={rule} scoreState={setScorePlume}/>
-                        <ArtefactCard equip={character.artefacts.sablier} rule={rule} scoreState={setScoreSablier}/>
-                        <ArtefactCard equip={character.artefacts.coupe} rule={rule} scoreState={setScoreCoupe}/>
-                        <ArtefactCard equip={character.artefacts.couronne} rule={rule} scoreState={setScoreCouronne}/>
+                        <ArtefactCard equip={artes[0]} rule={rule} scoreState={setScoreFleur}/>
+                        <ArtefactCard equip={artes[1]} rule={rule} scoreState={setScorePlume}/>
+                        <ArtefactCard equip={artes[2]} rule={rule} scoreState={setScoreSablier}/>
+                        <ArtefactCard equip={artes[3]} rule={rule} scoreState={setScoreCoupe}/>
+                        <ArtefactCard equip={artes[4]} rule={rule} scoreState={setScoreCouronne}/>
         </div>
     )
 }

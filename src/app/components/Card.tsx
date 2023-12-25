@@ -1,5 +1,6 @@
 import React, { useContext } from "react"
 import { ThemeContext } from "./ThemeContext"
+import { randomUUID } from "crypto"
 
 interface CardProps {
     c: React.ReactNode
@@ -17,6 +18,6 @@ export const Card = (c: CardProps) => {
         cname = c.cname
     }
     return (
-        <div className={baseCname.concat(colorDirector.borderAccent(3), " ", cname)} >{c.c}</div>
+        <div key={Math.random()} className={baseCname.concat(colorDirector.borderAccent(3), " ", cname)} >{c.c}</div>
     )
 }

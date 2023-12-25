@@ -25,14 +25,14 @@ export default function RuleCard({rule, ruleSetterCallback, uid}: {rule: ICharac
             
                 ls.push(
                     <li className={classname}>
-            <div className="text-left basis-2/5 items-center m-1 flex flex-row">
+            <div key={Math.random()} className="text-left basis-2/5 items-center m-1 flex flex-row">
                 <div className="mr-1">
                     <Icon n={labels[i]} />
                 </div><p>
                     {labels[i]}
                 </p>
             </div>
-            <div className="grid basis-3/5 grid-cols-7 items-center">
+            <div key={Math.random()} className="grid basis-3/5 grid-cols-7 items-center">
                 {<InteractiveGaugeComponent label={label} rule={rule} ruleSetterCallback={ruleSetterCallback} />}
             </div>
         </li>)

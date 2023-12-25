@@ -1,9 +1,9 @@
 import { useContext } from "react";
-import { ICharacter } from "../interfaces/ICharacter";
 import { ThemeContext } from "./ThemeContext";
 import { Card } from "./Card";
+import { ICharacterData } from "@/server/gamedata/ICharacterData";
 
-export default function CharacterCard({char} : {char: ICharacter}) {
+export default function CharacterCard({char} : {char: ICharacterData}) {
     const {colorDirector} = useContext(ThemeContext)
     let bgClass = "max-w-md flex flex-col"
     let fname = char.assets!.characterCard

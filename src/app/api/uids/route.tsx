@@ -1,7 +1,4 @@
-import {promises as fsPromises} from 'fs';
-import path from 'path'
-import { getUIDFolderList } from './server';
-
+import { getUIDFolderList } from '@/server/uidFolders';
 
 export async function GET(request: Request) {
     return Response.json(await getUIDFolderList())

@@ -187,16 +187,16 @@ export async function loadRules(uid: string) : Promise<ICharacterRule[]>{
         let f = fileList[i]
         const jsonData = JSON.parse((await fsPromises.readFile(p.concat("/", f))).toString())
         let values : IStatTuple[] = []
-        for (let j = 0; j < jsonData["rule"].length; ++j) {
+        for (let j = 0; j < jsonData["stats"].length; ++j) {
             values.push({
-                name: jsonData["rule"][j]["name"],
-                value: jsonData["rule"][j]["value"],
+                name: jsonData["stats"][j]["name"],
+                value: jsonData["stats"][j]["value"],
             })
         }
 
         res.push({
             ruleName: "defaultRuleName",
-            character: jsonData["name"],
+            character: jsonData["character"],
             stats: values
         })
     }

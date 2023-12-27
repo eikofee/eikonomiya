@@ -36,7 +36,7 @@ export default function ArtefactCard({equip, rule, sortedStats, scoreState} : {e
     ]
 
     const badStats = [
-        "HP","ATK","DEF"
+        EStat.HP,EStat.ATK,EStat.DEF
     ]
 
     let mainIndex = 0

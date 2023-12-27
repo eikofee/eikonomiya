@@ -14,6 +14,7 @@ import { ERarity } from "./enums/ERarity";
 import { EStat } from "./enums/EStat";
 import { promises as fsPromises } from 'fs';
 import path from "path";
+import { ICharacterRule } from "@/app/interfaces/ICharacterRule";
 
 
 export class Updater {
@@ -248,7 +249,7 @@ export class Updater {
                 refinement: c.weapon.refinement,
                 ascensionLevel: c.weapon.ascensionLevel,
                 assets: {
-                    icon: "/weaponIcons/".concat(c.weapon.name.replaceAll(" ", ""), "/weapon", c.weapon.ascensionLevel > 1 ? "-awake.png":".png")
+                    icon: "/weaponIcons/".concat(c.weapon.name.replaceAll(" ", "").replaceAll("'",""), "/weapon", c.weapon.ascensionLevel > 1 ? "-awake.png":".png")
                 }
             }
 
@@ -264,7 +265,7 @@ export class Updater {
                     mainStat: arte.mainStat,
                     subStats: arte.subStats,
                     assets: {
-                        icon: "/artefactIcons/".concat(arte.set.replaceAll(" ", ""),"/", arte.type, ".png")
+                        icon: "/artefactIcons/".concat(arte.set.replaceAll(" ", "").replaceAll("'",""),"/", arte.type, ".png")
                     }
                 }
 
@@ -358,25 +359,30 @@ export class Updater {
             await fsPromises.writeFile(p.concat("/", characterName), JSON.stringify(currentChar))
             const pr = path.join(process.cwd(), "/data/", uid, "/rules")
             const fileList = await fsPromises.readdir(pr)
-            const ruleLabels = [EStat.HP, EStat.ATK, EStat.DEF, EStat.HP_P, EStat.ATK_P, EStat.DEF_P, EStat.EM, EStat.ER_P, EStat.CR_P, EStat.CDMG_P]
-            let rules : IStatTuple[] = []
-            for (let j = 0; j < ruleLabels.length; ++j) {
-                rules.push({
-                    name: ruleLabels[j],
-                    value: 3
-                })
-            }
             if (!fileList.includes(characterName)) {
-                    let content = {
-                        "name":characterName,
-                        "rule": rules,
-                        "lastUpdated": Date.now()
-                    }
+                const ruleLabels = [EStat.HP, EStat.ATK, EStat.DEF, EStat.HP_P, EStat.ATK_P, EStat.DEF_P, EStat.EM, EStat.ER_P, EStat.CR_P, EStat.CDMG_P]
+                let rule : IStatTuple[] = []
+                for (let j = 0; j < ruleLabels.length; ++j) {
+                    rule.push({
+                        name: ruleLabels[j],
+                        value: 3
+                    })
+                }
 
-                await fsPromises.writeFile(pr.concat("/", characterName), JSON.stringify(content))
+                this.writeRule(uid, {character: characterName, ruleName: "defaultRuleName", stats: rule})
             }
 
         }
     }
 
+    public async writeRule(uid: string, rule: ICharacterRule) {
+        const pr = path.join(process.cwd(), "/data/", uid, "/rules")
+            // const content = {
+            //     "name": rule.character,
+            //     "rule": rule.stats,
+            //     "lastUpdated": Date.now()
+            //         }
+
+                await fsPromises.writeFile(pr.concat("/", rule.character), JSON.stringify(rule))
+    }
 }

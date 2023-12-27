@@ -16,11 +16,11 @@ import { EWeaponType } from "@/server/gamedata/enums/EWeaponType";
 import { ERarity } from "@/server/gamedata/enums/ERarity";
 import { EStat } from "@/server/gamedata/enums/EStat";
 import { ERegion } from "@/server/gamedata/enums/ERegion";
+import { hostUrl } from "../host";
 
 
 export default function RootComponent({data: characters, currentCharacterName: currentCharacter, rules, uid} : ({data: ICharacterData[], currentCharacterName: string, rules: ICharacterRule[], uid: string})) {
     
-    // let char = characters.find(v => v.name == currentCharacter)!
     let char: ICharacterData = {
         name: "Default Character",
         element: EElement.NONE,
@@ -102,6 +102,15 @@ export default function RootComponent({data: characters, currentCharacterName: c
         setRule(x)
     }
 
+    async function saveRuleCallback(x: ICharacterRule) {
+        let url = hostUrl("/api/rules?mode=edit&characterName=".concat(x.character,"&uid=", uid))
+        for (let i = 0; i < x.stats.length; ++i) {
+            url = url.concat("&", x.stats[i].name, "=", x.stats[i].value.toString())
+        }
+
+        await fetch(url)
+    }
+
     return <ThemeContext.Provider value={{colorDirector}}>
         <BackgroundComponent character={char}/>
         <div className="flex flex-col">
@@ -124,7 +133,7 @@ export default function RootComponent({data: characters, currentCharacterName: c
                         </div>
                     </div>
                     <div className="basis-1/5 flex flex-col p-1">
-                        <RuleCard rule={rule} ruleSetterCallback={setRuleCallback} uid={uid}/>
+                        <RuleCard rule={rule} ruleSetterCallback={setRuleCallback} saveRuleCallback={saveRuleCallback}/>
                     </div>
 
             </div>

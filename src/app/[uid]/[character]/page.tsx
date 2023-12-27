@@ -1,6 +1,9 @@
+"use server";
+
 import { loadCharacters, loadRules } from '@/server/DataLoader';
 import RootComponent from '../../components/RootComponent';
 import { ICharacterRule } from '@/app/interfaces/ICharacterRule';
+import { Updater } from '@/server/gamedata/Updater';
 
 export default async function Page({ params }: { params: { character: string, uid: string } }) {
 
@@ -15,6 +18,8 @@ export default async function Page({ params }: { params: { character: string, ui
             </div>
         )
     }
+    const u = new Updater(uid)
+    await u.initialize()
 
     return (
             <RootComponent data={characters} currentCharacterName={characterName} rules={rules} uid={uid}/>

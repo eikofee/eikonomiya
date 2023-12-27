@@ -11,11 +11,6 @@ import { EStat } from "./enums/EStat"
 export interface ICharacterData {
     name: string
     element: EElement
-    region?: ERegion
-    assets?: {
-        characterCard?: string
-        characterPortrait?: string
-    }
 
     level: number
     ascensionLevel: number

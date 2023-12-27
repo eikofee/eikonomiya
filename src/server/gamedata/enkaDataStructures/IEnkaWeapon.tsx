@@ -10,4 +10,5 @@ export interface IEnkaWeapon {
     level: number;
     refinement?: number,
     rarity: ERarity;
+    ascensionLevel: number
 }

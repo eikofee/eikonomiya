@@ -12,6 +12,7 @@ import { INumberInstances } from "./gamedata/INumberInstances";
 import { IArtefact } from "./gamedata/IArtefact";
 import { stringToEArtefact } from "./gamedata/enums/EArtefact";
 import { ICharacterRule } from "@/app/interfaces/ICharacterRule";
+import { stringToERegion } from "./gamedata/enums/ERegion";
 
 export async function getUIDFolderList(): Promise<string[]> {
     const p = path.join(process.cwd(), "/data")
@@ -96,7 +97,10 @@ function convertJsonToCharacterData(json: any): ICharacterData {
                 name: stringToEStat(a["mainStat"]["name"]),
                 value: a["mainStat"]["value"]
             },
-            subStats: subs
+            subStats: subs,
+            assets: {
+                icon: a["assets"]["icon"]
+            }
         })
     }
 
@@ -113,17 +117,18 @@ function convertJsonToCharacterData(json: any): ICharacterData {
             levelSkill: json["skills"]["levelSkill"],
             levelUlt: json["skills"]["levelUlt"]
         },
-        assets: {
-            characterCard: json["assets"]["characterCard"],
-            characterPortrait: json["assets"]["characterPortrait"]
-        },
         commonData: {
             name: json["commonData"]["name"],
             element: stringToEElement(json["commonData"]["element"]),
+            region: stringToERegion(json["commonData"]["region"]),
             rarity: stringToERarity(json["commonData"]["rarity"]),
             weaponType: stringToEWeaponType(json["commonData"]["weaponType"]),
             ascensionStatName: stringToEStat(json["commonData"]["ascensionStatName"]),
             ascensionStatBaseValue: json["commonData"]["ascensionStatBaseValue"],
+            assets: {
+                characterPortrait: json["commonData"]["assets"]["characterPortrait"],
+                characterCard: json["commonData"]["assets"]["characterCard"]
+            },
             baseStats: {
                 hp: json["commonData"]["baseStats"]["hp"],
                 atk: json["commonData"]["baseStats"]["atk"],
@@ -138,15 +143,23 @@ function convertJsonToCharacterData(json: any): ICharacterData {
                 name: stringToEStat(json["weapon"]["mainStat"]["name"]),
                 value: json["weapon"]["mainStat"]["value"]
             },
+            subStat: json["weapon"]["subStat"] == undefined ? undefined : {
+                name: stringToEStat(json["weapon"]["subStat"]["name"]),
+                value: json["weapon"]["subStat"]["value"]
+            },
             level: json["weapon"]["level"],
-            rarity: stringToERarity(json["weapon"]["rarity"])
+            rarity: stringToERarity(json["weapon"]["rarity"]),
+            ascensionLevel: json["weapon"]["ascensionLevel"],
+            assets: {
+                icon: json["weapon"]["assets"]["icon"]
+            }
         },
         artefacts: artefacts,
         totalStats: totalStats.toIStatBag(),
         lastUpdated: json["lastUpdated"],
         anormalStats: anormalStats.toIStatBag(),
         staticEffects: staticEffects,
-        dynamicEffects: []
+        dynamicEffects: [],
     }
 
     return res;

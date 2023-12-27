@@ -196,13 +196,40 @@ export class Updater {
                     ascendedFactor = 4;
                     break;
             }
+
+            let p = path.join(process.cwd(), "/public/characterCards")
+            let fileList = await fsPromises.readdir(p)
+            const extensions = [".jpg", ".jpeg", ".png"]
+            let charCard = "";
+            for (let i = 0; i < extensions.length; ++i) {
+                const fname = name.toLowerCase().concat(extensions[i])
+                if (fileList.includes(fname)) {
+                    charCard = "/characterCards/".concat(fname)
+                }
+            }
+
+            p = path.join(process.cwd(), "/public/characterPortraits")
+            fileList = await fsPromises.readdir(p)
+            let characterPortrait = "";
+            for (let i = 0; i < extensions.length; ++i) {
+                const fname = name.toLowerCase().concat(extensions[i])
+                if (fileList.includes(fname)) {
+                    characterPortrait = "/characterPortraits/".concat(fname)
+                }
+            }
+
             const common: ICharacterCommonData = {
                 name: name,
                 element: c.commonData.element,
+                region: this.eikoDataTranslator.yamlToRegion(reg[name]),
                 rarity: c.commonData.rarity,
                 weaponType: c.commonData.weapon,
                 ascensionStatName: ascensionName,
                 ascensionStatBaseValue: ascensionValue,
+                assets: {
+                    characterCard: charCard,
+                    characterPortrait: characterPortrait
+                },
                 baseStats: {
                     hp: c.baseStats.get(EStat.HP)!.value,
                     atk: c.baseStats.get(EStat.ATK)!.value,
@@ -218,7 +245,11 @@ export class Updater {
                 level: c.weapon.level,
                 rarity: c.weapon.rarity,
                 subStat: c.weapon.subStat,
-                refinement: c.weapon.refinement
+                refinement: c.weapon.refinement,
+                ascensionLevel: c.weapon.ascensionLevel,
+                assets: {
+                    icon: "/weaponIcons/".concat(c.weapon.name.replaceAll(" ", ""), "/weapon", c.weapon.ascensionLevel > 1 ? "-awake.png":".png")
+                }
             }
 
             let artes = []
@@ -231,7 +262,10 @@ export class Updater {
                     level: arte.level,
                     rarity: arte.rarity,
                     mainStat: arte.mainStat,
-                    subStats: arte.subStats
+                    subStats: arte.subStats,
+                    assets: {
+                        icon: "/artefactIcons/".concat(arte.set.replaceAll(" ", ""),"/", arte.type, ".png")
+                    }
                 }
 
                 artes.push(a)
@@ -264,27 +298,6 @@ export class Updater {
                 }
             }
 
-            let p = path.join(process.cwd(), "/public/characterCards")
-            let fileList = await fsPromises.readdir(p)
-            const extensions = [".jpg", ".jpeg", ".png"]
-            let charCard = "";
-            for (let i = 0; i < extensions.length; ++i) {
-                const fname = name.toLowerCase().concat(extensions[i])
-                if (fileList.includes(fname)) {
-                    charCard = "/characterCards/".concat(fname)
-                }
-            }
-
-            p = path.join(process.cwd(), "/public/characterPortraits")
-            fileList = await fsPromises.readdir(p)
-            let characterPortrait = "";
-            for (let i = 0; i < extensions.length; ++i) {
-                const fname = name.toLowerCase().concat(extensions[i])
-                if (fileList.includes(fname)) {
-                    characterPortrait = "/characterPortraits/".concat(fname)
-                }
-            }
-
             const char: ICharacterData = {
                 name: name,
                 element: c.commonData.element,
@@ -293,15 +306,10 @@ export class Updater {
                 ascensionStatName: ascensionName,
                 ascensionStatValue: ascensionValue * ascendedFactor,
                 friendshipLevel: c.friendship,
-                region: this.eikoDataTranslator.yamlToRegion(reg[name]),
                 skills: {
                     levelAA: c.skills[0].level,
                     levelSkill: c.skills[1].level,
                     levelUlt: c.skills[2].level
-                },
-                assets: {
-                    characterCard: charCard,
-                    characterPortrait: characterPortrait
                 },
                 commonData: common,
                 weapon: weapon,

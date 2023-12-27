@@ -15,6 +15,7 @@ import { EElement } from "@/server/gamedata/enums/EElement";
 import { EWeaponType } from "@/server/gamedata/enums/EWeaponType";
 import { ERarity } from "@/server/gamedata/enums/ERarity";
 import { EStat } from "@/server/gamedata/enums/EStat";
+import { ERegion } from "@/server/gamedata/enums/ERegion";
 
 
 export default function RootComponent({data: characters, currentCharacterName: currentCharacter, rules, uid} : ({data: ICharacterData[], currentCharacterName: string, rules: ICharacterRule[], uid: string})) {
@@ -42,6 +43,11 @@ export default function RootComponent({data: characters, currentCharacterName: c
                 hp: 0,
                 atk: 0,
                 def: 0
+            },
+            region: ERegion.UNKNOWN,
+            assets: {
+                characterPortrait: "",
+                characterCard: ""
             }
         },
         weapon: {
@@ -52,7 +58,11 @@ export default function RootComponent({data: characters, currentCharacterName: c
                 value: 0
             },
             level: 0,
-            rarity: ERarity.I
+            rarity: ERarity.I,
+            assets: {
+                icon: ""
+            },
+            ascensionLevel: 0
         },
         artefacts: [],
         totalStats: {

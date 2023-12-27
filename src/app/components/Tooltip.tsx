@@ -18,9 +18,8 @@ export default function InfoDiv(c: InfoDivProps) {
     }
 
     let iname = c.infoClassname
-    if (iname == undefined)
-    {
-        iname = "transition duration-300 z-10 absolute bg-gray-800 text-white font-normal text-sm rounded p-2 whitespace-nowrap top-full left-1/2 transform -translate-x-1/2 -translate-y-16"
+    if (iname == undefined) {
+        iname = "transition duration-300 z-20 absolute bg-gray-800 text-white font-normal text-sm rounded p-2 whitespace-nowrap top-full left-1/2 transform -translate-x-1/2 -translate-y-16"
     }
 
     function displayTT() {

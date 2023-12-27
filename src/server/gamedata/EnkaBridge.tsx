@@ -148,7 +148,8 @@ export class EnkaBridge {
                         value: e["flat"]["weaponStats"][0]["statValue"]
                     },
                     subStat: undefined,
-                    rarity: ERarity.I //TODO
+                    rarity: ERarity.I, //TODO
+                    ascensionLevel: e["weapon"]["promoteLevel"]
                 }
 
                 if (e["weapon"]["affixMap"] != undefined) {

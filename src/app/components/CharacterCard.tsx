@@ -6,7 +6,7 @@ import { ICharacterData } from "@/server/gamedata/ICharacterData";
 export default function CharacterCard({char} : {char: ICharacterData}) {
     const {colorDirector} = useContext(ThemeContext)
     let bgClass = "max-w-md flex flex-col"
-    let fname = char.assets!.characterCard
+    let fname = char.commonData.assets.characterCard
     let content = <div className={bgClass}>
     <div>
         <img className="rounded-t-md" src={fname} />

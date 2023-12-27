@@ -29,7 +29,7 @@ export default async function Page({ params }: { params: { uid: string } }) {
     const buildCharacterCard = (c: ICharacterData, useHref: boolean, useLargeFont: boolean) => {
         let content = <div className="basis-1/4 items-center h-full flex flex-row cursor-pointer">
                     <div className="h-12 basis-1/2 overflow-hidden">
-                        <img className="aspect-square h-full" src={c.assets?.characterPortrait} />
+                        <img className="aspect-square h-full" src={c.commonData.assets.characterPortrait} />
                     </div>
                     <div className={"items-center basis-1/2 ".concat(useLargeFont ? "font-bold text-xl" : "")}>
                         {c.name}

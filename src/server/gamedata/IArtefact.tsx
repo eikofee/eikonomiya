@@ -9,4 +9,7 @@ export interface IArtefact {
     rarity: ERarity;
     mainStat: IStatTuple;
     subStats: ISubStat[];
+    assets: {
+        icon: string
+    }
 }

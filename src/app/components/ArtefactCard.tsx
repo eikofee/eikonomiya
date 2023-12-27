@@ -42,7 +42,6 @@ export default function ArtefactCard({equip, rule, scoreState} : {equip: IArtefa
     let statList = []
     let div = 0;
     let mvs = rule.stats.toSorted((a, b) => a.value - b.value)
-    console.log(mvs)
     let mainIndex = 0
     if (mvs[mainIndex].name == equip.mainStat.name) {
         mainIndex += 1
@@ -138,7 +137,7 @@ export default function ArtefactCard({equip, rule, scoreState} : {equip: IArtefa
 
     let content = <div className="flex flex-col">
     <div className="aspect-square grad-5star basis-1/5 flex items-center justify-center rounded-t-md">
-        <img src={equip.name} className="max-w-full max-h-full"/>
+        <img src={equip.assets.icon} className="max-w-full max-h-full"/>
     </div>
     <div className="basis-4/5 px-1 py-2">
         <ul>

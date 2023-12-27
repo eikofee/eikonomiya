@@ -78,7 +78,7 @@ export default function StatCard({character} : {character: ICharacterData}) {
         </li>)
     }
 
-    statNames = ["Phys%", "Anemo%", "Geo%", "Electro%", "Dendro%", "Hydro%", "Pyro%", "Cryo%", "Heal%"]
+    statNames = ["Phys DMG%", "Anemo DMG%", "Geo DMG%", "Electro DMG%", "Dendro DMG%", "Hydro DMG%", "Pyro DMG%", "Cryo DMG%", "Heal DMG%"]
     statValues = [getStat(EStat.PHYS_DMG_P), getStat(EStat.ANEMO_DMG_P), getStat(EStat.GEO_DMG_P), getStat(EStat.ELECTRO_DMG_P), getStat(EStat.DENDRO_DMG_P), getStat(EStat.HYDRO_DMG_P), getStat(EStat.PYRO_DMG_P), getStat(EStat.CRYO_DMG_P), getStat(EStat.HEAL_OUT_P)]
     for (let i = 0; i < statNames.length; ++i) {
         let s = statNames[i]

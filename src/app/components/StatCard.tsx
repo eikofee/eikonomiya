@@ -4,7 +4,7 @@ import Icon from "./Icon";
 import { ThemeContext } from "./ThemeContext";
 import Tooltip from "./Tooltip";
 import { ICharacterData } from "@/server/gamedata/ICharacterData";
-import { EStat } from "@/server/gamedata/enums/EStat";
+import { EStat, eStatToReadable } from "@/server/gamedata/enums/EStat";
 
 export interface ILine {
     name: ReactNode
@@ -78,10 +78,10 @@ export default function StatCard({character} : {character: ICharacterData}) {
         </li>)
     }
 
-    statNames = ["Phys DMG%", "Anemo DMG%", "Geo DMG%", "Electro DMG%", "Dendro DMG%", "Hydro DMG%", "Pyro DMG%", "Cryo DMG%", "Heal DMG%"]
-    statValues = [getStat(EStat.PHYS_DMG_P), getStat(EStat.ANEMO_DMG_P), getStat(EStat.GEO_DMG_P), getStat(EStat.ELECTRO_DMG_P), getStat(EStat.DENDRO_DMG_P), getStat(EStat.HYDRO_DMG_P), getStat(EStat.PYRO_DMG_P), getStat(EStat.CRYO_DMG_P), getStat(EStat.HEAL_OUT_P)]
+    statNames = [EStat.PHYS_DMG_P, EStat.ANEMO_DMG_P, EStat.GEO_DMG_P, EStat.ELECTRO_DMG_P, EStat.DENDRO_DMG_P, EStat.HYDRO_DMG_P, EStat.PYRO_DMG_P, EStat.CRYO_DMG_P, EStat.HEAL_OUT_P, EStat.SKILL_DMG_P]
+    statValues = [getStat(EStat.PHYS_DMG_P), getStat(EStat.ANEMO_DMG_P), getStat(EStat.GEO_DMG_P), getStat(EStat.ELECTRO_DMG_P), getStat(EStat.DENDRO_DMG_P), getStat(EStat.HYDRO_DMG_P), getStat(EStat.PYRO_DMG_P), getStat(EStat.CRYO_DMG_P), getStat(EStat.HEAL_OUT_P), getStat(EStat.SKILL_DMG_P)]
     for (let i = 0; i < statNames.length; ++i) {
-        let s = statNames[i]
+        let s = eStatToReadable(statNames[i] as EStat)
         if (statValues[i] > 0) {
 
             let classname = "flex flex-row justify-between items p-1"
@@ -99,7 +99,6 @@ export default function StatCard({character} : {character: ICharacterData}) {
         </li>)
         }
     }
-    
     let content = <div className="bg-inherit">
         <div className="pl-2 font-semibold">{"Basic Stats"}</div>
         <ul>

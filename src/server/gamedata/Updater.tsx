@@ -315,7 +315,7 @@ export class Updater {
                 commonData: common,
                 weapon: weapon,
                 artefacts: artes,
-                totalStats: c.finalStats.toIStatBag(),
+                totalStats: currentStats.toIStatBag(),
                 dynamicEffects: [],
                 lastUpdated: Date.now(),
                 staticEffects: artefactEffects,

@@ -14,9 +14,12 @@ import { ICharacterRule } from "../interfaces/ICharacterRule";
 import { EElement } from "@/server/gamedata/enums/EElement";
 import { EWeaponType } from "@/server/gamedata/enums/EWeaponType";
 import { ERarity } from "@/server/gamedata/enums/ERarity";
-import { EStat } from "@/server/gamedata/enums/EStat";
+import { EStat, eStatToReadable } from "@/server/gamedata/enums/EStat";
 import { ERegion } from "@/server/gamedata/enums/ERegion";
 import { hostUrl } from "../host";
+import Icon from "./Icon";
+import { Card } from "./Card";
+import { EEffectTarget } from "@/server/gamedata/enums/EEffectTarget";
 
 
 export default function RootComponent({data: characters, currentCharacterName: currentCharacter, rules, uid} : ({data: ICharacterData[], currentCharacterName: string, rules: ICharacterRule[], uid: string})) {
@@ -111,6 +114,42 @@ export default function RootComponent({data: characters, currentCharacterName: c
         await fetch(url)
     }
 
+    let staticEffectCards = []
+    for (let e = 0; e < char.staticEffects.length; ++e) {
+        const effect = char.staticEffects[e]
+        if (effect.target == EEffectTarget.SELF || EEffectTarget.TEAM) {
+
+            let ls = []
+            for (let i = 0; i < effect.statChanges.length; ++i) {
+            let statChange = effect.statChanges[i]
+            let s = eStatToReadable(statChange.name)
+            // let classname = "flex flex-row justify-between items ".concat(i%2 == 1 ? colorDirector.bg(0) : colorDirector.bg(1))
+            let classname = "flex flex-row justify-between items p-1"
+            if (i == effect.statChanges.length - 1) {
+                classname += " rounded-b-md"
+            }
+            let n = <div className="flex flex-row items-center"><Icon n={s} /> <span className="pl-1">{s}</span></div>
+            let value = statChange.value * (s.includes("%") ? 100 : 1)
+            let fv = (s.includes("%") ? 1 : 0)
+            let v = <div>{value.toFixed(fv).toString().concat(s.includes("%") ? "%" : "")}</div>
+            ls.push(
+            <li className={classname}>
+                <div className="text-left basis-3/5 items-center">{n}</div>
+                <div className="text-right basis-2/5 pr-2">{v}</div>
+            </li>)
+            }
+
+            let content = <div className="bg-inherit">
+            <div className="pl-2 font-semibold">{effect.source}</div>
+                <ul>
+                    {ls}
+                </ul>
+            </div>;
+
+            staticEffectCards.push(<Card c={content}/>)
+        }
+    }
+
     return <ThemeContext.Provider value={{colorDirector}}>
         <BackgroundComponent character={char}/>
         <div className="flex flex-col">
@@ -123,10 +162,11 @@ export default function RootComponent({data: characters, currentCharacterName: c
                     <div className={"basis-3/5 flex flex-col p-1"}>
                         <FullEquipCard character={char} rule={rule}/>
                         <div className="grid grid-cols-3 p-1">
-                            <div className="flex flex-col gap-4">
+                            <div className="flex flex-col gap-4 mr-1">
                                 <StatCard character={char} />
                             </div>
-                            <div className="flex flex-col gap-4">
+                            <div className="flex flex-col gap-4 mr-1">
+                                {staticEffectCards}
                             </div>
                             <div className="flex flex-col gap-4">
                             </div>

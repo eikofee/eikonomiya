@@ -1,8 +1,9 @@
 import { useContext, useState } from "react"
 import { ICharacterRule } from "../interfaces/ICharacterRule"
 import { ThemeContext } from "./ThemeContext"
+import { EStat } from "@/server/gamedata/enums/EStat";
 
-export default function InteractiveGaugeComponent({label, rule, ruleSetterCallback}: {label: string, rule: ICharacterRule, ruleSetterCallback: (_x : ICharacterRule) => void}) {
+export default function InteractiveGaugeComponent({label, rule, ruleSetterCallback}: {label: EStat, rule: ICharacterRule, ruleSetterCallback: (_x : ICharacterRule) => void}) {
     const {colorDirector} = useContext(ThemeContext)
     let baseValue = 3;
     let baseIndex = 0;

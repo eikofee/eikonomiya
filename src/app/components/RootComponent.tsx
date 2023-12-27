@@ -96,7 +96,7 @@ export default function RootComponent({data: characters, currentCharacterName: c
 
     let colorDirector = new ColorDirector(char.element)
 
-    const [rule, setRule] = useState(defaultRule as ICharacterRule)
+    const [rule, setRule] = useState(defaultRule)
 
     function setRuleCallback(x: ICharacterRule) {
         setRule(x)

@@ -7,6 +7,7 @@ import { useContext, useState } from "react";
 import Icon from "./Icon";
 import { ThemeContext } from "./ThemeContext";
 import InteractiveGaugeComponent from "./InteractiveGaugeComponent";
+import { eStatToReadable } from "@/server/gamedata/enums/EStat";
 
 
 
@@ -14,12 +15,11 @@ export default function RuleCard({rule, ruleSetterCallback, uid}: {rule: ICharac
     let ls = []
 
     let [hiddableClassname, setHiddableClassname] = useState("hidden")
-    const labels = ["HP%", "ATK%", "DEF%", "EM", "ER%", "Crit Rate%", "Crit DMG%"]
     
-    for (let i = 0; i < labels.length; ++i) {
-        let label = labels[i]
+    for (let i = 0; i < rule.stats.length; ++i) {
+        let label = rule.stats[i].name
             let classname = "w-full flex flex-row justify-between items pr-4"
-            if (i == labels.length - 1) {
+            if (i == rule.stats.length - 1) {
                 classname += " rounded-md"
             }
             
@@ -27,9 +27,9 @@ export default function RuleCard({rule, ruleSetterCallback, uid}: {rule: ICharac
                     <li className={classname}>
             <div key={Math.random()} className="text-left basis-2/5 items-center m-1 flex flex-row">
                 <div className="mr-1">
-                    <Icon n={labels[i]} />
+                    <Icon n={eStatToReadable(label)} />
                 </div><p>
-                    {labels[i]}
+                    {eStatToReadable(label)}
                 </p>
             </div>
             <div key={Math.random()} className="grid basis-3/5 grid-cols-7 items-center">
@@ -44,11 +44,11 @@ export default function RuleCard({rule, ruleSetterCallback, uid}: {rule: ICharac
                                 </ul>
                         </div>
     let saveRule = () => {
-        let url = hostUrl("/api/rules?mode=edit&characterName=".concat(rule.character,"&uid=",uid))
-        for (let i = 0; i < labels.length; ++i) {
-            url = url.concat("&", labels[i].replaceAll(" ", "+"), "=", rule.stats.get(labels[i]).toString())
-        }
-        fetch(url);
+        // let url = hostUrl("/api/rules?mode=edit&characterName=".concat(rule.character,"&uid=",uid))
+        // for (let i = 0; i < labels.length; ++i) {
+        //     url = url.concat("&", labels[i].replaceAll(" ", "+"), "=", rule.stats.get(labels[i]).toString())
+        // }
+        // fetch(url);
     }
     let saveButton = <button onClick={saveRule}>
         <svg viewBox="0 0 24 24" className="h-4 w-4">

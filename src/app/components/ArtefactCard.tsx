@@ -9,7 +9,7 @@ import { ThemeContext } from "./ThemeContext";
 import { IArtefact } from "@/server/gamedata/IArtefact";
 import { EStat, eStatToReadable } from "@/server/gamedata/enums/EStat";
 
-export default function ArtefactCard({equip, rule, scoreState} : {equip: IArtefact, rule: ICharacterRule, scoreState: (a: number) => void}) {
+export default function ArtefactCard({equip, rule, sortedStats, scoreState} : {equip: IArtefact, rule: ICharacterRule, sortedStats: IStatTuple[], scoreState: (a: number) => void}) {
 
 
 
@@ -39,10 +39,9 @@ export default function ArtefactCard({equip, rule, scoreState} : {equip: IArtefa
         "HP","ATK","DEF"
     ]
 
-    let statList = []
-    let div = 0;
-    let mvs = rule.stats.toSorted((a, b) => a.value - b.value)
     let mainIndex = 0
+    let div = 1;
+    let mvs = sortedStats
     if (mvs[mainIndex].name == equip.mainStat.name) {
         mainIndex += 1
     }
@@ -53,6 +52,7 @@ export default function ArtefactCard({equip, rule, scoreState} : {equip: IArtefa
     }
     div = Math.max(1, div)
 
+    let statList = []
     let statLine = <div className="w-full flex flex-row items-center">
                         <div className="text-left max-h-4">
                             <Icon n={eStatToReadable(equip.mainStat.name)}/>

@@ -53,6 +53,10 @@ export class Updater {
         return baseValue * rarityMultiplier;
     }
 
+    private cleanNameForPath(s: string) {
+        return s.replaceAll(" ", "").replaceAll("'", "").replaceAll("-", "")
+    }
+
     private buildBaseStats(characterBase : ICharacterCommonData, weapon: IWeapon, artefacts: IArtefact[], ascensionLevel: number) {
         let sb = new StatBag()
         // sb.addStat({name: EStat.HP, value: characterBase.baseStats.hp})
@@ -249,7 +253,7 @@ export class Updater {
                 refinement: c.weapon.refinement,
                 ascensionLevel: c.weapon.ascensionLevel,
                 assets: {
-                    icon: "/weaponIcons/".concat(c.weapon.name.replaceAll(" ", "").replaceAll("'",""), "/weapon", c.weapon.ascensionLevel > 1 ? "-awake.png":".png")
+                    icon: "/weaponIcons/".concat(this.cleanNameForPath(c.weapon.name), "/weapon", c.weapon.ascensionLevel > 1 ? "-awake.png":".png")
                 }
             }
 
@@ -265,7 +269,7 @@ export class Updater {
                     mainStat: arte.mainStat,
                     subStats: arte.subStats,
                     assets: {
-                        icon: "/artefactIcons/".concat(arte.set.replaceAll(" ", "").replaceAll("'",""),"/", arte.type, ".png")
+                        icon: "/artefactIcons/".concat(this.cleanNameForPath(arte.set), "/", arte.type, ".png")
                     }
                 }
 

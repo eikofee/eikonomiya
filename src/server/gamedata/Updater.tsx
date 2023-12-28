@@ -102,6 +102,42 @@ export class Updater {
         return sb
     }
 
+    private async getWeaponEffects(weapon : IWeapon): Promise<IEffect[]> {
+        const weaponEffectsRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/weapons.yml")).text()
+        let res : IEffect[] = []
+        const weaponEffects = yaml.parse(weaponEffectsRawData)[weapon.name]
+        if (weaponEffects != undefined) {
+
+            // TODO: Change for better effect parsing
+            for (let j = 0; j < weaponEffects.length; ++j) {
+                const rawEffect = weaponEffects[j]
+                if (rawEffect["type"] == "buff") {
+                    for (let k = 0; k < rawEffect["buff"].length; ++k) {
+                        const currentBuff = rawEffect["buff"][k]
+                        const target = this.eikoDataTranslator.yamlToStat(currentBuff["target"])
+                        const stat = this.eikoDataTranslator.yamlToStat(currentBuff["stat"])
+                        const passiveEffectName = rawEffect["name"]
+                        const minvalue = parseFloat(currentBuff["minvalue"])
+                        const maxvalue = parseFloat(currentBuff["maxvalue"])
+                        const interval = maxvalue - minvalue
+                        const step = interval / 5
+                        const value = minvalue + step * (weapon.refinement == undefined ? 1 : weapon.refinement)
+                        const e : IEffect = {
+                            source: passiveEffectName,
+                            target: EEffectTarget.SELF,
+                            statChanges: [{name: stat, value: value}],
+                            staticNumber: []
+                        }
+
+                        res.push(e)
+                    }
+                }
+            }
+        }
+
+        return res;
+    }
+
     private async getArtefactEffects(arte : IArtefact[]): Promise<IEffect[]> {
         const artefactSetRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/artefacts.yml")).text()
         const equipSets : Record<string, number> = {}
@@ -121,47 +157,48 @@ export class Updater {
         // TODO: Change for better effect parsing
         for (let i = 0; i < setNames.length; ++i) {
             const set = setNames[i]
-            if (equipSets[set] >= 2) {
-                const rawEffects = sets[set]["2pc"]
-                for (let j = 0; j < rawEffects.length; ++j) {
-                    const rawEffect = rawEffects[j]
-                    if (rawEffect["type"] == "buff") {
-                        for (let k = 0; k < rawEffect["buff"].length; ++k) {
-                            const currentBuff = rawEffect["buff"][k]
-                            const target = this.eikoDataTranslator.yamlToStat(currentBuff["target"])
-                            const stat = this.eikoDataTranslator.yamlToStat(currentBuff["stat"])
-                            const value = parseFloat(currentBuff["value"])
-                            const e : IEffect = {
-                                source: set.concat(" 2pc"),
-                                target: EEffectTarget.SELF,
-                                statChanges: [{name: stat, value: value}],
-                                staticNumber: []
+            if (sets[set] != undefined) {
+                if (equipSets[set] >= 2) {
+                    const rawEffects = sets[set]["2pc"]
+                    for (let j = 0; j < rawEffects.length; ++j) {
+                        const rawEffect = rawEffects[j]
+                        if (rawEffect["type"] == "buff") {
+                            for (let k = 0; k < rawEffect["buff"].length; ++k) {
+                                const currentBuff = rawEffect["buff"][k]
+                                const target = this.eikoDataTranslator.yamlToStat(currentBuff["target"])
+                                const stat = this.eikoDataTranslator.yamlToStat(currentBuff["stat"])
+                                const value = parseFloat(currentBuff["value"])
+                                const e : IEffect = {
+                                    source: set.concat(" 2pc"),
+                                    target: EEffectTarget.SELF,
+                                    statChanges: [{name: stat, value: value}],
+                                    staticNumber: []
+                                }
+                                
+                                res.push(e)
                             }
-
-                            res.push(e)
                         }
                     }
                 }
-            }
+                if (equipSets[set] >= 4) {
+                    const rawEffects = sets[set]["4pc"]
+                    for (let j = 0; j < rawEffects.length; ++j) {
+                        const rawEffect = rawEffects[j]
+                        if (rawEffect["type"] == "buff") {
+                            for (let k = 0; k < rawEffect["buff"].length; ++k) {
+                                const currentBuff = rawEffect["buff"][k]
+                                const target = this.eikoDataTranslator.yamlToStat(currentBuff["target"])
+                                const stat = this.eikoDataTranslator.yamlToStat(currentBuff["stat"])
+                                const value = parseFloat(currentBuff["value"])
+                                const e : IEffect = {
+                                    source: set.concat(" 4pc"),
+                                    target: EEffectTarget.SELF,
+                                    statChanges: [{name: stat, value: value}],
+                                    staticNumber: []
+                                }
 
-            if (equipSets[set] >= 4) {
-                const rawEffects = sets[set]["4pc"]
-                for (let j = 0; j < rawEffects.length; ++j) {
-                    const rawEffect = rawEffects[j]
-                    if (rawEffect["type"] == "buff") {
-                        for (let k = 0; k < rawEffect["buff"].length; ++k) {
-                            const currentBuff = rawEffect["buff"][k]
-                            const target = this.eikoDataTranslator.yamlToStat(currentBuff["target"])
-                            const stat = this.eikoDataTranslator.yamlToStat(currentBuff["stat"])
-                            const value = parseFloat(currentBuff["value"])
-                            const e : IEffect = {
-                                source: set.concat(" 4pc"),
-                                target: EEffectTarget.SELF,
-                                statChanges: [{name: stat, value: value}],
-                                staticNumber: []
+                                res.push(e)
                             }
-
-                            res.push(e)
                         }
                     }
                 }
@@ -279,12 +316,13 @@ export class Updater {
             let currentStats = this.buildBaseStats(common, weapon, artes, c.ascensionLevel)
 
             const artefactEffects = await this.getArtefactEffects(artes)
-            // const weaponEffects = await this.getWeaponEffects(common, currentStats)
+            const weaponEffects = await this.getWeaponEffects(weapon)
             // const inherentEffect = this.getCharacterPassiveEffects()
+            const currentEffects = artefactEffects.concat(weaponEffects)
 
 
-            for (let j = 0; j < artefactEffects.length; ++j) {
-                const currentEffect = artefactEffects[j]
+            for (let j = 0; j < currentEffects.length; ++j) {
+                const currentEffect = currentEffects[j]
                 for (let k = 0; k < currentEffect.statChanges.length; ++k) {
                     currentStats.addStat(currentEffect.statChanges[k])
                 }

@@ -19,7 +19,7 @@ export default function RuleCard({rule, ruleSetterCallback, saveRuleCallback}: {
     
     for (let i = 0; i < rule.stats.length; ++i) {
         let label = rule.stats[i].name
-            let classname = "w-full flex flex-row justify-between items pr-4"
+            let classname = "w-full flex flex-row justify-between items"
             if (i == rule.stats.length - 1) {
                 classname += " rounded-md"
             }
@@ -27,14 +27,14 @@ export default function RuleCard({rule, ruleSetterCallback, saveRuleCallback}: {
             const iconDivClassName = badStats.includes(label) ? "text-slate-500/50 fill-slate-500/50" : ""
                 ls.push(
                     <li className={classname}>
-            <div key={Math.random()} className={"text-left basis-2/5 items-center m-1 flex flex-row ".concat(iconDivClassName)}>
+            <div key={Math.random()} className={"text-left basis-1/2 items-center m-1 flex flex-row ".concat(iconDivClassName)}>
                 <div className={"mr-1"}>
                     <Icon n={eStatToReadable(label)} />
                 </div><p>
                     {eStatToReadable(label)}
                 </p>
             </div>
-            <div key={Math.random()} className="grid basis-3/5 grid-cols-7 items-center">
+            <div key={Math.random()} className="grid basis-1/2 grid-cols-7 items-center">
                 {<InteractiveGaugeComponent label={label} rule={rule} ruleSetterCallback={ruleSetterCallback} />}
             </div>
         </li>)

@@ -120,8 +120,8 @@ export class Updater {
                         const minvalue = parseFloat(currentBuff["minvalue"])
                         const maxvalue = parseFloat(currentBuff["maxvalue"])
                         const interval = maxvalue - minvalue
-                        const step = interval / 5
-                        const value = minvalue + step * (weapon.refinement == undefined ? 1 : weapon.refinement)
+                        const step = interval / 4
+                        const value = minvalue + step * (weapon.refinement == undefined ? 0 : Math.max(0, weapon.refinement - 1))
                         const e : IEffect = {
                             source: passiveEffectName,
                             target: EEffectTarget.SELF,
@@ -163,20 +163,23 @@ export class Updater {
                     for (let j = 0; j < rawEffects.length; ++j) {
                         const rawEffect = rawEffects[j]
                         if (rawEffect["type"] == "buff") {
+                            let statChanges = []
                             for (let k = 0; k < rawEffect["buff"].length; ++k) {
                                 const currentBuff = rawEffect["buff"][k]
                                 const target = this.eikoDataTranslator.yamlToStat(currentBuff["target"])
                                 const stat = this.eikoDataTranslator.yamlToStat(currentBuff["stat"])
                                 const value = parseFloat(currentBuff["value"])
-                                const e : IEffect = {
-                                    source: set.concat(" 2pc"),
-                                    target: EEffectTarget.SELF,
-                                    statChanges: [{name: stat, value: value}],
-                                    staticNumber: []
-                                }
-                                
-                                res.push(e)
+                                statChanges.push({name: stat, value: value})
                             }
+                            
+                            const e : IEffect = {
+                                source: set.concat(" 2pc"),
+                                target: EEffectTarget.SELF,
+                                statChanges: statChanges,
+                                staticNumber: []
+                            }
+
+                            res.push(e)
                         }
                     }
                 }
@@ -185,20 +188,23 @@ export class Updater {
                     for (let j = 0; j < rawEffects.length; ++j) {
                         const rawEffect = rawEffects[j]
                         if (rawEffect["type"] == "buff") {
+                            let statChanges = []
                             for (let k = 0; k < rawEffect["buff"].length; ++k) {
                                 const currentBuff = rawEffect["buff"][k]
                                 const target = this.eikoDataTranslator.yamlToStat(currentBuff["target"])
                                 const stat = this.eikoDataTranslator.yamlToStat(currentBuff["stat"])
                                 const value = parseFloat(currentBuff["value"])
-                                const e : IEffect = {
-                                    source: set.concat(" 4pc"),
-                                    target: EEffectTarget.SELF,
-                                    statChanges: [{name: stat, value: value}],
-                                    staticNumber: []
-                                }
-
-                                res.push(e)
+                                statChanges.push({name: stat, value: value})
                             }
+                            
+                            const e : IEffect = {
+                                source: set.concat(" 4pc"),
+                                target: EEffectTarget.SELF,
+                                statChanges: statChanges,
+                                staticNumber: []
+                            }
+
+                            res.push(e)
                         }
                     }
                 }
@@ -360,7 +366,7 @@ export class Updater {
                 totalStats: currentStats.toIStatBag(),
                 dynamicEffects: [],
                 lastUpdated: Date.now(),
-                staticEffects: artefactEffects,
+                staticEffects: currentEffects,
                 anormalStats: anomalies.toIStatBag(),
             }
 

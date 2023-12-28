@@ -2,7 +2,6 @@
 import { useState } from "react";
 import CharacterCard from "./CharacterCard";
 import RuleCard from "./RuleCard";
-import { KVStats } from "../classes/KVStats";
 import { ColorDirector } from "../classes/ColorDirector";
 import { ThemeContext } from "./ThemeContext";
 import StatCard from "./StatCard";
@@ -14,7 +13,7 @@ import { ICharacterRule } from "../interfaces/ICharacterRule";
 import { EElement } from "@/server/gamedata/enums/EElement";
 import { EWeaponType } from "@/server/gamedata/enums/EWeaponType";
 import { ERarity } from "@/server/gamedata/enums/ERarity";
-import { EStat, eStatToReadable } from "@/server/gamedata/enums/EStat";
+import { EStat, eStatToReadable, stringToEStat } from "@/server/gamedata/enums/EStat";
 import { ERegion } from "@/server/gamedata/enums/ERegion";
 import { hostUrl } from "../host";
 import Icon from "./Icon";
@@ -45,7 +44,8 @@ export default function RootComponent({data: characters, currentCharacterName: c
             baseStats: {
                 hp: 0,
                 atk: 0,
-                def: 0
+                def: 0,
+                atk_nw: 0
             },
             region: ERegion.UNKNOWN,
             assets: {
@@ -150,6 +150,31 @@ export default function RootComponent({data: characters, currentCharacterName: c
         }
     }
 
+    let anomalyCards = []
+    for (let e = 0; e < char.anormalStats.names.length; ++e) {
+        const stat = char.anormalStats.names[e]
+        let value = char.anormalStats.values[e]
+        if (value != 0) {
+            let s = eStatToReadable(stringToEStat(stat))
+            let classname = "flex flex-row justify-between items p-1 bg-red-200"
+            let n = <div className="flex flex-row items-center"><Icon n={s} /> <span className="pl-1">{s}</span></div>
+            value = value * (s.includes("%") ? 100 : 1)
+            let fv = (s.includes("%") ? 1 : 0)
+            let v = <div>{value.toFixed(fv).toString().concat(s.includes("%") ? "%" : "")}</div>
+                let content = <div className="bg-inherit">
+            <div className="pl-2 font-semibold bg-red-400 rounded-t-md">Anomalies in stats</div>
+                <ul>
+                    <li className={classname}>
+                        <div className="text-left basis-3/5 items-center">{n}</div>
+                        <div className="text-right basis-2/5 pr-2">{v}</div>
+                    </li>
+                </ul>
+            </div>;
+
+    anomalyCards.push(<Card c={content}/>)
+    }
+}
+
     return <ThemeContext.Provider value={{colorDirector}}>
         <BackgroundComponent character={char}/>
         <div className="flex flex-col">
@@ -167,6 +192,7 @@ export default function RootComponent({data: characters, currentCharacterName: c
                             </div>
                             <div className="flex flex-col gap-4 mr-1">
                                 {staticEffectCards}
+                                {anomalyCards}
                             </div>
                             <div className="flex flex-col gap-4">
                             </div>

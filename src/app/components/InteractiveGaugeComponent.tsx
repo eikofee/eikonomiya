@@ -40,7 +40,7 @@ export default function InteractiveGaugeComponent({label, rule, ruleSetterCallba
 
     let buttons = []
     for (let j = 0; j < 7; ++j) {
-        let bClassName = "h-1/2 rounded-md"
+        let bClassName = "h-3 w-3 rounded-full"
         if (j <= currentSliderValue) {
             bClassName = bClassName.concat(" ", colorDirector.bgAccent(3))
             // bClassName = bClassName.concat(" ", colors[currentSliderValue])

@@ -111,9 +111,9 @@ export class Updater {
             // TODO: Change for better effect parsing
             for (let j = 0; j < weaponEffects.length; ++j) {
                 const rawEffect = weaponEffects[j]
-                if (rawEffect["type"] == "buff") {
-                    for (let k = 0; k < rawEffect["buff"].length; ++k) {
-                        const currentBuff = rawEffect["buff"][k]
+                if (rawEffect["type"] == "static") {
+                    for (let k = 0; k < rawEffect["effects"].length; ++k) {
+                        const currentBuff = rawEffect["static"][k]
                         const target = this.eikoDataTranslator.yamlToStat(currentBuff["target"])
                         const stat = this.eikoDataTranslator.yamlToStat(currentBuff["stat"])
                         const passiveEffectName = rawEffect["name"]
@@ -162,10 +162,10 @@ export class Updater {
                     const rawEffects = sets[set]["2pc"]
                     for (let j = 0; j < rawEffects.length; ++j) {
                         const rawEffect = rawEffects[j]
-                        if (rawEffect["type"] == "buff") {
+                        if (rawEffect["type"] == "static") {
                             let statChanges = []
-                            for (let k = 0; k < rawEffect["buff"].length; ++k) {
-                                const currentBuff = rawEffect["buff"][k]
+                            for (let k = 0; k < rawEffect["effects"].length; ++k) {
+                                const currentBuff = rawEffect["effects"][k]
                                 const target = this.eikoDataTranslator.yamlToStat(currentBuff["target"])
                                 const stat = this.eikoDataTranslator.yamlToStat(currentBuff["stat"])
                                 const value = parseFloat(currentBuff["value"])
@@ -187,10 +187,10 @@ export class Updater {
                     const rawEffects = sets[set]["4pc"]
                     for (let j = 0; j < rawEffects.length; ++j) {
                         const rawEffect = rawEffects[j]
-                        if (rawEffect["type"] == "buff") {
+                        if (rawEffect["type"] == "static") {
                             let statChanges = []
-                            for (let k = 0; k < rawEffect["buff"].length; ++k) {
-                                const currentBuff = rawEffect["buff"][k]
+                            for (let k = 0; k < rawEffect["effects"].length; ++k) {
+                                const currentBuff = rawEffect["effects"][k]
                                 const target = this.eikoDataTranslator.yamlToStat(currentBuff["target"])
                                 const stat = this.eikoDataTranslator.yamlToStat(currentBuff["stat"])
                                 const value = parseFloat(currentBuff["value"])

@@ -7,7 +7,7 @@ import { IWeapon } from "./IWeapon";
 import { IArtefact } from "./IArtefact";
 import { StatBag } from "./StatBag";
 import { IEffect } from "./IEffect";
-import { EEffectTarget } from "./enums/EEffectTarget";
+import { EEffectTarget, stringToEEffectTarget } from "./enums/EEffectTarget";
 import { EikoDataTranslator } from "./EikoDataTranslator";
 import { ICharacterCommonData } from "./ICharacterCommonData";
 import { ERarity } from "./enums/ERarity";
@@ -103,17 +103,17 @@ export class Updater {
     }
 
     private async getWeaponEffects(weapon : IWeapon): Promise<IEffect[]> {
-        const weaponEffectsRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/weapons.yml")).text()
+        const weaponEffectsRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/weapons.yml", { cache: 'no-store' })).text()
         let res : IEffect[] = []
         const weaponEffects = yaml.parse(weaponEffectsRawData)[weapon.name]
         if (weaponEffects != undefined) {
-
             // TODO: Change for better effect parsing
             for (let j = 0; j < weaponEffects.length; ++j) {
                 const rawEffect = weaponEffects[j]
+                console.log(rawEffect)
                 if (rawEffect["type"] == "static") {
                     for (let k = 0; k < rawEffect["effects"].length; ++k) {
-                        const currentBuff = rawEffect["static"][k]
+                        const currentBuff = rawEffect["effects"][k]
                         const target = this.eikoDataTranslator.yamlToStat(currentBuff["target"])
                         const stat = this.eikoDataTranslator.yamlToStat(currentBuff["stat"])
                         const passiveEffectName = rawEffect["name"]
@@ -124,7 +124,7 @@ export class Updater {
                         const value = minvalue + step * (weapon.refinement == undefined ? 0 : Math.max(0, weapon.refinement - 1))
                         const e : IEffect = {
                             source: passiveEffectName,
-                            target: EEffectTarget.SELF,
+                            target: stringToEEffectTarget(target),
                             statChanges: [{name: stat, value: value}],
                             staticNumber: []
                         }
@@ -330,7 +330,9 @@ export class Updater {
             for (let j = 0; j < currentEffects.length; ++j) {
                 const currentEffect = currentEffects[j]
                 for (let k = 0; k < currentEffect.statChanges.length; ++k) {
-                    currentStats.addStat(currentEffect.statChanges[k])
+                    if (currentEffect.target == EEffectTarget.SELF || currentEffect.target == EEffectTarget.TEAM) {
+                        currentStats.addStat(currentEffect.statChanges[k])
+                    }
                 }
             }
 

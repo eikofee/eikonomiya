@@ -110,7 +110,6 @@ export class Updater {
             // TODO: Change for better effect parsing
             for (let j = 0; j < weaponEffects.length; ++j) {
                 const rawEffect = weaponEffects[j]
-                console.log(rawEffect)
                 if (rawEffect["type"] == "static") {
                     for (let k = 0; k < rawEffect["effects"].length; ++k) {
                         const currentBuff = rawEffect["effects"][k]

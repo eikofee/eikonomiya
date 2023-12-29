@@ -5,11 +5,8 @@ import path from 'path'
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
-    console.log("GET")
-    console.log(searchParams)
     const uid = searchParams.get("uid")!
     const p = path.join(process.cwd(), "/data/", uid, "/rules")
-    console.log(p)
     const fileList = await fsPromises.readdir(p)
     let content : any = {}
     if (searchParams.has("characterName")) {

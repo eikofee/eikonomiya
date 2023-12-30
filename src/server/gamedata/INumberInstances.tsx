@@ -1,5 +1,11 @@
-export interface INumberInstances {
+import { EStat } from "./enums/EStat";
+
+export interface INumberInstance {
     iconId: string;
     name: string;
-    value: number;
+    source: EStat;
+    ratio: number;
+    base: number;
+    step: number;
+    maxvalue: number;
 }

@@ -1,3 +1,4 @@
+import { IStatTuple } from "./IStatTuple";
 import { ERarity } from "./enums/ERarity";
 import { EWeaponType } from "./enums/EWeaponType";
 
@@ -10,7 +11,7 @@ export interface IWeapon {
     mainStat: IStatTuple;
     subStat?: IStatTuple;
     level: number;
-    refinement?: number,
+    refinement: number,
     rarity: ERarity;
     ascensionLevel: number
 }

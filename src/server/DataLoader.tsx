@@ -7,12 +7,14 @@ import { stringToEWeaponType } from "./gamedata/enums/EWeaponType";
 import { stringToEStat } from "./gamedata/enums/EStat";
 import { StatBag } from "./gamedata/StatBag";
 import { IEffect } from "./gamedata/IEffect";
-import { stringToEEffectTarget } from "./gamedata/enums/EEffectTarget";
-import { INumberInstances } from "./gamedata/INumberInstances";
+import { ETarget, stringToETarget } from "./gamedata/enums/EEffectTarget";
+import { INumberInstance } from "./gamedata/INumberInstances";
 import { IArtefact } from "./gamedata/IArtefact";
 import { stringToEArtefact } from "./gamedata/enums/EArtefact";
 import { ICharacterRule } from "@/app/interfaces/ICharacterRule";
 import { stringToERegion } from "./gamedata/enums/ERegion";
+import { stringToEEffectType } from "./gamedata/enums/EEffectType";
+import { IStatTuple } from "./gamedata/IStatTuple";
 
 export async function getUIDFolderList(): Promise<string[]> {
     const p = path.join(process.cwd(), "/data")
@@ -29,7 +31,8 @@ function convertJsonToCharacterData(json: any): ICharacterData {
         const item = json["totalStats"]["values"][i]
         totalStats.addStat({
             name: stringToEStat(totalStatKeys[i]),
-            value: item
+            value: item,
+            target: ETarget.SELF
         })
     }
 
@@ -39,7 +42,8 @@ function convertJsonToCharacterData(json: any): ICharacterData {
         const item = json["anormalStats"]["values"][i]
         anormalStats.addStat({
             name: stringToEStat(anormalStatsKeys[i]),
-            value: item
+            value: item,
+            target: ETarget.SELF
         })
     }
 
@@ -48,27 +52,40 @@ function convertJsonToCharacterData(json: any): ICharacterData {
     for (let i = 0; i < staticEffectsKeys.length; ++i) {
         const item = json["staticEffects"][i]
         let statChanges: IStatTuple[] = []
-        let staticNumber: INumberInstances[] = []
+        let ratioNumbers: INumberInstance[] = []
         for (let j = 0; j < item["statChanges"].length; ++j) {
             statChanges.push({
                 name: stringToEStat(item["statChanges"][j]["name"]),
-                value: item["statChanges"][j]["value"]
+                value: item["statChanges"][j]["value"],
+                target: stringToETarget(item["statChanges"][j]["target"])
             })
         }
 
-        for (let j = 0; j < item["staticNumber"].length; ++j) {
-            staticNumber.push({
-                iconId: item["staticNumber"][j]["iconId"],
-                name: item["staticNumber"][j]["name"],
-                value: item["staticNumber"][j]["value"]
+        for (let j = 0; j < item["ratioNumbers"].length; ++j) {
+            ratioNumbers.push({
+                iconId: item["ratioNumbers"][j]["iconId"],
+                name: item["ratioNumbers"][j]["name"],
+                maxvalue: item["ratioNumbers"][j]["value"],
+                base: parseFloat(item["ratioNumbers"][j]["base"]),
+                ratio: parseFloat(item["ratioNumbers"][j]["ratio"]),
+                source: item["ratioNumbers"][j]["source"],
+                step: parseFloat(item["ratioNumbers"][j]["step"])
             })
         }
 
         const effect: IEffect = {
             source: item["source"],
-            target: stringToEEffectTarget(item["target"]),
+            icon: item["icon"],
+            text: item["text"],
+            options: {
+                enabled: item["options"]["enabled"] == "true",
+                stack: parseInt(item["options"]["stack"]),
+                maxstack: parseInt(item["options"]["maxstack"])
+            },
+            type: stringToEEffectType(item["type"]),
             statChanges: statChanges,
-            staticNumber: staticNumber
+            ratioNumbers: ratioNumbers,
+            tag: item["tag"]
         }
 
         staticEffects.push(effect)
@@ -141,18 +158,21 @@ function convertJsonToCharacterData(json: any): ICharacterData {
             name: json["weapon"]["name"],
             mainStat: {
                 name: stringToEStat(json["weapon"]["mainStat"]["name"]),
-                value: json["weapon"]["mainStat"]["value"]
+                value: json["weapon"]["mainStat"]["value"],
+                target: stringToETarget(json["weapon"]["mainStat"]["target"])
             },
             subStat: json["weapon"]["subStat"] == undefined ? undefined : {
                 name: stringToEStat(json["weapon"]["subStat"]["name"]),
-                value: json["weapon"]["subStat"]["value"]
+                value: json["weapon"]["subStat"]["value"],
+                target: stringToETarget(json["weapon"]["mainStat"]["target"])
             },
             level: json["weapon"]["level"],
             rarity: stringToERarity(json["weapon"]["rarity"]),
             ascensionLevel: json["weapon"]["ascensionLevel"],
             assets: {
                 icon: json["weapon"]["assets"]["icon"]
-            }
+            },
+            refinement: json["weapon"]["refinement"]
         },
         artefacts: artefacts,
         totalStats: totalStats.toIStatBag(),
@@ -191,6 +211,7 @@ export async function loadRules(uid: string) : Promise<ICharacterRule[]>{
             values.push({
                 name: jsonData["stats"][j]["name"],
                 value: jsonData["stats"][j]["value"],
+                target: ETarget.SELF
             })
         }
 

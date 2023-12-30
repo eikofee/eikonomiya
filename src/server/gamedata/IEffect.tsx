@@ -1,9 +1,15 @@
-import { INumberInstances } from "./INumberInstances";
-import { EEffectTarget } from "./enums/EEffectTarget";
+import { IEffectOptions } from "./IEffectOptions";
+import { INumberInstance } from "./INumberInstances";
+import { IStatTuple } from "./IStatTuple";
+import { EEffectType } from "./enums/EEffectType";
 
 export interface IEffect {
     source: string,
-    target: EEffectTarget,
+    tag: string,
+    icon: string,
+    text: string,
+    type: EEffectType,
+    options: IEffectOptions,
     statChanges: IStatTuple[],
-    staticNumber: INumberInstances[],
+    ratioNumbers: INumberInstance[],
 }

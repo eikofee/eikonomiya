@@ -18,10 +18,12 @@ import { ERegion } from "@/server/gamedata/enums/ERegion";
 import { hostUrl } from "../host";
 import Icon from "./Icon";
 import { Card } from "./Card";
-import { EEffectTarget } from "@/server/gamedata/enums/EEffectTarget";
+import { ETarget } from "@/server/gamedata/enums/EEffectTarget";
+import EffectCard from "./EffectCard";
+import { IEffect } from "@/server/gamedata/IEffect";
 
 
-export default function RootComponent({data: characters, currentCharacterName: currentCharacter, rules, uid} : ({data: ICharacterData[], currentCharacterName: string, rules: ICharacterRule[], uid: string})) {
+export default function RootComponent({data: characters, currentCharacterName: currentCharacterName, rules, uid} : ({data: ICharacterData[], currentCharacterName: string, rules: ICharacterRule[], uid: string})) {
     
     let char: ICharacterData = {
         name: "Default Character",
@@ -58,9 +60,11 @@ export default function RootComponent({data: characters, currentCharacterName: c
             name: "Default Weapon Name",
             mainStat: {
                 name: EStat.UNKNOWN,
-                value: 0
+                value: 0,
+                target: ETarget.NONE
             },
             level: 0,
+            refinement: 0,
             rarity: ERarity.I,
             assets: {
                 icon: ""
@@ -91,7 +95,7 @@ export default function RootComponent({data: characters, currentCharacterName: c
 
 
     for (let i = 0; i < characters.length; ++i) {
-        if (characters[i].name == currentCharacter) {
+        if (characters[i].name == currentCharacterName) {
             char = characters[i]
             defaultRule = rules[i]
         }
@@ -105,6 +109,12 @@ export default function RootComponent({data: characters, currentCharacterName: c
         setRule(x)
     }
 
+    const [characterData, setCharacterData] = useState(char)
+
+    function setCharacterDataCallback(x: ICharacterData) {
+        setCharacterData(x)
+    }
+
     async function saveRuleCallback(x: ICharacterRule) {
         let url = hostUrl("/api/rules?mode=edit&characterName=".concat(x.character,"&uid=", uid))
         for (let i = 0; i < x.stats.length; ++i) {
@@ -115,45 +125,18 @@ export default function RootComponent({data: characters, currentCharacterName: c
     }
 
     let staticEffectCards = []
-    for (let e = 0; e < char.staticEffects.length; ++e) {
-        const effect = char.staticEffects[e]
-        if (effect.target == EEffectTarget.SELF || EEffectTarget.TEAM) {
-
-            let ls = []
-            for (let i = 0; i < effect.statChanges.length; ++i) {
-            let statChange = effect.statChanges[i]
-            let s = eStatToReadable(statChange.name)
-            // let classname = "flex flex-row justify-between items ".concat(i%2 == 1 ? colorDirector.bg(0) : colorDirector.bg(1))
-            let classname = "flex flex-row justify-between items p-1"
-            if (i == effect.statChanges.length - 1) {
-                classname += " rounded-b-md"
-            }
-            let n = <div className="flex flex-row items-center"><Icon n={s} /> <span className="pl-1">{s}</span></div>
-            let value = statChange.value * (s.includes("%") ? 100 : 1)
-            let fv = (s.includes("%") ? 1 : 0)
-            let v = <div>{value.toFixed(fv).toString().concat(s.includes("%") ? "%" : "")}</div>
-            ls.push(
-            <li className={classname}>
-                <div className="text-left basis-3/5 items-center">{n}</div>
-                <div className="text-right basis-2/5 pr-2">{v}</div>
-            </li>)
-            }
-
-            let content = <div className="bg-inherit">
-            <div className="pl-2 font-semibold">{effect.source}</div>
-                <ul>
-                    {ls}
-                </ul>
-            </div>;
-
-            staticEffectCards.push(<Card c={content}/>)
-        }
+    for (let e = 0; e < characterData.staticEffects.length; ++e) {
+        const effect = characterData.staticEffects[e]
+        // if (effect.target == ETarget.SELF || ETarget.TEAM) {
+        const card = <EffectCard data={effect} character={characterData} characterUpdateCallback={setCharacterDataCallback}/>
+        staticEffectCards.push(card)
+        // }
     }
 
     let anomalyCards = []
-    for (let e = 0; e < char.anormalStats.names.length; ++e) {
-        const stat = char.anormalStats.names[e]
-        let value = char.anormalStats.values[e]
+    for (let e = 0; e < characterData.anormalStats.names.length; ++e) {
+        const stat = characterData.anormalStats.names[e]
+        let value = characterData.anormalStats.values[e]
         if (value != 0) {
             let s = eStatToReadable(stringToEStat(stat))
             let classname = "flex flex-row justify-between items p-1 bg-red-200"
@@ -176,21 +159,21 @@ export default function RootComponent({data: characters, currentCharacterName: c
 }
 
     return <ThemeContext.Provider value={{colorDirector}}>
-        <BackgroundComponent character={char}/>
+        <BackgroundComponent character={characterData}/>
         <div className="flex flex-col">
-            <NavigationComponent currentCharacter={char} characterList={characters} uid={uid} />
+            <NavigationComponent currentCharacter={characterData} characterList={characters} uid={uid} />
             <div className={"flex flex-row"}>
-                    <div className={"basis-1/5 p-1 grow"}>
-                        <CharacterCard char={char} />
+                    <div className={"basis-1/5 m-1 grow"}>
+                        <CharacterCard char={characterData} />
                     </div>
 
-                    <div className={"basis-3/5 flex flex-col p-1"}>
-                        <FullEquipCard character={char} rule={rule}/>
-                        <div className="grid grid-cols-3 p-1">
-                            <div className="flex flex-col gap-4 mr-1">
-                                <StatCard character={char} />
+                    <div className={"basis-3/5 flex flex-col"}>
+                        <FullEquipCard character={characterData} rule={rule}/>
+                        <div className="grid grid-cols-3">
+                            <div className="flex flex-col gap-4 m-1">
+                                <StatCard character={characterData} />
                             </div>
-                            <div className="flex flex-col gap-4 mr-1">
+                            <div className="flex flex-col gap-2 m-1">
                                 {staticEffectCards}
                                 {anomalyCards}
                             </div>

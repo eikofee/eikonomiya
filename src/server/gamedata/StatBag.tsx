@@ -1,4 +1,5 @@
 import { IStatBag } from "./IStatBag";
+import { IStatTuple } from "./IStatTuple";
 import { EStat } from "./enums/EStat";
 
 export class StatBag {
@@ -11,7 +12,7 @@ export class StatBag {
 
     public addStat(t: IStatTuple) {
         if (this.ks.includes(t.name)) {
-            this.stats[t.name] = {name: t.name, value: t.value + this.stats[t.name]!.value}
+            this.stats[t.name] = {name: t.name, value: t.value + this.stats[t.name]!.value, target: t.target}
         } else {
             this.stats[t.name] = t
             this.ks.push(t.name)

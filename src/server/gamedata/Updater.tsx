@@ -7,14 +7,20 @@ import { IWeapon } from "./IWeapon";
 import { IArtefact } from "./IArtefact";
 import { StatBag } from "./StatBag";
 import { IEffect } from "./IEffect";
-import { EEffectTarget, stringToEEffectTarget } from "./enums/EEffectTarget";
+import { ETarget, stringToETarget } from "./enums/EEffectTarget";
 import { EikoDataTranslator } from "./EikoDataTranslator";
 import { ICharacterCommonData } from "./ICharacterCommonData";
 import { ERarity } from "./enums/ERarity";
-import { EStat } from "./enums/EStat";
-import { promises as fsPromises } from 'fs';
+import { EStat, stringToEStat } from "./enums/EStat";
+import { promises as fsPromises, stat } from 'fs';
 import path from "path";
 import { ICharacterRule } from "@/app/interfaces/ICharacterRule";
+import { EEffectType, stringToEEffectType } from "./enums/EEffectType";
+import { INumberInstance } from "./INumberInstances";
+import { rule } from "postcss";
+import { IStatTuple } from "./IStatTuple";
+import EffectCard from "@/app/components/EffectCard";
+import { addOptions } from "./IEffectOptions";
 
 
 export class Updater {
@@ -62,18 +68,18 @@ export class Updater {
         // sb.addStat({name: EStat.HP, value: characterBase.baseStats.hp})
         // sb.addStat({name: EStat.ATK, value: characterBase.baseStats.atk})
         // sb.addStat({name: EStat.DEF, value: characterBase.baseStats.def})
-        sb.addStat({name: EStat.ER_P, value: 1})
-        sb.addStat({name: EStat.CR_P, value: 0.05})
-        sb.addStat({name: EStat.CDMG_P, value: 0.5})
+        sb.addStat({name: EStat.ER_P, value: 1, target: ETarget.SELF})
+        sb.addStat({name: EStat.CR_P, value: 0.05, target: ETarget.SELF})
+        sb.addStat({name: EStat.CDMG_P, value: 0.5, target: ETarget.SELF})
         if (weapon.subStat != undefined) {
-            sb.addStat({name: weapon.subStat.name, value: weapon.subStat.value})
+            sb.addStat({name: weapon.subStat.name, value: weapon.subStat.value, target: ETarget.SELF})
         }
 
         for (let i = 0; i < artefacts.length; ++i) {
             let a = artefacts[i]
-            sb.addStat({name: a.mainStat.name, value: a.mainStat.value})
+            sb.addStat({name: a.mainStat.name, value: a.mainStat.value, target: ETarget.SELF})
             for (let j = 0; j < a.subStats.length; ++j) {
-                sb.addStat({name: a.subStats[j].name, value: a.subStats[j].value})
+                sb.addStat({name: a.subStats[j].name, value: a.subStats[j].value, target: ETarget.SELF})
             }
         }
 
@@ -98,41 +104,124 @@ export class Updater {
                 break;
         }
 
-        sb.addStat({name: characterBase.ascensionStatName, value: characterBase.ascensionStatBaseValue * ascendedFactor})
+        sb.addStat({name: characterBase.ascensionStatName, value: characterBase.ascensionStatBaseValue * ascendedFactor, target: ETarget.SELF})
         return sb
     }
+
+    private parseEffect(data: any[], defaultName: string, defaultIcon: string, refinement: number) : IEffect[] {
+        let res = []
+        console.log(data)
+        for (let i = 0; i < data.length; ++i) {
+            let effectName = defaultName
+            const rawEffect = data[i];
+            if (rawEffect["name"] != undefined) {
+                effectName = rawEffect["name"]
+            }
+
+            let effectTag = ""
+            if (rawEffect["tag"] != undefined) {
+                effectTag = rawEffect["tag"]
+            }
+
+            const effectType = stringToEEffectType(rawEffect["type"])
+            const text = rawEffect["text"] != undefined ? rawEffect["text"] : ""
+            let statChanges: IStatTuple[] = []
+            let ratioNumbers: INumberInstance[] = []
+            const maxstack = rawEffect["maxstack"] != undefined ? rawEffect["maxstack"] : 0
+            if (effectType != undefined) {
+                switch (effectType) {
+                    case EEffectType.STATIC:
+                    case EEffectType.BOOLEAN:
+                        for (let k = 0; k < rawEffect["effects"].length; ++k) {
+                            const e = rawEffect["effects"][k]
+                            const target = e["target"]
+                            const stat = this.eikoDataTranslator.yamlToStat(e["stat"])
+                            if (e["source"] != undefined) {
+                                const source = stringToEStat(e["source"])
+                                let ratio = 1
+                                if (e["ratio"] != undefined) {
+                                    ratio = parseFloat(e["ratio"])
+                                } else {
+                                    const minratio = parseFloat(e["minratio"])
+                                    const maxratio = parseFloat(e["maxratio"])
+                                    const interval = maxratio - minratio
+                                    const step = interval / 4
+                                    ratio = minratio + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
+                                }
+
+                                const base = (e["base"] != undefined ? parseFloat(e["base"]) : 0)
+                                const step = (e["step"] != undefined ? parseFloat(e["step"]) : 0)
+
+                                let maxvalue = 0
+                                if (e["minmaxvalue"] != undefined) {
+                                    const minmaxvalue = parseFloat(e["minmaxvalue"])
+                                    const maxmaxvalue = parseFloat(e["maxmaxvalue"])
+                                    const interval = maxmaxvalue - minmaxvalue
+                                    const step = interval / 4
+                                    maxvalue = minmaxvalue + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
+                                }
+
+                                ratioNumbers.push({name: stat, iconId: "", source: source, ratio: ratio, base: base, step: step, maxvalue: maxvalue})
+                            } else {
+                                let value = 0;
+                                if (e["value"] != undefined) {
+                                    value = parseFloat(e["value"])
+                                } else {
+                                    const minvalue = parseFloat(e["minvalue"])
+                                    const maxvalue = parseFloat(e["maxvalue"])
+                                    const interval = maxvalue - minvalue
+                                    const step = interval / 4
+                                    value = minvalue + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
+                                }
+
+                                statChanges.push({name: stat, value: value, target: target})
+                            }
+                        }
+                }
+            }
+
+            const effect : IEffect = {
+                source: effectName,
+                tag: effectTag,
+                icon: defaultIcon,
+                type: effectType,
+                text: text,
+                options: addOptions(effectType, maxstack),
+                statChanges: statChanges,
+                ratioNumbers: ratioNumbers
+            }
+
+            res.push(effect)
+        }
+        return res
+    }
+
 
     private async getWeaponEffects(weapon : IWeapon): Promise<IEffect[]> {
         const weaponEffectsRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/weapons.yml", { cache: 'no-store' })).text()
         let res : IEffect[] = []
         const weaponEffects = yaml.parse(weaponEffectsRawData)[weapon.name]
         if (weaponEffects != undefined) {
-            // TODO: Change for better effect parsing
-            for (let j = 0; j < weaponEffects.length; ++j) {
-                const rawEffect = weaponEffects[j]
-                if (rawEffect["type"] == "static") {
-                    for (let k = 0; k < rawEffect["effects"].length; ++k) {
-                        const currentBuff = rawEffect["effects"][k]
-                        const target = this.eikoDataTranslator.yamlToStat(currentBuff["target"])
-                        const stat = this.eikoDataTranslator.yamlToStat(currentBuff["stat"])
-                        const passiveEffectName = rawEffect["name"]
-                        const minvalue = parseFloat(currentBuff["minvalue"])
-                        const maxvalue = parseFloat(currentBuff["maxvalue"])
-                        const interval = maxvalue - minvalue
-                        const step = interval / 4
-                        const value = minvalue + step * (weapon.refinement == undefined ? 0 : Math.max(0, weapon.refinement - 1))
-                        const e : IEffect = {
-                            source: passiveEffectName,
-                            target: stringToEEffectTarget(target),
-                            statChanges: [{name: stat, value: value}],
-                            staticNumber: []
-                        }
-
-                        res.push(e)
-                    }
-                }
-            }
+            return this.parseEffect(weaponEffects, weapon.name, weapon.assets.icon, weapon.refinement)
         }
+            // TODO: Change for better effect parsing
+            // for (let j = 0; j < weaponEffects.length; ++j) {
+            //     const rawEffect = weaponEffects[j]
+            //     // if (rawEffect["type"] == "static") {
+                    
+            //             const e : IEffect = {
+            //                 source: passiveEffectName,
+            //                 icon: weapon.assets.icon,
+            //                 type: stringToEEffectType(rawEffect["type"]),
+            //                 target: stringToETarget(target),
+            //                 statChanges: [{name: stat, value: value}],
+            //                 ratioNumbers: []
+            //             }
+
+            //             res.push(e)
+            //         // }
+            //     }
+            // }
 
         return res;
     }
@@ -141,11 +230,15 @@ export class Updater {
         const artefactSetRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/artefacts.yml")).text()
         const equipSets : Record<string, number> = {}
         const setNames = []
+        const iconNames = []
         for (let i = 0; i < arte.length; ++i) {
             const set = arte[i].set
             if (equipSets[set] == undefined) {
                 equipSets[set] = 1
                 setNames.push(set)
+                const iconNameSplit = arte[i].assets.icon.split("/")
+                iconNameSplit[iconNameSplit.length - 1] = "fleur.png"
+                iconNames.push(iconNameSplit.join("/"))
             } else {
                 equipSets[set] = equipSets[set] + 1
             }
@@ -156,55 +249,13 @@ export class Updater {
         // TODO: Change for better effect parsing
         for (let i = 0; i < setNames.length; ++i) {
             const set = setNames[i]
-            if (sets[set] != undefined) {
-                if (equipSets[set] >= 2) {
-                    const rawEffects = sets[set]["2pc"]
-                    for (let j = 0; j < rawEffects.length; ++j) {
-                        const rawEffect = rawEffects[j]
-                        if (rawEffect["type"] == "static") {
-                            let statChanges = []
-                            for (let k = 0; k < rawEffect["effects"].length; ++k) {
-                                const currentBuff = rawEffect["effects"][k]
-                                const target = this.eikoDataTranslator.yamlToStat(currentBuff["target"])
-                                const stat = this.eikoDataTranslator.yamlToStat(currentBuff["stat"])
-                                const value = parseFloat(currentBuff["value"])
-                                statChanges.push({name: stat, value: value})
-                            }
-                            
-                            const e : IEffect = {
-                                source: set.concat(" 2pc"),
-                                target: EEffectTarget.SELF,
-                                statChanges: statChanges,
-                                staticNumber: []
-                            }
-
-                            res.push(e)
-                        }
-                    }
-                }
-                if (equipSets[set] >= 4) {
-                    const rawEffects = sets[set]["4pc"]
-                    for (let j = 0; j < rawEffects.length; ++j) {
-                        const rawEffect = rawEffects[j]
-                        if (rawEffect["type"] == "static") {
-                            let statChanges = []
-                            for (let k = 0; k < rawEffect["effects"].length; ++k) {
-                                const currentBuff = rawEffect["effects"][k]
-                                const target = this.eikoDataTranslator.yamlToStat(currentBuff["target"])
-                                const stat = this.eikoDataTranslator.yamlToStat(currentBuff["stat"])
-                                const value = parseFloat(currentBuff["value"])
-                                statChanges.push({name: stat, value: value})
-                            }
-                            
-                            const e : IEffect = {
-                                source: set.concat(" 4pc"),
-                                target: EEffectTarget.SELF,
-                                statChanges: statChanges,
-                                staticNumber: []
-                            }
-
-                            res.push(e)
-                        }
+            const rawEffects = sets[set]
+            if (rawEffects != undefined){
+                const effects = this.parseEffect(rawEffects, set, iconNames[i], 0)
+                for (let j = 0; j < effects.length; ++j) {
+                    if ((effects[j].tag.includes("2pc") && equipSets[set] >= 2) ||
+                    (effects[j].tag.includes("4pc") && equipSets[set] >= 4)) {
+                        res.push(effects[j])
                     }
                 }
             }
@@ -292,7 +343,7 @@ export class Updater {
                 level: c.weapon.level,
                 rarity: c.weapon.rarity,
                 subStat: c.weapon.subStat,
-                refinement: c.weapon.refinement,
+                refinement: c.weapon.refinement == undefined ? 1 : c.weapon.refinement,
                 ascensionLevel: c.weapon.ascensionLevel,
                 assets: {
                     icon: "/weaponIcons/".concat(this.cleanNameForPath(c.weapon.name), "/weapon", c.weapon.ascensionLevel > 1 ? "-awake.png":".png")
@@ -329,7 +380,7 @@ export class Updater {
             for (let j = 0; j < currentEffects.length; ++j) {
                 const currentEffect = currentEffects[j]
                 for (let k = 0; k < currentEffect.statChanges.length; ++k) {
-                    if (currentEffect.target == EEffectTarget.SELF || currentEffect.target == EEffectTarget.TEAM) {
+                    if (currentEffect.options.enabled && (currentEffect.statChanges[k].target == ETarget.SELF || currentEffect.statChanges[k].target == ETarget.TEAM)){
                         currentStats.addStat(currentEffect.statChanges[k])
                     }
                 }
@@ -341,7 +392,7 @@ export class Updater {
                 if (currentStats.keys().includes(currentStat)) {
                     const statDiff = c.finalStats.get(currentStat)!.value / currentStats.get(currentStat)!.value
                     if (statDiff < 0.98 || statDiff > 1.02) {
-                        anomalies.addStat({name: currentStat, value: c.finalStats.get(currentStat)!.value - currentStats.get(currentStat)!.value})
+                        anomalies.addStat({name: currentStat, value: c.finalStats.get(currentStat)!.value - currentStats.get(currentStat)!.value, target: ETarget.SELF})
                     }
                 } else {
                     anomalies.addStat(c.finalStats.get(currentStat)!)
@@ -414,7 +465,8 @@ export class Updater {
                 for (let j = 0; j < ruleLabels.length; ++j) {
                     rule.push({
                         name: ruleLabels[j],
-                        value: 3
+                        value: 3,
+                        target: ETarget.SELF
                     })
                 }
 

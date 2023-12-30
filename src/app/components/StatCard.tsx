@@ -5,6 +5,7 @@ import { ThemeContext } from "./ThemeContext";
 import Tooltip from "./Tooltip";
 import { ICharacterData } from "@/server/gamedata/ICharacterData";
 import { EStat, eStatToReadable } from "@/server/gamedata/enums/EStat";
+import { computeStats } from "@/server/gamedata/StatComputations";
 
 export interface ILine {
     name: ReactNode
@@ -15,10 +16,11 @@ export interface ILine {
 export default function StatCard({character} : {character: ICharacterData}) {
 
     let ls = []
+    const currentStats = computeStats(character)
     const getStat = (name: EStat) => {
-        for (let i = 0; i < character.totalStats.names.length; ++i) {
-            if (character.totalStats.names[i] == name) {
-                return character.totalStats.values[i]
+        for (let i = 0; i < currentStats.names.length; ++i) {
+            if (currentStats.names[i] == name) {
+                return currentStats.values[i]
             }
         }
 

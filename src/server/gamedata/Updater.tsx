@@ -65,9 +65,6 @@ export class Updater {
 
     private buildBaseStats(characterBase : ICharacterCommonData, weapon: IWeapon, artefacts: IArtefact[], ascensionLevel: number) {
         let sb = new StatBag()
-        // sb.addStat({name: EStat.HP, value: characterBase.baseStats.hp})
-        // sb.addStat({name: EStat.ATK, value: characterBase.baseStats.atk})
-        // sb.addStat({name: EStat.DEF, value: characterBase.baseStats.def})
         sb.addStat({name: EStat.ER_P, value: 1, target: ETarget.SELF})
         sb.addStat({name: EStat.CR_P, value: 0.05, target: ETarget.SELF})
         sb.addStat({name: EStat.CDMG_P, value: 0.5, target: ETarget.SELF})
@@ -110,7 +107,6 @@ export class Updater {
 
     private parseEffect(data: any[], defaultName: string, defaultIcon: string, refinement: number) : IEffect[] {
         let res = []
-        console.log(data)
         for (let i = 0; i < data.length; ++i) {
             let effectName = defaultName
             const rawEffect = data[i];

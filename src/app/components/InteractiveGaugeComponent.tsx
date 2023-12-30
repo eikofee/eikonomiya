@@ -2,6 +2,8 @@ import { useContext, useState } from "react"
 import { ICharacterRule } from "../interfaces/ICharacterRule"
 import { ThemeContext } from "./ThemeContext"
 import { EStat } from "@/server/gamedata/enums/EStat";
+import { IStatTuple } from "@/server/gamedata/IStatTuple";
+import { ETarget } from "@/server/gamedata/enums/EEffectTarget";
 
 export default function InteractiveGaugeComponent({label, rule, ruleSetterCallback}: {label: EStat, rule: ICharacterRule, ruleSetterCallback: (_x : ICharacterRule) => void}) {
     const {colorDirector} = useContext(ThemeContext)
@@ -23,7 +25,8 @@ export default function InteractiveGaugeComponent({label, rule, ruleSetterCallba
             if (i == baseIndex) {
                 stats.push({
                     name: label,
-                    value: newValue
+                    value: newValue,
+                    target: ETarget.SELF
                 })
             } else {
                 stats.push(rule.stats[i])

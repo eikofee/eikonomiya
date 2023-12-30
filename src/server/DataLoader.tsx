@@ -78,7 +78,7 @@ function convertJsonToCharacterData(json: any): ICharacterData {
             icon: item["icon"],
             text: item["text"],
             options: {
-                enabled: item["options"]["enabled"] == "true",
+                enabled: item["options"]["enabled"],
                 stack: parseInt(item["options"]["stack"]),
                 maxstack: parseInt(item["options"]["maxstack"])
             },
@@ -112,7 +112,8 @@ function convertJsonToCharacterData(json: any): ICharacterData {
             rarity: stringToERarity(a["rarity"]),
             mainStat: {
                 name: stringToEStat(a["mainStat"]["name"]),
-                value: a["mainStat"]["value"]
+                value: a["mainStat"]["value"],
+                target: ETarget.SELF
             },
             subStats: subs,
             assets: {

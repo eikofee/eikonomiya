@@ -8,7 +8,7 @@ import StatCard from "./StatCard";
 import { FullEquipCard } from "./FullEquipCard";
 import BackgroundComponent from "./BackgroundComponent";
 import NavigationComponent from "./NavigationComponent";
-import { ICharacterData } from "@/server/gamedata/ICharacterData";
+import { ICharacterData, copyCharacterData } from "@/server/gamedata/ICharacterData";
 import { ICharacterRule } from "../interfaces/ICharacterRule";
 import { EElement } from "@/server/gamedata/enums/EElement";
 import { EWeaponType } from "@/server/gamedata/enums/EWeaponType";
@@ -124,13 +124,19 @@ export default function RootComponent({data: characters, currentCharacterName: c
         await fetch(url)
     }
 
+    function updateEffect(i: number) {
+        return (x: IEffect) => {
+            let c = copyCharacterData(characterData)
+            c.staticEffects[i] = x
+            setCharacterData(c)
+        }
+    }
     let staticEffectCards = []
     for (let e = 0; e < characterData.staticEffects.length; ++e) {
         const effect = characterData.staticEffects[e]
-        // if (effect.target == ETarget.SELF || ETarget.TEAM) {
-        const card = <EffectCard data={effect} character={characterData} characterUpdateCallback={setCharacterDataCallback}/>
+
+        const card = <EffectCard effect={effect} character={characterData} effectUpdateCallback={updateEffect(e)}/>
         staticEffectCards.push(card)
-        // }
     }
 
     let anomalyCards = []

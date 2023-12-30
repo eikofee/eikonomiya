@@ -5,8 +5,9 @@ import { Card } from "./Card";
 import { useContext } from "react";
 import { ThemeContext } from "./ThemeContext";
 import { ICharacterData } from "@/server/gamedata/ICharacterData";
+import { EEffectType } from "@/server/gamedata/enums/EEffectType";
 
-export default function EffectCard({data: effect, character: character, characterUpdateCallback: characterUpdateCallback} : ({data: IEffect, character: ICharacterData, characterUpdateCallback: (x: ICharacterData) => void})) {
+export default function EffectCard({effect: effect, effectUpdateCallback: effectUpdateCallback, character: character} : ({effect: IEffect, effectUpdateCallback: (x: IEffect) => void, character: ICharacterData})) {
     let ls = []
     const {colorDirector} = useContext(ThemeContext)
 
@@ -14,7 +15,7 @@ export default function EffectCard({data: effect, character: character, characte
         let statChange = effect.statChanges[i]
         let s = eStatToReadable(statChange.name)
         // let classname = "flex flex-row justify-between items ".concat(i%2 == 1 ? colorDirector.bg(0) : colorDirector.bg(1))
-        let classname = "flex flex-row justify-between items p-1"
+        let classname = "flex flex-row justify-between items p-1 ".concat(effect.options.enabled ? "" : "text-gray-400")
         if (i == effect.statChanges.length - 1) {
             classname += " rounded-b-md"
         }
@@ -29,13 +30,19 @@ export default function EffectCard({data: effect, character: character, characte
         </li>)
     }
 
+    const enableCallback = () => {
+        effect.options.enabled = !effect.options.enabled
+        effectUpdateCallback(effect)
+    }
+
     let content = <div className="bg-inherit">
         <div className={"flex flex-row flex-grow w-full rounded-t-md ".concat(colorDirector.bgAccent(7))}>
             <img src={effect.icon} className="aspect-square w-8 place-self-start"/>
             <div className="pl-2 font-semibold place-self-center grow">{effect.source}</div>
             {effect.tag != "" ? <div className="text-right place-self-end self-center h-1/2 bg-orange-500 rounded-md text-sm mr-2 p-1">{effect.tag}</div> : ""}
         </div>
-        {effect.text != "" ? <div className="text-left m-1 text-sm">{effect.text}</div>: ""}
+        {effect.type == EEffectType.BOOLEAN ? <button className={"text-sm self-start place-self-center w-full ".concat(effect.options.enabled ? "bg-green-300" : "bg-red-300" )} onClick={enableCallback}>{effect.options.enabled ? "Enabled" : "Disabled"}</button> : ""}
+        {effect.text != "" ? <div className={"text-left m-1 text-sm "}>{effect.text}</div>: ""}
         <ul>
             {ls}
         </ul>

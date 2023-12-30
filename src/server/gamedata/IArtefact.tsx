@@ -1,3 +1,4 @@
+import { IStatTuple } from "./IStatTuple";
 import { EArtefact } from "./enums/EArtefact";
 import { ERarity } from "./enums/ERarity";
 
@@ -12,4 +13,34 @@ export interface IArtefact {
     assets: {
         icon: string
     }
+}
+
+export function copyArtefact(x: IArtefact) : IArtefact {
+    let subStats: ISubStat[] = []
+    for (let i = 0; i < x.subStats.length; ++i) {
+        subStats.push({
+            name: x.subStats[i].name,
+            value: x.subStats[i].value,
+            rollValue: x.subStats[i].rollValue
+        })
+    }
+    
+    const res : IArtefact = {
+        type: x.type,
+        name: x.name,
+        set: x.set,
+        level: x.level,
+        rarity: x.rarity,
+        mainStat: {
+            name: x.mainStat.name,
+            value: x.mainStat.value,
+            target: x.mainStat.target
+        },
+        subStats: subStats,
+        assets: {
+            icon: x.assets.icon
+        }
+    }
+
+    return res
 }

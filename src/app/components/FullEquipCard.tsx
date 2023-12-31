@@ -17,11 +17,10 @@ export function FullEquipCard({character, rule}:{character : ICharacterData, rul
     let [scoreCouronne, setScoreCouronne] = useState(0)
 
     const totalScore = (scoreFleur + scorePlume + scoreSablier + scoreCoupe + scoreCouronne) / 5
-    const totalScoreContent = <div className="h-full flex flex-row items-center align-baseline font-semibold">
-    <p className="text-center w-full ml-2">
-        Score : {totalScore.toFixed(0).concat("%")}
-    </p>
-</div>
+    const totalScoreContent = <div className="h-full flex flex-col w-full justify-center items-center font-semibold">
+        <div>Score :</div>
+        <div>{totalScore.toFixed(0).concat("%")}</div>
+    </div>
 
     const arteTypes = [EArtefact.FLEUR, EArtefact.PLUME, EArtefact.SABLIER, EArtefact.COUPE, EArtefact.COURONNE]
     let artes : IArtefact[] = []
@@ -32,7 +31,6 @@ export function FullEquipCard({character, rule}:{character : ICharacterData, rul
             }
         }
     }
-    let div = 0;
     let mvs = []
     for (let i = 0; i < rule.stats.length; ++i) {
         mvs.push(rule.stats[i])
@@ -43,7 +41,7 @@ export function FullEquipCard({character, rule}:{character : ICharacterData, rul
         <div className="max-w-5xl basis-1/4 grid lg:grid-cols-7 md:grid-cols-3 sm:grid-cols-2 gap-2 p-1 bg-inherit h-full">
                         <div className="flex flex-col gap-y-2">
                             <AscensionCard char={character} />
-                            <Card c={totalScoreContent} cname={"grow items-center"} />
+                            <Card c={totalScoreContent} cname={"grow"} />
                         </div>
                         <WeaponCard equip={character.weapon} rule={rule}/>
                         <ArtefactCard equip={artes[0]} rule={rule} scoreState={setScoreFleur} sortedStats={mvs}/>

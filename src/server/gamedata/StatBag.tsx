@@ -12,7 +12,7 @@ export class StatBag {
 
     public addStat(t: IStatTuple) {
         if (this.ks.includes(t.name)) {
-            this.stats[t.name] = {name: t.name, value: t.value + this.stats[t.name]!.value, target: t.target}
+            this.stats[t.name] = {name: t.name, value: t.value + this.stats[t.name]!.value}
         } else {
             this.stats[t.name] = t
             this.ks.push(t.name)
@@ -25,6 +25,16 @@ export class StatBag {
 
     public keys() {
         return this.ks
+    }
+
+    public copy(): StatBag {
+        const res = new StatBag()
+        for (let i = 0; i < this.ks.length; ++i) {
+            const s = this.stats[this.ks[i]]
+            res.addStat(s)
+        }
+
+        return res
     }
 
     public toIStatBag() {

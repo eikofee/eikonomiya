@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react"
+import { useContext, useState } from "react"
+import { ThemeContext } from "./ThemeContext";
 
 interface InfoDivProps {
     child: React.ReactNode,
@@ -11,6 +12,7 @@ interface InfoDivProps {
 export default function InfoDiv(c: InfoDivProps) {
 
     let [ttClassName, setTTClassName] = useState("hidden")
+    const {colorDirector} = useContext(ThemeContext)
     let cn = c.childClassname
     if (cn == undefined)
     {
@@ -19,8 +21,10 @@ export default function InfoDiv(c: InfoDivProps) {
 
     let iname = c.infoClassname
     if (iname == undefined) {
-        iname = "transition duration-300 z-20 absolute bg-gray-800 text-white font-normal text-sm rounded p-2 whitespace-nowrap top-full left-1/2 transform -translate-x-1/2 -translate-y-16"
+        iname = "rounded-md text-sm bg-gray-800/80 text-white font-normal w-full max-w-xl p-2 absolute bottom-full left-1/2 transform -translate-x-1/2 "
     }
+
+    iname = iname.concat(" outline outline-1 ", colorDirector.outlineAccent(5))
 
     function displayTT() {
         setTTClassName(iname!)

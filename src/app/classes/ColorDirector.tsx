@@ -39,6 +39,19 @@ const borderHydro = [
     "border-blue-950",
 ]
 
+const outlineHydro = [
+    "outiline-blue-50",
+    "outline-blue-100",
+    "outline-blue-200",
+    "outline-blue-300",
+    "outline-blue-400",
+    "outline-blue-500",
+    "outline-blue-600",
+    "outline-blue-700",
+    "outline-blue-800",
+    "outline-blue-950",
+]
+
 const bgElectro = [
     "bg-violet-50",
     "bg-violet-100",
@@ -76,6 +89,19 @@ const borderElectro = [
     "border-violet-700",
     "border-violet-800",
     "border-violet-950",
+]
+
+const outlineElectro = [
+    "outiline-violet-50",
+    "outline-violet-100",
+    "outline-violet-200",
+    "outline-violet-300",
+    "outline-violet-400",
+    "outline-violet-500",
+    "outline-violet-600",
+    "outline-violet-700",
+    "outline-violet-800",
+    "outline-violet-950",
 ]
 
 const bgAnemo = [
@@ -117,6 +143,19 @@ const borderAnemo = [
     "border-teal-950",
 ]
 
+const outlineAnemo = [
+    "outiline-teal-50",
+    "outline-teal-100",
+    "outline-teal-200",
+    "outline-teal-300",
+    "outline-teal-400",
+    "outline-teal-500",
+    "outline-teal-600",
+    "outline-teal-700",
+    "outline-teal-800",
+    "outline-teal-950",
+]
+
 const bgDendro = [
     "bg-lime-50",
     "bg-lime-100",
@@ -154,6 +193,19 @@ const borderDendro = [
     "border-lime-700",
     "border-lime-800",
     "border-lime-950",
+]
+
+const outlineDendro = [
+    "outiline-lime-50",
+    "outline-lime-100",
+    "outline-lime-200",
+    "outline-lime-300",
+    "outline-lime-400",
+    "outline-lime-500",
+    "outline-lime-600",
+    "outline-lime-700",
+    "outline-lime-800",
+    "outline-lime-950",
 ]
 
 const bgPyro = [
@@ -195,6 +247,19 @@ const borderPyro = [
     "border-red-950",
 ]
 
+const outlinePyro = [
+    "outiline-red-50",
+    "outline-red-100",
+    "outline-red-200",
+    "outline-red-300",
+    "outline-red-400",
+    "outline-red-500",
+    "outline-red-600",
+    "outline-red-700",
+    "outline-red-800",
+    "outline-red-950",
+]
+
 const bgCryo = [
     "bg-cyan-50",
     "bg-cyan-100",
@@ -234,6 +299,19 @@ const borderCryo = [
     "border-cyan-950",
 ]
 
+const outlineCryo = [
+    "outiline-cyan-50",
+    "outline-cyan-100",
+    "outline-cyan-200",
+    "outline-cyan-300",
+    "outline-cyan-400",
+    "outline-cyan-500",
+    "outline-cyan-600",
+    "outline-cyan-700",
+    "outline-cyan-800",
+    "outline-cyan-950",
+]
+
 const bgGeo = [
     "bg-yellow-50",
     "bg-yellow-100",
@@ -271,6 +349,19 @@ const borderGeo = [
     "border-yellow-700",
     "border-yellow-800",
     "border-yellow-950",
+]
+
+const outlineGeo = [
+    "outiline-yellow-50",
+    "outline-yellow-100",
+    "outline-yellow-200",
+    "outline-yellow-300",
+    "outline-yellow-400",
+    "outline-yellow-500",
+    "outline-yellow-600",
+    "outline-yellow-700",
+    "outline-yellow-800",
+    "outline-yellow-950",
 ]
 
 export class ColorDirector {
@@ -380,6 +471,27 @@ export class ColorDirector {
                 return borderPyro[9 - light];
             case EElement.CRYO:
                 return borderCryo[9 - light];
+            default:
+                return "neutral";
+        }
+    }
+
+    public outlineAccent(light: number) : string {
+        switch (this.element) {
+            case EElement.ANEMO:
+                return outlineAnemo[9 - light];
+            case EElement.GEO:
+                return outlineGeo[9 - light];
+            case EElement.ELECTRO:
+                return outlineElectro[9 - light];
+            case EElement.DENDRO:
+                return outlineDendro[9 - light];
+            case EElement.HYDRO:
+                return outlineHydro[9 - light]
+            case EElement.PYRO:
+                return outlinePyro[9 - light];
+            case EElement.CRYO:
+                return outlineCryo[9 - light];
             default:
                 return "neutral";
         }

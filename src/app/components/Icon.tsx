@@ -221,5 +221,5 @@ export default function Icon({n}: {n: string}) {
     let svg = <svg viewBox="0 0 24 24" className={svgClassname}>
                     {content}
                 </svg>
-    return <Tooltip child={svg} info={n} childClassname="" />
+    return <Tooltip child={svg} info={n} childClassname="" infoClassname="absolute bg-gray-800 text-white font-normal text-sm rounded p-2 whitespace-nowrap bottom-full left-1/2 transform -translate-x-1/2 " />
 }

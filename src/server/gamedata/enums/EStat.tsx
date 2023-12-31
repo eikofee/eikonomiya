@@ -21,6 +21,7 @@ export enum EStat {
     CRYO_DMG_P = "cryo dmg%",
     HEAL_OUT_P = "heal out%",
     HEAL_IN_P = "heal in%",
+    ELEM_DMG_P = "elem dmg%",
 
     NA_DMG_P = "na dmg%",
     CA_DMG_P = "ca dmg%",
@@ -32,15 +33,18 @@ export enum EStat {
     CA_SPD_P = "ca spd%",
     PA_SPD_P = "pa spd%",
 
+    DMG_P = "dmg%",
     SKILL_DMG_P = "skill dmg%",
     BURST_DMG_P = "burst dmg%",
     SKILL_CR_P = "skill cr%",
     BURST_CR_P = "burst cr%",
 
-    OVERLOAD_DMG_P = "overloaded dmg%",
+    OVERLOADED_DMG_P = "overloaded dmg%",
     BURNING_DMG_P = "burning dmg%",
     VAPORIZE_DMG_P = "vaporize dmg%",
     MELT_DMG_P = "melt dmg%",
+    ELECTROCHARGED_DMG_P = "electrocharged dmg%",
+    SUPERCONDUCT_DMG_P = "superconduct dmg%",
     
     MOVE_SPD_P = "mov spd%",
     UNKNOWN = "unknown"
@@ -69,6 +73,7 @@ export function eStatToReadable (s: EStat) : string {
         case EStat.CRYO_DMG_P: return "Cryo DMG%";
         case EStat.HEAL_OUT_P: return "Heal out%";
         case EStat.HEAL_IN_P: return "Heal in%";
+        case EStat.ELEM_DMG_P: return "Elem DMG%"
         case EStat.NA_DMG_P: return "NA DMG%";
         case EStat.CA_DMG_P: return "CA DMG%";
         case EStat.PA_DMG_P: return "PA DMG%";
@@ -78,15 +83,18 @@ export function eStatToReadable (s: EStat) : string {
         case EStat.NA_SPD_P: return "NA SPD%";
         case EStat.CA_SPD_P: return "CA SPD%";
         case EStat.PA_SPD_P: return "PA SPD%";
+        case EStat.DMG_P: return "DMG%"
         case EStat.SKILL_DMG_P: return "Skill DMG%";
         case EStat.BURST_DMG_P: return "Burst DMG%";
         case EStat.MOVE_SPD_P: return "Move SPD%";
         case EStat.SKILL_CR_P: return "Skill Crit Rate%";
         case EStat.BURST_CR_P: return "Burst Crit Rate%";
-        case EStat.OVERLOAD_DMG_P: return "Overload DMG%";
+        case EStat.OVERLOADED_DMG_P: return "Overloaded DMG%";
         case EStat.BURNING_DMG_P: return "Burning DMG%";
         case EStat.VAPORIZE_DMG_P: return "Vaporize DMG%";
         case EStat.MELT_DMG_P: return "Melt DMG%";
+        case EStat.ELECTROCHARGED_DMG_P: return "Electrocharged DMG%";
+        case EStat.SUPERCONDUCT_DMG_P: return "Superconduct DMG%";
 
         case EStat.UNKNOWN: return "Unknown";
     }
@@ -116,6 +124,8 @@ export function stringToEStat (s: string): EStat {
         case "cryo dmg%": return EStat.CRYO_DMG_P;
         case "heal out%": return EStat.HEAL_OUT_P;
         case "heal in%": return EStat.HEAL_IN_P;
+        case "elem dmg%": return EStat.ELEM_DMG_P;
+        case "dmg%": return EStat.DMG_P;
     
         case "na dmg%": return EStat.NA_DMG_P;
         case "ca dmg%": return EStat.CA_DMG_P;
@@ -131,10 +141,12 @@ export function stringToEStat (s: string): EStat {
         case "skill cr%": return EStat.SKILL_CR_P;
         case "burst cr%": return EStat.BURST_CR_P;
 
-        case "overload dmg%": return EStat.OVERLOAD_DMG_P;
+        case "overloaded dmg%": return EStat.OVERLOADED_DMG_P;
         case "burning dmg%": return EStat.BURNING_DMG_P;
         case "vaporize dmg%": return EStat.VAPORIZE_DMG_P;
         case "melt dmg%": return EStat.MELT_DMG_P;
+        case "electrocharged dmg%": return EStat.ELECTROCHARGED_DMG_P;
+        case "superconduct dmg%": return EStat.SUPERCONDUCT_DMG_P;
 
 
         case "mov spd%": return EStat.MOVE_SPD_P;

@@ -4,8 +4,9 @@ import Icon from "./Icon";
 import { ThemeContext } from "./ThemeContext";
 import Tooltip from "./Tooltip";
 import { ICharacterData } from "@/server/gamedata/ICharacterData";
-import { EStat, eStatToReadable } from "@/server/gamedata/enums/EStat";
+import { EStat, eStatToReadable, stringToEStat } from "@/server/gamedata/enums/EStat";
 import { computeStats } from "@/server/gamedata/StatComputations";
+import { IStatBag } from "@/server/gamedata/IStatBag";
 
 export interface ILine {
     name: ReactNode
@@ -13,14 +14,13 @@ export interface ILine {
     info?: ReactNode
 }
 
-export default function StatCard({character} : {character: ICharacterData}) {
+export default function StatCard({character, statbag} : {character: ICharacterData, statbag: IStatBag}) {
 
     let ls = []
-    const currentStats = computeStats(character)
     const getStat = (name: EStat) => {
-        for (let i = 0; i < currentStats.names.length; ++i) {
-            if (currentStats.names[i] == name) {
-                return currentStats.values[i]
+        for (let i = 0; i < statbag.names.length; ++i) {
+            if (statbag.names[i] == name) {
+                return statbag.values[i]
             }
         }
 
@@ -33,7 +33,6 @@ export default function StatCard({character} : {character: ICharacterData}) {
     let baseStat = ["HP", "ATK", "DEF"]
     let baseValues = [finalHP, finalATK, finalDEF]
     for (let i = 0; i < baseStat.length; ++i) {
-        // let classname = "flex flex-row justify-between items ".concat(i%2 == 0 ? colorDirector.bg(0) : colorDirector.bg(1))
         let classname = "flex flex-row justify-between items p-1"
         let n = <div className="flex flex-row items-center"><Icon n={baseStat[i]} /> <span className="pl-1">{baseStat[i]}</span></div>
         let v = <div>{baseValues[i].toFixed(0).toString()}</div>
@@ -60,28 +59,11 @@ export default function StatCard({character} : {character: ICharacterData}) {
         </li>)
     }
 
-    let statNames = ["EM", "ER%", "Crit Rate%", "Crit DMG%"]
-    let statValues = [getStat(EStat.EM), getStat(EStat.ER_P), getStat(EStat.CR_P), getStat(EStat.CDMG_P)]
+    const statNames = Object.values(EStat).filter(x => !["hp", "atk", "def"].includes(x.replace("%", "")))
+    const statValues = []
     for (let i = 0; i < statNames.length; ++i) {
-        let s = statNames[i]
-        // let classname = "flex flex-row justify-between items ".concat(i%2 == 1 ? colorDirector.bg(0) : colorDirector.bg(1))
-        let classname = "flex flex-row justify-between items p-1"
-        if (i == statNames.length - 1) {
-            classname += " rounded-b-md"
-        }
-        let n = <div className="flex flex-row items-center"><Icon n={s} /> <span className="pl-1">{s}</span></div>
-        let value = statValues[i] * (s.includes("%") ? 100 : 1)
-        let fv = (s.includes("%") ? 1 : 0)
-        let v = <div>{value.toFixed(fv).toString().concat(s.includes("%") ? "%" : "")}</div>
-        ls.push(
-        <li className={classname}>
-            <div className="text-left basis-3/5 items-center">{n}</div>
-            <div className="text-right basis-2/5 pr-2">{v}</div>
-        </li>)
+        statValues.push(getStat(stringToEStat(statNames[i])))
     }
-
-    statNames = [EStat.PHYS_DMG_P, EStat.ANEMO_DMG_P, EStat.GEO_DMG_P, EStat.ELECTRO_DMG_P, EStat.DENDRO_DMG_P, EStat.HYDRO_DMG_P, EStat.PYRO_DMG_P, EStat.CRYO_DMG_P, EStat.HEAL_OUT_P, EStat.SKILL_DMG_P]
-    statValues = [getStat(EStat.PHYS_DMG_P), getStat(EStat.ANEMO_DMG_P), getStat(EStat.GEO_DMG_P), getStat(EStat.ELECTRO_DMG_P), getStat(EStat.DENDRO_DMG_P), getStat(EStat.HYDRO_DMG_P), getStat(EStat.PYRO_DMG_P), getStat(EStat.CRYO_DMG_P), getStat(EStat.HEAL_OUT_P), getStat(EStat.SKILL_DMG_P)]
     for (let i = 0; i < statNames.length; ++i) {
         let s = eStatToReadable(statNames[i] as EStat)
         if (statValues[i] > 0) {

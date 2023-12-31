@@ -21,6 +21,12 @@ import { Card } from "./Card";
 import { ETarget } from "@/server/gamedata/enums/EEffectTarget";
 import EffectCard from "./EffectCard";
 import { IEffect } from "@/server/gamedata/IEffect";
+import { EEffectType } from "@/server/gamedata/enums/EEffectType";
+import EffectCardBasic from "./effectCards/EffectCardBasic";
+import EffectCardBoolean from "./effectCards/EffectCardBoolean";
+import EffectCardStack from "./effectCards/EffectCardStack";
+import { computeStats } from "@/server/gamedata/StatComputations";
+import { StatBag } from "@/server/gamedata/StatBag";
 
 
 export default function RootComponent({data: characters, currentCharacterName: currentCharacterName, rules, uid} : ({data: ICharacterData[], currentCharacterName: string, rules: ICharacterRule[], uid: string})) {
@@ -60,8 +66,7 @@ export default function RootComponent({data: characters, currentCharacterName: c
             name: "Default Weapon Name",
             mainStat: {
                 name: EStat.UNKNOWN,
-                value: 0,
-                target: ETarget.NONE
+                value: 0
             },
             level: 0,
             refinement: 0,
@@ -109,11 +114,10 @@ export default function RootComponent({data: characters, currentCharacterName: c
         setRule(x)
     }
 
-    const [characterData, setCharacterData] = useState(char)
-
-    function setCharacterDataCallback(x: ICharacterData) {
-        setCharacterData(x)
-    }
+    const firstComputation = computeStats(char)
+    const [characterData, setCharacterData] = useState(firstComputation.a)
+    const defaultStatBag = firstComputation.b
+    const [statBag, setStatBag] = useState(defaultStatBag)
 
     async function saveRuleCallback(x: ICharacterRule) {
         let url = hostUrl("/api/rules?mode=edit&characterName=".concat(x.character,"&uid=", uid))
@@ -128,15 +132,28 @@ export default function RootComponent({data: characters, currentCharacterName: c
         return (x: IEffect) => {
             let c = copyCharacterData(characterData)
             c.staticEffects[i] = x
+            const res = computeStats(c)
+            c = res.a
             setCharacterData(c)
+            setStatBag(res.b)
         }
     }
+
     let staticEffectCards = []
     for (let e = 0; e < characterData.staticEffects.length; ++e) {
         const effect = characterData.staticEffects[e]
-
-        const card = <EffectCard effect={effect} character={characterData} effectUpdateCallback={updateEffect(e)}/>
-        staticEffectCards.push(card)
+        switch (effect.type) {
+            case EEffectType.BOOLEAN:
+                staticEffectCards.push(<EffectCardBoolean effect={effect} character={characterData} effectUpdateCallback={updateEffect(e)}/>)
+                break;
+            case EEffectType.STACK:
+            case EEffectType.STACK_PRECISE:
+                staticEffectCards.push(<EffectCardStack effect={effect} character={characterData} effectUpdateCallback={updateEffect(e)}/>)
+                break;
+            default:
+                staticEffectCards.push(<EffectCardBasic effect={effect} character={characterData} effectUpdateCallback={updateEffect(e)}/>)
+                break;
+        }
     }
 
     let anomalyCards = []
@@ -177,7 +194,7 @@ export default function RootComponent({data: characters, currentCharacterName: c
                         <FullEquipCard character={characterData} rule={rule}/>
                         <div className="grid grid-cols-3">
                             <div className="flex flex-col gap-4 m-1">
-                                <StatCard character={characterData} />
+                                <StatCard character={characterData} statbag={statBag}/>
                             </div>
                             <div className="flex flex-col gap-2 m-1">
                                 {staticEffectCards}

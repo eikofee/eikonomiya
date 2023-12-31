@@ -1,6 +1,7 @@
+import { IEffectImplication } from "./IEffectImplication";
 import { IEffectOptions } from "./IEffectOptions";
-import { INumberInstance } from "./INumberInstances";
-import { IStatTuple } from "./IStatTuple";
+import { INumberInstance, copyNumberInstance } from "./INumberInstances";
+import { IStatTuple, copyStatTuple } from "./IStatTuple";
 import { EEffectType } from "./enums/EEffectType";
 
 export interface IEffect {
@@ -10,8 +11,8 @@ export interface IEffect {
     text: string,
     type: EEffectType,
     options: IEffectOptions,
+    implications: IEffectImplication[][],
     statChanges: IStatTuple[],
-    ratioNumbers: INumberInstance[],
 }
 
 export function copyEffect(x: IEffect): IEffect {
@@ -20,23 +21,34 @@ export function copyEffect(x: IEffect): IEffect {
         statChanges.push({
             name: x.statChanges[i].name,
             value: x.statChanges[i].value,
-            target: x.statChanges[i].target
         })
     }
+    let implicationsSet = []
+    for (let j = 0; j < x.implications.length; ++j) {
 
-    let ratioNumbers: INumberInstance[] = []
-    for (let i = 0; i < x.ratioNumbers.length; ++i) {
-        ratioNumbers.push({
-            iconId: x.ratioNumbers[i].iconId,
-            name: x.ratioNumbers[i].name,
-            source: x.ratioNumbers[i].source,
-            ratio: x.ratioNumbers[i].ratio,
-            base: x.ratioNumbers[i].base,
-            step: x.ratioNumbers[i].step,
-            maxvalue: x.ratioNumbers[i].maxvalue
-        })
+        let implications : IEffectImplication[] = []
+        for (let i = 0; i < x.implications[j].length; ++i) {
+            const iei : IEffectImplication = {
+                target: x.implications[j][i].target,
+                flatValue: x.implications[j][i].flatValue == undefined ? undefined : {
+                    name: x.implications[j][i].flatValue!.name,
+                    value: x.implications[j][i].flatValue!.value,
+                },
+                ratioValue: x.implications[j][i].ratioValue == undefined ? undefined : {
+                    base: x.implications[j][i].ratioValue!.base,
+                    maxvalue: x.implications[j][i].ratioValue!.maxvalue,
+                    ratio: x.implications[j][i].ratioValue!.ratio,
+                    source: x.implications[j][i].ratioValue!.source,
+                    step: x.implications[j][i].ratioValue!.step,
+                    target: x.implications[j][i].ratioValue!.target
+                }
+            }
+
+            implications.push(iei)
+        }
+
+        implicationsSet.push(implications)
     }
-    
     const res: IEffect = {
         source: x.source,
         tag: x.tag,
@@ -46,10 +58,10 @@ export function copyEffect(x: IEffect): IEffect {
         options: {
             enabled: x.options.enabled,
             stack: x.options.stack,
-            maxstack: x.options.maxstack
+            maxstack: x.options.maxstack,
         },
         statChanges: statChanges,
-        ratioNumbers: ratioNumbers
+        implications: implicationsSet
     }
 
     return res

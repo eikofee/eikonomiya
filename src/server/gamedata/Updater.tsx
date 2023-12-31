@@ -17,10 +17,10 @@ import path from "path";
 import { ICharacterRule } from "@/app/interfaces/ICharacterRule";
 import { EEffectType, stringToEEffectType } from "./enums/EEffectType";
 import { INumberInstance } from "./INumberInstances";
-import { rule } from "postcss";
 import { IStatTuple } from "./IStatTuple";
-import EffectCard from "@/app/components/EffectCard";
 import { addOptions } from "./IEffectOptions";
+import { IEffectImplication } from "./IEffectImplication";
+import { IStatRatio } from "./IStatRatio";
 
 
 export class Updater {
@@ -65,18 +65,18 @@ export class Updater {
 
     private buildBaseStats(characterBase : ICharacterCommonData, weapon: IWeapon, artefacts: IArtefact[], ascensionLevel: number) {
         let sb = new StatBag()
-        sb.addStat({name: EStat.ER_P, value: 1, target: ETarget.SELF})
-        sb.addStat({name: EStat.CR_P, value: 0.05, target: ETarget.SELF})
-        sb.addStat({name: EStat.CDMG_P, value: 0.5, target: ETarget.SELF})
+        sb.addStat({name: EStat.ER_P, value: 1})
+        sb.addStat({name: EStat.CR_P, value: 0.05})
+        sb.addStat({name: EStat.CDMG_P, value: 0.5})
         if (weapon.subStat != undefined) {
-            sb.addStat({name: weapon.subStat.name, value: weapon.subStat.value, target: ETarget.SELF})
+            sb.addStat({name: weapon.subStat.name, value: weapon.subStat.value})
         }
 
         for (let i = 0; i < artefacts.length; ++i) {
             let a = artefacts[i]
-            sb.addStat({name: a.mainStat.name, value: a.mainStat.value, target: ETarget.SELF})
+            sb.addStat({name: a.mainStat.name, value: a.mainStat.value})
             for (let j = 0; j < a.subStats.length; ++j) {
-                sb.addStat({name: a.subStats[j].name, value: a.subStats[j].value, target: ETarget.SELF})
+                sb.addStat({name: a.subStats[j].name, value: a.subStats[j].value})
             }
         }
 
@@ -101,7 +101,7 @@ export class Updater {
                 break;
         }
 
-        sb.addStat({name: characterBase.ascensionStatName, value: characterBase.ascensionStatBaseValue * ascendedFactor, target: ETarget.SELF})
+        sb.addStat({name: characterBase.ascensionStatName, value: characterBase.ascensionStatBaseValue * ascendedFactor})
         return sb
     }
 
@@ -121,19 +121,99 @@ export class Updater {
 
             const effectType = stringToEEffectType(rawEffect["type"])
             const text = rawEffect["text"] != undefined ? rawEffect["text"] : ""
-            let statChanges: IStatTuple[] = []
-            let ratioNumbers: INumberInstance[] = []
             const maxstack = rawEffect["maxstack"] != undefined ? rawEffect["maxstack"] : 0
+            let implicationsSet : IEffectImplication[][] = []
+            let implications : IEffectImplication[] = []
+            let statChanges : IStatTuple[] = []
+            
             if (effectType != undefined) {
                 switch (effectType) {
                     case EEffectType.STATIC:
                     case EEffectType.BOOLEAN:
+                        implications = []
                         for (let k = 0; k < rawEffect["effects"].length; ++k) {
+                            const e = rawEffect["effects"][k]
+                            const target = e["target"]
+                            let flatValue : IStatTuple | undefined = undefined
+                            let ratioValue : IStatRatio | undefined = undefined
+                            if (e["source"] != undefined) {
+                                const sourceStat = stringToEStat(e["source"])
+                                const targetStat = stringToEStat(e["stat"])
+                                let ratio = 1
+                                if (e["ratio"] != undefined) {
+                                    ratio = parseFloat(e["ratio"])
+                                } else {
+                                    const minratio = parseFloat(e["minratio"])
+                                    const maxratio = parseFloat(e["maxratio"])
+                                    const interval = maxratio - minratio
+                                    const step = interval / 4
+                                    ratio = minratio + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
+                                }
+
+                                const base = (e["base"] != undefined ? parseFloat(e["base"]) : 0)
+                                const step = (e["step"] != undefined ? parseFloat(e["step"]) : 0)
+
+                                let maxvalue = 0
+                                if (e["minmaxvalue"] != undefined) {
+                                    const minmaxvalue = parseFloat(e["minmaxvalue"])
+                                    const maxmaxvalue = parseFloat(e["maxmaxvalue"])
+                                    const interval = maxmaxvalue - minmaxvalue
+                                    const step = interval / 4
+                                    maxvalue = minmaxvalue + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
+                                } else {
+                                    maxvalue = parseFloat(e["maxvalue"])
+                                }
+
+                                ratioValue = {
+                                    base: base,
+                                    maxvalue: maxvalue,
+                                    ratio: ratio,
+                                    source: sourceStat,
+                                    step: step,
+                                    target: targetStat
+                                }
+
+                            } else {
+                                const stat = stringToEStat(e["stat"])
+                                let value = 0;
+                                if (e["value"] != undefined) {
+                                    value = parseFloat(e["value"])
+                                } else {
+                                    const minvalue = parseFloat(e["minvalue"])
+                                    const maxvalue = parseFloat(e["maxvalue"])
+                                    const interval = maxvalue - minvalue
+                                    const step = interval / 4
+                                    value = minvalue + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
+                                }
+
+                                flatValue = {
+                                    name: stat,
+                                    value: value
+                                }
+                            }
+
+                            implications.push({
+                                target: target,
+                                flatValue: flatValue,
+                                ratioValue: ratioValue
+                            })
+
+                        }
+
+                        implicationsSet.push(implications)
+                        break;
+                    
+                    case EEffectType.STACK:
+                        implications = []
+                        for (let k = 0; k < rawEffect["effects"].length; ++k) {
+                            let flatValue : IStatTuple | undefined = undefined
+                            let ratioValue : IStatRatio | undefined = undefined
                             const e = rawEffect["effects"][k]
                             const target = e["target"]
                             const stat = this.eikoDataTranslator.yamlToStat(e["stat"])
                             if (e["source"] != undefined) {
-                                const source = stringToEStat(e["source"])
+                                const sourceStat = stringToEStat(e["source"])
+                                const targetStat = stringToEStat(e["stat"])
                                 let ratio = 1
                                 if (e["ratio"] != undefined) {
                                     ratio = parseFloat(e["ratio"])
@@ -157,7 +237,15 @@ export class Updater {
                                     maxvalue = minmaxvalue + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
                                 }
 
-                                ratioNumbers.push({name: stat, iconId: "", source: source, ratio: ratio, base: base, step: step, maxvalue: maxvalue})
+                                ratioValue = {
+                                    base: base,
+                                    maxvalue: maxvalue,
+                                    ratio: ratio,
+                                    source: sourceStat,
+                                    step: step,
+                                    target: targetStat
+                                }
+
                             } else {
                                 let value = 0;
                                 if (e["value"] != undefined) {
@@ -170,9 +258,95 @@ export class Updater {
                                     value = minvalue + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
                                 }
 
-                                statChanges.push({name: stat, value: value, target: target})
+                                flatValue = {
+                                    name: stat,
+                                    value: value
+                                }
+
                             }
+
+                            implications.push({
+                                target: target,
+                                flatValue: flatValue,
+                                ratioValue: ratioValue
+                            })
+
                         }
+
+                        implicationsSet.push(implications)
+                    break;
+                    case EEffectType.STACK_PRECISE:
+                        for (let kk = 1; kk < maxstack + 1; ++kk) {
+                            implications = []
+                            for (let k = 0; k < rawEffect["effects"][kk].length; ++k) {
+                                let flatValue : IStatTuple | undefined = undefined
+                                let ratioValue : IStatRatio | undefined = undefined
+                                const e = rawEffect["effects"][kk][k]
+                                const target = e["target"]
+                                const stat = this.eikoDataTranslator.yamlToStat(e["stat"])
+                                if (e["source"] != undefined) {
+                                    const sourceStat = stringToEStat(e["source"])
+                                    const targetStat = stringToEStat(e["stat"])
+                                    let ratio = 1
+                                    if (e["ratio"] != undefined) {
+                                        ratio = parseFloat(e["ratio"])
+                                    } else {
+                                        const minratio = parseFloat(e["minratio"])
+                                        const maxratio = parseFloat(e["maxratio"])
+                                        const interval = maxratio - minratio
+                                        const step = interval / 4
+                                        ratio = minratio + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
+                                    }
+
+                                    const base = (e["base"] != undefined ? parseFloat(e["base"]) : 0)
+                                    const step = (e["step"] != undefined ? parseFloat(e["step"]) : 0)
+
+                                    let maxvalue = 0
+                                    if (e["minmaxvalue"] != undefined) {
+                                        const minmaxvalue = parseFloat(e["minmaxvalue"])
+                                        const maxmaxvalue = parseFloat(e["maxmaxvalue"])
+                                        const interval = maxmaxvalue - minmaxvalue
+                                        const step = interval / 4
+                                        maxvalue = minmaxvalue + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
+                                    }
+
+                                    ratioValue = {
+                                        base: base,
+                                        maxvalue: maxvalue,
+                                        ratio: ratio,
+                                        source: sourceStat,
+                                        step: step,
+                                        target: targetStat
+                                    }
+                                    
+                                } else {
+                                    let value = 0;
+                                    if (e["value"] != undefined) {
+                                        value = parseFloat(e["value"])
+                                    } else {
+                                        const minvalue = parseFloat(e["minvalue"])
+                                        const maxvalue = parseFloat(e["maxvalue"])
+                                        const interval = maxvalue - minvalue
+                                        const step = interval / 4
+                                        value = minvalue + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
+                                    }
+                                    
+                                    flatValue = {
+                                        name: stat,
+                                        value: value
+                                    }
+                                }
+
+                                implications.push({
+                                    target: target,
+                                    flatValue: flatValue,
+                                    ratioValue: ratioValue
+                                })
+                            }
+
+                            implicationsSet.push(implications)
+
+                    }
                 }
             }
 
@@ -184,11 +358,12 @@ export class Updater {
                 text: text,
                 options: addOptions(effectType, maxstack),
                 statChanges: statChanges,
-                ratioNumbers: ratioNumbers
+                implications: implicationsSet
             }
 
             res.push(effect)
         }
+
         return res
     }
 
@@ -200,24 +375,6 @@ export class Updater {
         if (weaponEffects != undefined) {
             return this.parseEffect(weaponEffects, weapon.name, weapon.assets.icon, weapon.refinement)
         }
-            // TODO: Change for better effect parsing
-            // for (let j = 0; j < weaponEffects.length; ++j) {
-            //     const rawEffect = weaponEffects[j]
-            //     // if (rawEffect["type"] == "static") {
-                    
-            //             const e : IEffect = {
-            //                 source: passiveEffectName,
-            //                 icon: weapon.assets.icon,
-            //                 type: stringToEEffectType(rawEffect["type"]),
-            //                 target: stringToETarget(target),
-            //                 statChanges: [{name: stat, value: value}],
-            //                 ratioNumbers: []
-            //             }
-
-            //             res.push(e)
-            //         // }
-            //     }
-            // }
 
         return res;
     }
@@ -366,7 +523,6 @@ export class Updater {
             }
 
             let currentStats = this.buildBaseStats(common, weapon, artes, c.ascensionLevel)
-
             const artefactEffects = await this.getArtefactEffects(artes)
             const weaponEffects = await this.getWeaponEffects(weapon)
             // const inherentEffect = this.getCharacterPassiveEffects()
@@ -375,9 +531,38 @@ export class Updater {
 
             for (let j = 0; j < currentEffects.length; ++j) {
                 const currentEffect = currentEffects[j]
-                for (let k = 0; k < currentEffect.statChanges.length; ++k) {
-                    if (currentEffect.options.enabled && (currentEffect.statChanges[k].target == ETarget.SELF || currentEffect.statChanges[k].target == ETarget.TEAM)){
-                        currentStats.addStat(currentEffect.statChanges[k])
+                if (currentEffect.type == EEffectType.STATIC) {
+                    for (let k = 0; k < currentEffect.implications[0].length; ++k) {
+                        if (currentEffect.options.enabled && (currentEffect.implications[0][k].target == ETarget.SELF || currentEffect.implications[0][k].target == ETarget.TEAM)){
+                            if (currentEffect.implications[0][k].flatValue != undefined) {
+                                currentStats.addStat(currentEffect.implications[0][k].flatValue!)
+                            }
+
+                        }
+                    }
+                }
+            }
+
+            for (let j = 0; j < currentEffects.length; ++j) {
+                const currentEffect = currentEffects[j]
+                if (currentEffect.type == EEffectType.STATIC) {
+                    for (let k = 0; k < currentEffect.implications[0].length; ++k) {
+                        if (currentEffect.options.enabled && (currentEffect.implications[0][k].target == ETarget.SELF || currentEffect.implications[0][k].target == ETarget.TEAM)){
+                            if (currentEffect.implications[0][k].ratioValue != undefined) {
+                                const r = currentEffect.implications[0][k].ratioValue!
+                                let value = currentStats.get(r.source).value - r.base
+                                if (r.step != 0) {
+                                    value = value / r.step
+                                }
+
+                                value = value * r.ratio
+                                currentStats.addStat({
+                                    name: r.target,
+                                    value: value
+                                })
+                            }
+
+                        }
                     }
                 }
             }
@@ -388,7 +573,7 @@ export class Updater {
                 if (currentStats.keys().includes(currentStat)) {
                     const statDiff = c.finalStats.get(currentStat)!.value / currentStats.get(currentStat)!.value
                     if (statDiff < 0.98 || statDiff > 1.02) {
-                        anomalies.addStat({name: currentStat, value: c.finalStats.get(currentStat)!.value - currentStats.get(currentStat)!.value, target: ETarget.SELF})
+                        anomalies.addStat({name: currentStat, value: c.finalStats.get(currentStat)!.value - currentStats.get(currentStat)!.value})
                     }
                 } else {
                     anomalies.addStat(c.finalStats.get(currentStat)!)
@@ -461,8 +646,7 @@ export class Updater {
                 for (let j = 0; j < ruleLabels.length; ++j) {
                     rule.push({
                         name: ruleLabels[j],
-                        value: 3,
-                        target: ETarget.SELF
+                        value: 3
                     })
                 }
 

@@ -1,3 +1,5 @@
+import { INumberInstance } from "./INumberInstances";
+import { IStatTuple } from "./IStatTuple";
 import { EEffectType } from "./enums/EEffectType"
 
 export interface IEffectOptions {

@@ -64,7 +64,6 @@ export function copyCharacterData(ref: ICharacterData) : ICharacterData{
         totalStats.addStat({
             name: stringToEStat(n),
             value: v,
-            target: ETarget.SELF
         })
     }
 
@@ -75,7 +74,6 @@ export function copyCharacterData(ref: ICharacterData) : ICharacterData{
         anomalies.addStat({
             name: stringToEStat(n),
             value: v,
-            target: ETarget.SELF
         })
     }
 
@@ -117,12 +115,10 @@ export function copyCharacterData(ref: ICharacterData) : ICharacterData{
             mainStat: {
                 name: ref.weapon.mainStat.name,
                 value: ref.weapon.mainStat.value,
-                target: ref.weapon.mainStat.target
             },
             subStat: ref.weapon.subStat == undefined ? undefined : {
                 name: ref.weapon.subStat.name,
                 value: ref.weapon.subStat.value,
-                target: ref.weapon.subStat.target,
             },
             level: ref.weapon.level,
             refinement: ref.weapon.refinement,

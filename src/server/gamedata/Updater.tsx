@@ -8,7 +8,6 @@ import { IArtefact } from "./IArtefact";
 import { StatBag } from "./StatBag";
 import { IEffect } from "./IEffect";
 import { ETarget, stringToETarget } from "./enums/EEffectTarget";
-import { EikoDataTranslator } from "./EikoDataTranslator";
 import { ICharacterCommonData } from "./ICharacterCommonData";
 import { ERarity } from "./enums/ERarity";
 import { EStat, stringToEStat } from "./enums/EStat";
@@ -21,13 +20,13 @@ import { IStatTuple } from "./IStatTuple";
 import { addOptions } from "./IEffectOptions";
 import { IEffectImplication } from "./IEffectImplication";
 import { IStatRatio } from "./IStatRatio";
+import { stringToERegion } from "./enums/ERegion";
 
 
 export class Updater {
 
     uid: string = ""
     enkaTranslator!: EnkaTranslator
-    eikoDataTranslator! : EikoDataTranslator
     bridge!:EnkaBridge
 
     constructor (uid: string) {
@@ -36,7 +35,6 @@ export class Updater {
     
     public async initialize() {
         this.enkaTranslator = await buildEnkaTranslator()
-        this.eikoDataTranslator = new EikoDataTranslator()
         this.bridge = new EnkaBridge(this.uid, this.enkaTranslator)
     }
 
@@ -44,13 +42,13 @@ export class Updater {
         const ascensionRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/character-ascensions.yml")).text()
         const sets = yaml.parse(ascensionRawData)
         const statName = sets[name]["stat"]
-        return this.eikoDataTranslator.yamlToStat(statName)
+        return stringToEStat(statName)
     }
     
     private async computeAscensionStatValue(statName: EStat, characterName: string, rarity: ERarity): Promise<number> {
         const values = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/ascension-values.yml")).text()
         const sets = yaml.parse(values)
-        const baseValue = sets[this.eikoDataTranslator.statToYaml(statName)]
+        const baseValue = sets[stringToEStat(statName)]
         let rarityMultiplier = 1
         if (characterName != "Lumine" && characterName != "Aether" && (rarity == ERarity.V || rarity == ERarity.V_RED)) {
             rarityMultiplier = 1.2
@@ -210,7 +208,7 @@ export class Updater {
                             let ratioValue : IStatRatio | undefined = undefined
                             const e = rawEffect["effects"][k]
                             const target = e["target"]
-                            const stat = this.eikoDataTranslator.yamlToStat(e["stat"])
+                            const stat = stringToEStat(e["stat"])
                             if (e["source"] != undefined) {
                                 const sourceStat = stringToEStat(e["source"])
                                 const targetStat = stringToEStat(e["stat"])
@@ -283,7 +281,7 @@ export class Updater {
                                 let ratioValue : IStatRatio | undefined = undefined
                                 const e = rawEffect["effects"][kk][k]
                                 const target = e["target"]
-                                const stat = this.eikoDataTranslator.yamlToStat(e["stat"])
+                                const stat = stringToEStat(e["stat"])
                                 if (e["source"] != undefined) {
                                     const sourceStat = stringToEStat(e["source"])
                                     const targetStat = stringToEStat(e["stat"])
@@ -472,7 +470,7 @@ export class Updater {
             const common: ICharacterCommonData = {
                 name: name,
                 element: c.commonData.element,
-                region: this.eikoDataTranslator.yamlToRegion(reg[name]),
+                region: stringToERegion(reg[name]),
                 rarity: c.commonData.rarity,
                 weaponType: c.commonData.weapon,
                 ascensionStatName: ascensionName,

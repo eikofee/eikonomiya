@@ -1,1 +1,0 @@
-type TStatSet = (stat: EStat) => number

@@ -8,6 +8,7 @@ import InfoDiv from "./Tooltip";
 import { ThemeContext } from "./ThemeContext";
 import { IArtefact } from "@/server/gamedata/IArtefact";
 import { EStat, eStatToReadable } from "@/server/gamedata/enums/EStat";
+import { IStatTuple } from "@/server/gamedata/IStatTuple";
 
 export default function ArtefactCard({equip, rule, sortedStats, scoreState} : {equip: IArtefact, rule: ICharacterRule, sortedStats: IStatTuple[], scoreState: (a: number) => void}) {
 

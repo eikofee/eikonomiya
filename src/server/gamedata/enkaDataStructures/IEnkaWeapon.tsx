@@ -1,3 +1,4 @@
+import { IStatTuple } from "../IStatTuple";
 import { ERarity } from "../enums/ERarity";
 import { EWeaponType } from "../enums/EWeaponType";
 

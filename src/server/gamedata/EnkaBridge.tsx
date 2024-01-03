@@ -1,4 +1,5 @@
 import { EnkaTranslator } from "./EnkaTranslator";
+import { ISubStat } from "./ISubStat";
 import { StatBag } from "./StatBag";
 import { IEnkaArtefact } from "./enkaDataStructures/IEnkaArtefact";
 import { IEnkaCharacterCommonData } from "./enkaDataStructures/IEnkaCharacterCommonData";
@@ -63,25 +64,25 @@ export class EnkaBridge {
             return parseFloat(data["fightPropMap"][id])
         }
 
-        sb.addStat({ name: EStat.HP, value: fpm(2), target: ETarget.SELF })
-        sb.addStat({ name: EStat.HP_P, value: fpm(3), target: ETarget.SELF })
-        sb.addStat({ name: EStat.ATK, value: fpm(5), target: ETarget.SELF })
-        sb.addStat({ name: EStat.ATK_P, value: fpm(6), target: ETarget.SELF })
-        sb.addStat({ name: EStat.DEF, value: fpm(8), target: ETarget.SELF })
-        sb.addStat({ name: EStat.DEF_P, value: fpm(9), target: ETarget.SELF })
-        sb.addStat({ name: EStat.CR_P, value: fpm(20), target: ETarget.SELF })
-        sb.addStat({ name: EStat.CDMG_P, value: fpm(22), target: ETarget.SELF })
-        sb.addStat({ name: EStat.ER_P, value: fpm(23), target: ETarget.SELF })
-        sb.addStat({ name: EStat.HEAL_OUT_P, value: fpm(26), target: ETarget.SELF })
-        sb.addStat({ name: EStat.EM, value: fpm(28), target: ETarget.SELF })
-        sb.addStat({ name: EStat.PHYS_DMG_P, value: fpm(30), target: ETarget.SELF })
-        sb.addStat({ name: EStat.PYRO_DMG_P, value: fpm(40), target: ETarget.SELF })
-        sb.addStat({ name: EStat.ELECTRO_DMG_P, value: fpm(41), target: ETarget.SELF })
-        sb.addStat({ name: EStat.HYDRO_DMG_P, value: fpm(42), target: ETarget.SELF })
-        sb.addStat({ name: EStat.DENDRO_DMG_P, value: fpm(43), target: ETarget.SELF })
-        sb.addStat({ name: EStat.ANEMO_DMG_P, value: fpm(44), target: ETarget.SELF })
-        sb.addStat({ name: EStat.GEO_DMG_P, value: fpm(45), target: ETarget.SELF })
-        sb.addStat({ name: EStat.CRYO_DMG_P, value: fpm(46), target: ETarget.SELF })
+        sb.addStat({ name: EStat.HP, value: fpm(2)})
+        sb.addStat({ name: EStat.HP_P, value: fpm(3)})
+        sb.addStat({ name: EStat.ATK, value: fpm(5)})
+        sb.addStat({ name: EStat.ATK_P, value: fpm(6)})
+        sb.addStat({ name: EStat.DEF, value: fpm(8)})
+        sb.addStat({ name: EStat.DEF_P, value: fpm(9)})
+        sb.addStat({ name: EStat.CR_P, value: fpm(20)})
+        sb.addStat({ name: EStat.CDMG_P, value: fpm(22)})
+        sb.addStat({ name: EStat.ER_P, value: fpm(23)})
+        sb.addStat({ name: EStat.HEAL_OUT_P, value: fpm(26)})
+        sb.addStat({ name: EStat.EM, value: fpm(28)})
+        sb.addStat({ name: EStat.PHYS_DMG_P, value: fpm(30)})
+        sb.addStat({ name: EStat.PYRO_DMG_P, value: fpm(40)})
+        sb.addStat({ name: EStat.ELECTRO_DMG_P, value: fpm(41)})
+        sb.addStat({ name: EStat.HYDRO_DMG_P, value: fpm(42)})
+        sb.addStat({ name: EStat.DENDRO_DMG_P, value: fpm(43)})
+        sb.addStat({ name: EStat.ANEMO_DMG_P, value: fpm(44)})
+        sb.addStat({ name: EStat.GEO_DMG_P, value: fpm(45)})
+        sb.addStat({ name: EStat.CRYO_DMG_P, value: fpm(46)})
 
         let skills = []
         for (let i = 0; i < characterCommonData.skills.length; ++i) {
@@ -166,9 +167,9 @@ export class EnkaBridge {
         }
 
         const baseSb = new StatBag()
-        baseSb.addStat({name: EStat.HP, value: fpm(1), target: ETarget.SELF})
-        baseSb.addStat({name: EStat.ATK, value: fpm(4), target: ETarget.SELF}) // includes weapon
-        baseSb.addStat({name: EStat.DEF, value: fpm(7), target: ETarget.SELF})
+        baseSb.addStat({name: EStat.HP, value: fpm(1)})
+        baseSb.addStat({name: EStat.ATK, value: fpm(4)}) // includes weapon
+        baseSb.addStat({name: EStat.DEF, value: fpm(7)})
         const res: IEnkaCharacterData = {
             id: data["avatarId"],
             commonData: characterCommonData,

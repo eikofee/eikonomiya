@@ -1,4 +1,4 @@
-import { ReactNode, useContext } from "react";
+import { ReactNode, useContext, useState } from "react";
 import { Card } from "./Card";
 import Icon from "./Icon";
 import { ThemeContext } from "./ThemeContext";
@@ -7,6 +7,7 @@ import { ICharacterData } from "@/server/gamedata/ICharacterData";
 import { EStat, eStatToReadable, stringToEStat } from "@/server/gamedata/enums/EStat";
 import { computeStats } from "@/server/gamedata/StatComputations";
 import { IStatBag } from "@/server/gamedata/IStatBag";
+import StatLineDraw from "./StatLineDrawer";
 
 export interface ILine {
     name: ReactNode
@@ -26,37 +27,59 @@ export default function StatCard({character, statbag} : {character: ICharacterDa
 
         return 0
     }
+
+    const [expanded, setExpanded] = useState(false)
+
+    const toggleExpand = () => {
+        setExpanded(!expanded)
+    }
+
     const {colorDirector} = useContext(ThemeContext)
     const finalHP = character.commonData.baseStats.hp * (1+getStat(EStat.HP_P)) + getStat(EStat.HP)
     const finalATK = (character.commonData.baseStats.atk_nw! + character.weapon.mainStat.value) * (1+getStat(EStat.ATK_P)) + getStat(EStat.ATK)
     const finalDEF = character.commonData.baseStats.def * (1+getStat(EStat.DEF_P)) + getStat(EStat.DEF)
-    let baseStat = ["HP", "ATK", "DEF"]
+    let baseStat = ["hp", "atk", "def"]
     let baseValues = [finalHP, finalATK, finalDEF]
+    let subBase = 0;
+    let subBonus = 0;
+    let subFlat = 0;
     for (let i = 0; i < baseStat.length; ++i) {
-        let classname = "flex flex-row justify-between items p-1"
-        let n = <div className="flex flex-row items-center"><Icon n={baseStat[i]} /> <span className="pl-1">{baseStat[i]}</span></div>
-        let v = <div>{baseValues[i].toFixed(0).toString()}</div>
+
         let info = <p></p>
         switch (baseStat[i]) {
-            case "HP":
-                info = <p>{character.commonData.baseStats.hp.toFixed(0)} * (100% + {(getStat(EStat.HP_P) * 100).toFixed(1)}%) + {getStat(EStat.HP).toFixed(0)}</p>
+            case "hp":
+                // info = <p>{character.commonData.baseStats.hp.toFixed(0)} * (100% + {(getStat(EStat.HP_P) * 100).toFixed(1)}%) + {getStat(EStat.HP).toFixed(0)}</p>
+                subBase = character.commonData.baseStats.hp
+                subBonus = getStat(EStat.HP_P)
+                subFlat = getStat(EStat.HP)
                 break;
-            case "ATK":
-                info = <p>({character.commonData.baseStats.atk_nw.toFixed(0)} + {character.weapon.mainStat.value.toFixed(0)}) * (100% + {(getStat(EStat.ATK_P) * 100).toFixed(1)}%) + {getStat(EStat.ATK).toFixed(0)}</p>
+            case "atk":
+                // info = <p>({character.commonData.baseStats.atk_nw.toFixed(0)} + {character.weapon.mainStat.value.toFixed(0)}) * (100% + {(getStat(EStat.ATK_P) * 100).toFixed(1)}%) + {getStat(EStat.ATK).toFixed(0)}</p>
+                subBase = character.commonData.baseStats.atk
+                subBonus = getStat(EStat.ATK_P)
+                subFlat = getStat(EStat.ATK)
                 break;
-            case "DEF":
-                info = <p>{character.commonData.baseStats.def.toFixed(0)} * (100% + {(getStat(EStat.DEF_P) * 100).toFixed(1)}%) + {getStat(EStat.DEF).toFixed(0)}</p>
+            case "def":
+                // info = <p>{character.commonData.baseStats.def.toFixed(0)} * (100% + {(getStat(EStat.DEF_P) * 100).toFixed(1)}%) + {getStat(EStat.DEF).toFixed(0)}</p>
+                subBase = character.commonData.baseStats.def
+                subBonus = getStat(EStat.DEF_P)
+                subFlat = getStat(EStat.DEF)
                 break;
             default:
                 break;
         }
-        ls.push(
-        <li className={classname}>
-            <div className="text-left basis-3/5 items-center">{n}</div>
-            <Tooltip child={
-                <div className="text-right basis-2/5 pr-2">{v}</div>
-            } info={info} />
-        </li>)
+
+        ls.push(<StatLineDraw name={baseStat[i]} value={baseValues[i]} rounded={false} /> )
+        if (expanded) {
+            ls.push(<StatLineDraw name="Base" value={subBase} rounded={false} sub={true}/>)
+            if (subBonus > 0) {
+                ls.push(<StatLineDraw name="Stat% bonus" value={subBonus} rounded={false} sub={true}/>)
+            }
+            if (subFlat > 0) {
+                ls.push(<StatLineDraw name="Flat bonus" value={subFlat} rounded={false} sub={true}/>)
+            }
+        }
+
     }
 
     const statNames = Object.values(EStat).filter(x => !["hp", "atk", "def"].includes(x.replace("%", "")))
@@ -65,26 +88,18 @@ export default function StatCard({character, statbag} : {character: ICharacterDa
         statValues.push(getStat(stringToEStat(statNames[i])))
     }
     for (let i = 0; i < statNames.length; ++i) {
-        let s = eStatToReadable(statNames[i] as EStat)
+        let s = statNames[i]
+        console.log(s)
         if (statValues[i] > 0) {
-
-            let classname = "flex flex-row justify-between items p-1"
-            if (i == statNames.length - 1) {
-                classname += " rounded-b-md"
-            }
-            let n = <div className="flex flex-row items-center"><Icon n={s} /> <span className="pl-1">{s}</span></div>
-            let value = statValues[i] * (s.includes("%") ? 100 : 1)
-            let fv = (s.includes("%") ? 1 : 0)
-            let v = <div>{value.toFixed(fv).toString().concat(s.includes("%") ? "%" : "")}</div>
-            ls.push(
-                <li className={classname}>
-            <div className="text-left basis-3/5 items-center">{n}</div>
-            <div className="text-right basis-2/5 pr-2">{v}</div>
-        </li>)
+            ls.push(<StatLineDraw name={s} value={statValues[i]} rounded={i == statNames.length - 1} />)
         }
     }
+
     let content = <div className="bg-inherit">
-        <div className="pl-2 font-semibold">{"Basic Stats"}</div>
+        <div className="flex flex-row w-full justify-between">
+            <div className="pl-2 font-semibold">{"Basic Stats"}</div>
+            <button onClick={toggleExpand} className={"pr-2 text-sm text-right cursor-pointer ".concat(colorDirector.textAccent(3))}>{expanded ? "Collapse" : "Expand"}</button>
+        </div>
         <ul>
             {ls}
         </ul>

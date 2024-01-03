@@ -8,7 +8,7 @@ export default function AscensionCard({char} : {char: ICharacterData}) {
         return <li className="flex justify-between place-items-center">
             <div className="w-full flex flex-row items-center">
                             <div className="text-left max-h-4">
-                                <Icon n={statName}/>
+                                <Icon n={statName.toLowerCase()}/>
                             </div>
                             <div className="text-right grow">
                                 {(statName.includes("%") ? (statValue * 100).toFixed(1): statValue.toFixed(0)).concat(statName.includes("%") ? "%" : "")}
@@ -33,7 +33,7 @@ export default function AscensionCard({char} : {char: ICharacterData}) {
             {statLine("HP", char.commonData.baseStats.hp)}
             {statLine("ATK", char.commonData.baseStats.atk_nw!)}
             {statLine("DEF", char.commonData.baseStats.def)}
-            {statLine(eStatToReadable(char.ascensionStatName), char.ascensionStatValue)}
+            {statLine(char.ascensionStatName, char.ascensionStatValue)}
         </ul>
     </div>
 </div>

@@ -377,6 +377,17 @@ export class Updater {
         return res;
     }
 
+    private async getCharacterEffects(c: ICharacterCommonData): Promise<IEffect[]> {
+        const characterEffectsRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/talents.yml", { cache: 'no-store' })).text()
+        let res : IEffect[] = []
+        const charEffects = yaml.parse(characterEffectsRawData)[c.name]
+        if (charEffects != undefined) {
+            return this.parseEffect(charEffects, c.name, c.assets.characterPortrait, 0)
+        }
+
+        return res;
+    }
+
     private async getArtefactEffects(arte : IArtefact[]): Promise<IEffect[]> {
         const artefactSetRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/artefacts.yml")).text()
         const equipSets : Record<string, number> = {}
@@ -523,8 +534,8 @@ export class Updater {
             let currentStats = this.buildBaseStats(common, weapon, artes, c.ascensionLevel)
             const artefactEffects = await this.getArtefactEffects(artes)
             const weaponEffects = await this.getWeaponEffects(weapon)
-            // const inherentEffect = this.getCharacterPassiveEffects()
-            const currentEffects = artefactEffects.concat(weaponEffects)
+            const inherentEffect = await this.getCharacterEffects(common)
+            const currentEffects = artefactEffects.concat(weaponEffects, inherentEffect)
 
 
             for (let j = 0; j < currentEffects.length; ++j) {

@@ -1,6 +1,7 @@
 import { ReactElement } from "react";
 import InfoDiv from "./Tooltip";
 import Tooltip from "./Tooltip";
+import { EStat, eStatToReadable, stringToEStat } from "@/server/gamedata/enums/EStat";
 
 const atkIcon = () => {
     return [<path key="1" d="M 13.292969 2.832031 L 16.109375 5.648438 L 19.414062 2.34375 L 19.371094 0.429688 C 19.378906 0.21875 19.550781 0.0507812 19.761719 0.0507812 L 23.535156 0.0507812 C 23.636719 0.0507812 23.738281 0.09375 23.8125 0.167969 C 23.882812 0.238281 23.925781 0.339844 23.925781 0.445312 C 23.71875 5.003906 24.878906 4.65625 21.632812 4.558594 L 18.320312 7.859375 L 21.136719 10.679688 C 21.289062 10.832031 21.289062 11.078125 21.136719 11.230469 C 19.136719 13.304688 19.808594 12.785156 17.894531 11.050781 L 5.636719 23.300781 C 5.492188 23.445312 5.300781 23.53125 5.097656 23.539062 C 3.421875 23.789062 1.730469 23.925781 0.0351562 23.945312 C 0.0507812 22.25 0.1875 20.558594 0.441406 18.882812 C 0.441406 18.675781 0.527344 18.480469 0.671875 18.335938 L 12.921875 6.074219 L 11.484375 4.636719 C 11.332031 4.480469 11.332031 4.234375 11.484375 4.082031 L 12.742188 2.832031 C 12.894531 2.679688 13.140625 2.679688 13.292969 2.832031 Z M 13.292969 2.832031 "></path>]
@@ -116,110 +117,125 @@ const sablierIcon = () => {
     return [<path key="1" d="M 20.046875 21.785156 L 18.644531 21.785156 L 18.644531 20.167969 C 18.644531 14.105469 13.035156 13.808594 13.035156 11.742188 L 13.035156 11.621094 C 13.03125 11.121094 13.285156 10.65625 13.707031 10.386719 C 15.195312 9.425781 18.460938 8.136719 18.636719 3.707031 C 18.640625 3.609375 18.605469 3.507812 18.535156 3.4375 C 18.464844 3.363281 18.371094 3.324219 18.269531 3.324219 L 5.730469 3.324219 C 5.628906 3.324219 5.535156 3.363281 5.464844 3.4375 C 5.394531 3.507812 5.355469 3.605469 5.359375 3.707031 C 5.53125 8.136719 8.804688 9.425781 10.292969 10.394531 C 10.710938 10.664062 10.964844 11.128906 10.964844 11.628906 L 10.964844 11.75 C 10.964844 13.816406 5.355469 14.113281 5.355469 20.175781 L 5.355469 21.792969 L 3.949219 21.792969 C 3.75 21.792969 3.585938 21.953125 3.582031 22.152344 L 3.582031 23.632812 C 3.582031 23.835938 3.746094 24 3.949219 24 L 20.046875 24 C 20.253906 24 20.417969 23.835938 20.417969 23.632812 L 20.417969 22.152344 C 20.417969 21.949219 20.253906 21.785156 20.046875 21.785156 Z M 12 21.785156 L 6.6875 21.785156 C 6.6875 17.058594 11.410156 18.09375 11.410156 16.171875 L 11.410156 10.265625 C 11.410156 10.265625 8.601562 8.640625 8.601562 7.457031 L 15.394531 7.457031 C 15.394531 8.640625 12.589844 10.265625 12.589844 10.265625 L 12.589844 16.171875 C 12.589844 18.09375 17.316406 17.058594 17.316406 21.785156 Z M 20.417969 0.367188 L 20.417969 1.847656 C 20.417969 2.050781 20.253906 2.214844 20.046875 2.214844 L 3.949219 2.214844 C 3.746094 2.214844 3.582031 2.050781 3.582031 1.847656 L 3.582031 0.367188 C 3.582031 0.164062 3.746094 0 3.949219 0 L 20.046875 0 C 20.253906 0 20.417969 0.164062 20.417969 0.367188 Z M 20.417969 0.367188 " />]
 }
 
+const defaultDotIcon = () => {
+    return [<circle cx="12" cy="12" r="5" stroke="black"stroke-width="3" />]
+}
 
-export default function Icon({n}: {n: string}) {
+
+// export default function Icon({n}: {n: string}) {
+export default function Icon({n: n}: {n: string}) {
     let content : ReactElement[] = []
     let svgClassname = "h-4 w-4"
-
     switch (n) {
-        case "ATK":
-        case "ATK%":
+        case "atk":
+        case "atk%":
             content = atkIcon()
             break;
-        case "DEF":
-        case "DEF%":
+        case "def":
+        case "def%":
             content = defIcon()
             break;
-        case "HP":
-        case "HP%":
+        case "hp":
+        case "hp%":
             content = hpIcon()
             break;
-        case "EM":
+        case "em":
             content = emIcon()
             break;
-        case "ER%":
+        case "er%":
             content = erIcon()
             break;
-        case "Crit Rate%":
+        case "cr%":
             content = critRateIcon()
             break;
-        case "Crit DMG%":
+        case "cdmg%":
             content = critDmgIcon()
             break;
         case "CD Red.":
             content = cdRedIcon()
             break;
-        case "Heal in%":
+        case "heal in%":
             content = healBonusIcon()
             break;
-        case "Heal out%":
+        case "heal out%":
             content = healBonusIcon()
             break;
-        case "Shield%":
+        case "shield%":
             content = shieldIcon()
             break;
-        case "Stamina":
+        case "stamina":
             content = staminaIcon()
             break;
-        case "Anemo DMG%":
-        case "Anemo":
+        case "anemo dmg%":
+        case "anemo dmg":
+        case "anemo":
             content = anemoIcon()
             svgClassname = svgClassname.concat(" fill-teal-500")
             break;
-        case "Geo DMG%":
-        case "Geo":
+        case "geo dmg%":
+        case "geo dmg":
+        case "geo":
             content = geoIcon()
             svgClassname = svgClassname.concat(" fill-yellow-500")
             break;
-        case "Electro DMG%":
-        case "Electro":
+        case "electro dmg%":
+        case "electro dmg":
+        case "electro":
             content = electroIcon()
             svgClassname = svgClassname.concat(" fill-violet-500")
             break;
-        case "Dendro DMG%":
-        case "Dendro":
+        case "dendro dmg%":
+        case "dendro dmg":
+        case "dendro":
             content = dendroIcon()
             svgClassname = svgClassname.concat(" fill-lime-500")
             break;
-        case "Hydro DMG%":
-        case "Hydro":
+        case "hydro dmg%":
+        case "hydro dmg":
+        case "hydro":
             content = hydroIcon()
             svgClassname = svgClassname.concat(" fill-blue-500")
             break;
-        case "Pyro DMG%":
-        case "Pyro":
+        case "pyro dmg%":
+        case "pyro dmg":
+        case "pyro":
             content = pyroIcon()
             svgClassname = svgClassname.concat(" fill-red-500")
             break;
-        case "Cryo DMG%":
-        case "Cryo":
+        case "cryo dmg%":
+        case "cryo dmg":
+        case "cryo":
             content = cryoIcon()
             svgClassname = svgClassname.concat(" fill-cyan-500")
             break;
-        case "Phys DMG%":
-        case "Phys":
+        case "phys dmg%":
+        case "phys dmg":
+        case "phys":
             content = physIcon()
             svgClassname = svgClassname.concat(" fill-slate-500")
             break;
-        case "Fleur":
+        case "fleur":
             content = fleurIcon()
             break;
-        case "Plume":
+        case "plume":
             content = plumeIcon()
             break;
-        case "Sablier":
+        case "sablier":
             content = sablierIcon()
             break;
-        case "Coupe":
+        case "coupe":
             content = coupeIcon()
             break;
-        case "Couronne":
+        case "couronne":
             content = couronneIcon()
+            break;
+        default:
+            content = defaultDotIcon()
             break;
 
     }
     let svg = <svg viewBox="0 0 24 24" className={svgClassname}>
                     {content}
                 </svg>
-    return <Tooltip child={svg} info={n} childClassname="" infoClassname="absolute bg-gray-800 text-white font-normal text-sm rounded p-2 whitespace-nowrap bottom-full left-1/2 transform -translate-x-1/2 " />
+    return <Tooltip child={svg} info={eStatToReadable(stringToEStat(n))} childClassname="" infoClassname="absolute bg-gray-800 text-white font-normal text-sm rounded p-2 whitespace-nowrap bottom-full left-1/2 transform -translate-x-1/2 " />
 }

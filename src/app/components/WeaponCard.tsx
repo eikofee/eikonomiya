@@ -25,7 +25,7 @@ export default function WeaponCard({equip, rule} : {equip: IWeapon, rule: IChara
         <div className="flex flex-col w-full">
         <div className="w-full flex flex-row items-center">
                 <div className="text-left max-h-4">
-                    <Icon n={eStatToReadable(equip.subStat.name)}/>
+                    <Icon n={equip.subStat.name}/>
                 </div>
                 <div className={"text-right grow"}>
                     {isPercentage(eStatToReadable(equip.subStat.name)) ? (equip.subStat.value! * 100).toFixed(1): equip.subStat.value}{isPercentage(equip.subStat.name) ? "%" : ""}
@@ -52,7 +52,7 @@ export default function WeaponCard({equip, rule} : {equip: IWeapon, rule: IChara
                     </div>
                     <div className="w-full flex flex-row items-center">
                         <div className="text-left max-h-4">
-                            <Icon n={eStatToReadable(equip.mainStat.name)}/>
+                            <Icon n={equip.mainStat.name}/>
                         </div>
                         <div className={"text-right grow"}>
                             {isPercentage(equip.mainStat.name) ? (equip.mainStat.value * 100).toFixed(1): equip.mainStat.value}{isPercentage(equip.mainStat.name) ? "%" : ""}

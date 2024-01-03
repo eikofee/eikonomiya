@@ -59,8 +59,8 @@ export function eStatToReadable (s: EStat) : string {
         case EStat.HP_P: return "HP%";
         case EStat.ATK_P: return "ATK%";
         case EStat.DEF_P: return "DEF%";
-        case EStat.EM: return "EM";
-        case EStat.ER_P: return "ER%";
+        case EStat.EM: return "Elemental Mastery";
+        case EStat.ER_P: return "Energy Recharge%";
         case EStat.CR_P: return "Crit Rate%";
         case EStat.CDMG_P: return "Crit DMG%";
         case EStat.PHYS_DMG_P: return "Phys DMG%";
@@ -73,22 +73,22 @@ export function eStatToReadable (s: EStat) : string {
         case EStat.CRYO_DMG_P: return "Cryo DMG%";
         case EStat.HEAL_OUT_P: return "Heal out%";
         case EStat.HEAL_IN_P: return "Heal in%";
-        case EStat.ELEM_DMG_P: return "Elem DMG%"
-        case EStat.NA_DMG_P: return "NA DMG%";
-        case EStat.CA_DMG_P: return "CA DMG%";
-        case EStat.PA_DMG_P: return "PA DMG%";
-        case EStat.NA_DMG: return "NA DMG";
-        case EStat.CA_DMG: return "CA DMG";
-        case EStat.PA_DMG: return "PA DMG";
-        case EStat.NA_SPD_P: return "NA SPD%";
-        case EStat.CA_SPD_P: return "CA SPD%";
-        case EStat.PA_SPD_P: return "PA SPD%";
-        case EStat.DMG_P: return "DMG%"
-        case EStat.SKILL_DMG_P: return "Skill DMG%";
-        case EStat.BURST_DMG_P: return "Burst DMG%";
+        case EStat.ELEM_DMG_P: return "Elemental DMG%"
+        case EStat.NA_DMG_P: return "Normal ATK DMG%";
+        case EStat.CA_DMG_P: return "Charged ATK DMG%";
+        case EStat.PA_DMG_P: return "Plunging ATK DMG%";
+        case EStat.NA_DMG: return "Normal ATK DMG";
+        case EStat.CA_DMG: return "Charged ATK DMG";
+        case EStat.PA_DMG: return "Plunging DMG";
+        case EStat.NA_SPD_P: return "Normal ATK SPD%";
+        case EStat.CA_SPD_P: return "Charged ATK SPD%";
+        case EStat.PA_SPD_P: return "Plunging ATK SPD%";
+        case EStat.DMG_P: return "Bonus DMG%"
+        case EStat.SKILL_DMG_P: return "E. Skill DMG%";
+        case EStat.BURST_DMG_P: return "E. Burst DMG%";
         case EStat.MOVE_SPD_P: return "Move SPD%";
-        case EStat.SKILL_CR_P: return "Skill Crit Rate%";
-        case EStat.BURST_CR_P: return "Burst Crit Rate%";
+        case EStat.SKILL_CR_P: return "E. Skill Crit Rate%";
+        case EStat.BURST_CR_P: return "E. Burst Crit Rate%";
         case EStat.OVERLOADED_DMG_P: return "Overloaded DMG%";
         case EStat.BURNING_DMG_P: return "Burning DMG%";
         case EStat.VAPORIZE_DMG_P: return "Vaporize DMG%";

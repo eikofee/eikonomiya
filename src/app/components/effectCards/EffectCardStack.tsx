@@ -45,7 +45,7 @@ export default function EffectCardStack({effect: effect, effectUpdateCallback: e
     }
 
     const controller = <div className={stackClassname}>
-        <p className="self-start self-center text-xs">Stacks : </p>
+        <p className="self-center text-xs">Stacks : </p>
         <div className="flex flex-row w-full justify-center">
             {stackButtons}
         </div>

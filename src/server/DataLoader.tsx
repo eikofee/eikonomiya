@@ -16,6 +16,7 @@ import { stringToERegion } from "./gamedata/enums/ERegion";
 import { stringToEEffectType } from "./gamedata/enums/EEffectType";
 import { IStatTuple } from "./gamedata/IStatTuple";
 import { IEffectImplication } from "./gamedata/IEffectImplication";
+import { ISubStat } from "./gamedata/ISubStat";
 
 export async function getUIDFolderList(): Promise<string[]> {
     const p = path.join(process.cwd(), "/data")

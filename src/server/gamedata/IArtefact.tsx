@@ -1,4 +1,5 @@
 import { IStatTuple } from "./IStatTuple";
+import { ISubStat } from "./ISubStat";
 import { EArtefact } from "./enums/EArtefact";
 import { ERarity } from "./enums/ERarity";
 
@@ -34,7 +35,6 @@ export function copyArtefact(x: IArtefact) : IArtefact {
         mainStat: {
             name: x.mainStat.name,
             value: x.mainStat.value,
-            target: x.mainStat.target
         },
         subStats: subStats,
         assets: {

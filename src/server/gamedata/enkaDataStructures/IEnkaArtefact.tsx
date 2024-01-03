@@ -1,3 +1,5 @@
+import { IStatTuple } from "../IStatTuple";
+import { ISubStat } from "../ISubStat";
 import { EArtefact } from "../enums/EArtefact";
 import { ERarity } from "../enums/ERarity";
 

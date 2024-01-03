@@ -118,7 +118,7 @@ const sablierIcon = () => {
 }
 
 const defaultDotIcon = () => {
-    return [<circle cx="12" cy="12" r="5" stroke="black"stroke-width="3" />]
+    return [<circle key="1" cx="12" cy="12" r="5" stroke="black"stroke-width="3" />]
 }
 
 

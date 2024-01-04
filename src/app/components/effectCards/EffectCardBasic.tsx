@@ -2,8 +2,6 @@ import { IEffect } from "@/server/gamedata/IEffect";
 import { eStatToReadable } from "@/server/gamedata/enums/EStat";
 import { useContext, useState } from "react";
 import { ICharacterData } from "@/server/gamedata/ICharacterData";
-import { EEffectType } from "@/server/gamedata/enums/EEffectType";
-import { Card } from "../Card";
 import Icon from "../Icon";
 import { ThemeContext } from "../ThemeContext";
 import Tooltip from "../Tooltip";
@@ -35,7 +33,7 @@ export default function EffectCardBasic({effect: effect, effectUpdateCallback: e
     let title = <Tooltip child={effect.source} info={effect.text} />
     let content = <div className="bg-inherit">
         <div className={"flex flex-row flex-grow w-full rounded-t-md ".concat(colorDirector.bgAccent(7))}>
-            <img src={effect.icon} className="aspect-square w-8 place-self-start"/>
+            <img alt="" src={effect.icon} className="aspect-square w-8 place-self-start"/>
             <div className="pl-2 font-semibold place-self-center grow">{title}</div>
             {effect.tag != "" ? <div className="text-right place-self-end self-center h-1/2 bg-orange-500 rounded-md text-sm mr-2 p-1">{effect.tag}</div> : ""}
         </div>

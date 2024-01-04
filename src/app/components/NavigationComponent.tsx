@@ -9,7 +9,7 @@ export default function NavigationComponent({currentCharacter, characterList, ui
     const buildCharacterCard = (c: ICharacterData, useHref: boolean, useLargeFont: boolean) => {
         let content = <div className="basis-1/4 items-center h-full flex flex-row cursor-pointer">
                     <div key={Math.random()} className="h-12 basis-1/2 overflow-hidden">
-                        <img className="aspect-square h-full" src={c.commonData.assets.characterPortrait} />
+                        <img alt="" className="aspect-square h-full" src={c.commonData.assets.characterPortrait} />
                     </div>
                     <div key={Math.random()} className={"items-center basis-1/2 ".concat(useLargeFont ? "font-bold text-xl" : "")}>
                         {c.name}

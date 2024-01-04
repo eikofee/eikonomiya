@@ -58,6 +58,7 @@ export class Updater {
     }
 
     private cleanNameForPath(s: string) {
+        s = s.replaceAll(" of ", " Of ").replaceAll(" the ", " The ")
         return s.replaceAll(" ", "").replaceAll("'", "").replaceAll("-", "")
     }
 
@@ -634,20 +635,26 @@ export class Updater {
     }
 
     public async writeData(uid: string, data: IPlayerInfo) {
-        const uidList = await fsPromises.readdir(path.join(process.cwd(), "/data/"))
+        const uidList = await fsPromises.readdir(path.join(process.cwd(), "/", process.env.DATA_PATH!, "/"))
         if (!uidList.includes(uid)) {
-            fsPromises.mkdir(path.join(process.cwd(), "/data/", uid))
-            fsPromises.mkdir(path.join(process.cwd(), "/data/", uid, "/characters"))
-            fsPromises.mkdir(path.join(process.cwd(), "/data/", uid, "/rules"))
+            let p = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid)
+            console.warn("create ".concat(p))
+            await fsPromises.mkdir(p)
+            p = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/characters")
+            console.warn("create ".concat(p))
+            await fsPromises.mkdir(p)
+            p = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/rules")
+            console.warn("create ".concat(p))
+            await fsPromises.mkdir(p)
         }
 
-        let p = path.join(process.cwd(), "/data/", uid, "/characters")
+        let p = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/characters")
 
         for (let i = 0; i < data.characters.length; ++i) {
             const currentChar = data.characters[i];
             const characterName = currentChar.name;
             await fsPromises.writeFile(p.concat("/", characterName), JSON.stringify(currentChar))
-            const pr = path.join(process.cwd(), "/data/", uid, "/rules")
+            const pr = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/rules")
             const fileList = await fsPromises.readdir(pr)
             if (!fileList.includes(characterName)) {
                 const ruleLabels = [EStat.HP, EStat.ATK, EStat.DEF, EStat.HP_P, EStat.ATK_P, EStat.DEF_P, EStat.EM, EStat.ER_P, EStat.CR_P, EStat.CDMG_P]
@@ -659,14 +666,14 @@ export class Updater {
                     })
                 }
 
-                this.writeRule(uid, {character: characterName, ruleName: "defaultRuleName", stats: rule})
+                await this.writeRule(uid, {character: characterName, ruleName: "defaultRuleName", stats: rule})
             }
 
         }
     }
 
     public async writeRule(uid: string, rule: ICharacterRule) {
-        const pr = path.join(process.cwd(), "/data/", uid, "/rules")
+        const pr = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/rules")
             // const content = {
             //     "name": rule.character,
             //     "rule": rule.stats,

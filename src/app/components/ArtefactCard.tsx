@@ -138,7 +138,7 @@ export default function ArtefactCard({equip, rule, sortedStats, scoreState} : {e
 
     let content = <div className="flex flex-col">
     <div className="aspect-square grad-5star basis-1/5 flex items-center justify-center rounded-t-md">
-        <img src={equip.assets.icon} className="max-w-full max-h-full"/>
+        <img alt="" src={equip.assets.icon} className="max-w-full max-h-full"/>
     </div>
     <div className="basis-4/5 px-1 py-2">
         <ul>

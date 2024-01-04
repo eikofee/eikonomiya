@@ -19,7 +19,7 @@ import { IEffectImplication } from "./gamedata/IEffectImplication";
 import { ISubStat } from "./gamedata/ISubStat";
 
 export async function getUIDFolderList(): Promise<string[]> {
-    const p = path.join(process.cwd(), "/data")
+    const p = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/")
     const fileList = await fsPromises.readdir(p)
 
     return fileList;
@@ -200,7 +200,7 @@ function convertJsonToCharacterData(json: any): ICharacterData {
 }
 
 export async function loadCharacters(uid: string) : Promise<ICharacterData[]>{
-    const p = path.join(process.cwd(), "/data/", uid, "/characters")
+    const p = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/characters")
     const fileList = await fsPromises.readdir(p)
     let res: ICharacterData[] = []
     for (let i = 0; i < fileList.length; ++i) {
@@ -213,7 +213,7 @@ export async function loadCharacters(uid: string) : Promise<ICharacterData[]>{
 }
 
 export async function loadRules(uid: string) : Promise<ICharacterRule[]>{
-    const p = path.join(process.cwd(), "/data/", uid, "/rules")
+    const p = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/rules")
     const fileList = await fsPromises.readdir(p)
     let res: ICharacterRule[] = []
     for (let i = 0; i < fileList.length; ++i) {

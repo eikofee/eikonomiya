@@ -1,11 +1,8 @@
 import { ReactNode, useContext, useState } from "react";
 import { Card } from "./Card";
-import Icon from "./Icon";
 import { ThemeContext } from "./ThemeContext";
-import Tooltip from "./Tooltip";
 import { ICharacterData } from "@/server/gamedata/ICharacterData";
 import { EStat, eStatToReadable, stringToEStat } from "@/server/gamedata/enums/EStat";
-import { computeStats } from "@/server/gamedata/StatComputations";
 import { IStatBag } from "@/server/gamedata/IStatBag";
 import StatLineDraw from "./StatLineDrawer";
 
@@ -89,7 +86,6 @@ export default function StatCard({character, statbag} : {character: ICharacterDa
     }
     for (let i = 0; i < statNames.length; ++i) {
         let s = statNames[i]
-        console.log(s)
         if (statValues[i] > 0) {
             ls.push(<StatLineDraw name={s} value={statValues[i]} rounded={i == statNames.length - 1} />)
         }

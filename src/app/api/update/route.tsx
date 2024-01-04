@@ -287,14 +287,14 @@ import { hostUrl } from '@/app/host';
 export async function GET(request: Request) {
     // const { searchParams } = new URL(request.url)
     // const uid = searchParams.get("uid")!
-    // const uidList = await fsPromises.readdir(path.join(process.cwd(), "/data/"))
+    // const uidList = await fsPromises.readdir(path.join(process.cwd(), "/", process.env.DATA_PATH!, "/"))
     // if (!uidList.includes(uid)) {
-    //     fsPromises.mkdir(path.join(process.cwd(), "/data/", uid))
-    //     fsPromises.mkdir(path.join(process.cwd(), "/data/", uid, "/characters"))
-    //     fsPromises.mkdir(path.join(process.cwd(), "/data/", uid, "/rules"))
+    //     fsPromises.mkdir(path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid))
+    //     fsPromises.mkdir(path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/characters"))
+    //     fsPromises.mkdir(path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/rules"))
     // }
 
-    // let p = path.join(process.cwd(), "/data/", uid, "/characters")
+    // let p = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/characters")
 
     // let data: Record<string, any> = await loadPlayerData(uid)
     // let characterStats: Record<string, any> = await loadCharacterStats(data)
@@ -315,7 +315,7 @@ export async function GET(request: Request) {
 
     //     await fsPromises.writeFile(p.concat("/", characterName), JSON.stringify(characterStats[i]))
         
-    //     const pr = path.join(process.cwd(), "/data/", uid, "/rules")
+    //     const pr = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/rules")
     //     const fileList = await fsPromises.readdir(pr)
     //     if (!fileList.includes(characterName)) {
     //             let content = {

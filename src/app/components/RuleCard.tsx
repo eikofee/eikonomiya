@@ -29,7 +29,7 @@ export default function RuleCard({rule, ruleSetterCallback, saveRuleCallback}: {
                     <li className={classname}>
             <div key={Math.random()} className={"text-left basis-1/2 items-center m-1 flex flex-row ".concat(iconDivClassName)}>
                 <div className={"mr-1"}>
-                    <Icon n={eStatToReadable(label)} />
+                    <Icon n={label} />
                 </div><p>
                     {eStatToReadable(label)}
                 </p>

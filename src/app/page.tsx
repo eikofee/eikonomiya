@@ -20,7 +20,6 @@ const buildUIDCards = (uid: string) => {
 }
 
 const uids = await getUIDFolderList()
-
 let uidList = []
 for (let i = 0; i < uids.length; ++i) {
     uidList.push(<div className="group rounded-md border min-w-36 max-w-md backdrop-blur-xl bg-white/25 px-3 cursor-pointer z-10 gap-10 text-center" >{buildUIDCards(uids[i])}</div>)

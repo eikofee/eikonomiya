@@ -190,7 +190,12 @@ export class EnkaBridge {
     }
 
     public async loadPlayerData(): Promise<IEnkaPlayerInfo> {
-        const fullData = await (await fetch("https://enka.network/api/uid/".concat(this.uid))).json()
+        const fullDataRequest = await fetch("https://enka.network/api/uid/".concat(this.uid))
+        if (fullDataRequest.status != 200) {
+            return Promise.reject("UID does not exist.")
+        }
+
+        const fullData = await fullDataRequest.json()
         const playerInfo = fullData["playerInfo"]
         const data = fullData
         let charShowcase = []
@@ -234,7 +239,7 @@ export class EnkaBridge {
             }
 
             for (let x = 1; x < 9; ++x) {
-                let cid = id.concat("-", (subCharId + x).toString())
+                let cid = id.toString().concat("-", (subCharId + x).toString())
                 if (c[cid].length > 0) {
                     let ss = (c[cid]["SkillOrder"]).toString()
                     if (ss.includes(refSkillId)) {

@@ -1,11 +1,8 @@
 import { IEffect } from "@/server/gamedata/IEffect";
-import { eStatToReadable } from "@/server/gamedata/enums/EStat";
-import Icon from "./Icon";
 import { Card } from "./Card";
 import { useContext, useState } from "react";
 import { ThemeContext } from "./ThemeContext";
 import { ICharacterData } from "@/server/gamedata/ICharacterData";
-import { EEffectType } from "@/server/gamedata/enums/EEffectType";
 import Tooltip from "./Tooltip";
 import StatLineDraw from "./StatLineDrawer";
 
@@ -22,7 +19,7 @@ export default function EffectCard({effect: effect, effectUpdateCallback: effect
     }
 
     let child = <div className={"flex flex-row flex-grow w-full rounded-t-md ".concat(colorDirector.bgAccent(7))}>
-                    <img src={effect.icon} className="aspect-square w-8 place-self-start"/>
+                    <img alt="" src={effect.icon} className="aspect-square w-8 place-self-start"/>
                     <div className="pl-2 text-sm font-semibold place-self-center grow">{effect.source}</div>
                     {effect.tag != "" ? <div className="text-right place-self-end self-center h-1/2 bg-orange-500 rounded-md text-sm mr-2 p-1">{effect.tag}</div> : ""}
                 </div>

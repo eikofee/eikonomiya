@@ -9,7 +9,7 @@ export default function CharacterCard({char} : {char: ICharacterData}) {
     let fname = char.commonData.assets.characterCard
     let content = <div className={bgClass}>
     <div>
-        <img className="rounded-t-md" src={fname} />
+        <img alt="" className="rounded-t-md" src={fname} />
     </div>
     <div className="grid grid-cols-3 items-center">
         <p>Skill 1</p>

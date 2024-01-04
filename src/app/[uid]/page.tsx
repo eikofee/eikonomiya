@@ -1,5 +1,4 @@
 import { Updater } from "@/server/gamedata/Updater";
-import { Card } from "../components/Card";
 import { hostUrl } from "../host";
 import { ICharacterData } from "@/server/gamedata/ICharacterData";
 
@@ -29,7 +28,7 @@ export default async function Page({ params }: { params: { uid: string } }) {
     const buildCharacterCard = (c: ICharacterData, useHref: boolean, useLargeFont: boolean) => {
         let content = <div className="basis-1/4 items-center h-full flex flex-row cursor-pointer">
                     <div className="h-12 basis-1/2 overflow-hidden">
-                        <img className="aspect-square h-full" src={c.commonData.assets.characterPortrait} />
+                        <img className="aspect-square h-full" src={c.commonData.assets.characterPortrait} alt={""} />
                     </div>
                     <div className={"items-center basis-1/2 ".concat(useLargeFont ? "font-bold text-xl" : "")}>
                         {c.name}
@@ -41,13 +40,6 @@ export default async function Page({ params }: { params: { uid: string } }) {
             return content
         }
     }
-
-    // const charKeys = Object.keys(data)
-    // let characters :ICharacter[] = []
-    // for (let i = 0; i < charKeys.length; ++i) {
-    //     let c = data[charKeys[i]]
-    //     characters.push(buildCharacter(c))
-    // }
 
     let charList = []
     for (let i = 0; i < characters.length; ++i) {

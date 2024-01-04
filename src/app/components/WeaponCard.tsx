@@ -10,14 +10,6 @@ import { eStatToReadable } from "@/server/gamedata/enums/EStat";
 export default function WeaponCard({equip, rule} : {equip: IWeapon, rule: ICharacterRule}) {
 
     const isPercentage = (s: string) => s.includes("%")
-    const fontWeight = [
-        "font-light", //0-1
-        "font-normal", //1-2
-        "font-medium", // 2-3
-        "font-semibold", //3-4
-        "font-bold", //4-5
-        "font-bold"
-    ]
 
     let subLine = <p></p>
     if (equip.subStat != undefined) {
@@ -36,7 +28,7 @@ export default function WeaponCard({equip, rule} : {equip: IWeapon, rule: IChara
     }
     let content = <div className="flex flex-col">
     <div className="aspect-square grad-5star basis-1/5 flex items-center justify-center rounded-t-md">
-        <InfoDiv child={<img src={equip.assets.icon} className="max-w-full max-h-full"/>} info={<p>{equip.name}</p>} infoClassname="transition duration-300 z-20 absolute bg-gray-800 text-white font-normal text-sm rounded p-2 whitespace-nowrap top-full left-1/2 transform -translate-x-1/2" />
+        <InfoDiv child={<img alt="" src={equip.assets.icon} className="max-w-full max-h-full"/>} info={<p>{equip.name}</p>} infoClassname="transition duration-300 z-20 absolute bg-gray-800 text-white font-normal text-sm rounded p-2 whitespace-nowrap top-full left-1/2 transform -translate-x-1/2" />
     </div>
     <div className="basis-4/5 px-1 py-2">
         <ul>

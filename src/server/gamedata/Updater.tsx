@@ -659,7 +659,12 @@ export class Updater {
             if (!fileList.includes(characterName)) {
                 const ruleLabels = [EStat.HP, EStat.ATK, EStat.DEF, EStat.HP_P, EStat.ATK_P, EStat.DEF_P, EStat.EM, EStat.ER_P, EStat.CR_P, EStat.CDMG_P]
                 let rule : IStatTuple[] = []
-                for (let j = 0; j < ruleLabels.length; ++j) {
+                for (let j = 0; j < 3; ++j) {
+                    rule.push({
+                        name: ruleLabels[j],
+                        value: 0})
+                }
+                for (let j = 3; j < ruleLabels.length; ++j) {
                     rule.push({
                         name: ruleLabels[j],
                         value: 3

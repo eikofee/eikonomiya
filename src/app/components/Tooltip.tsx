@@ -21,7 +21,7 @@ export default function InfoDiv(c: InfoDivProps) {
 
     let iname = c.infoClassname
     if (iname == undefined) {
-        iname = "rounded-md text-sm bg-gray-800/80 text-white font-normal w-full max-w-xl p-2 absolute bottom-full left-1/2 transform -translate-x-1/2 "
+        iname = "rounded-md text-sm bg-gray-800/80 text-white font-normal w-full max-w-xl p-2 absolute bottom-full left-1/2 transform -translate-x-1/2 -translate-y-1"
     }
 
     iname = iname.concat(" outline outline-1 ", colorDirector.outlineAccent(5))

@@ -15,7 +15,6 @@ import { promises as fsPromises, stat } from 'fs';
 import path from "path";
 import { ICharacterRule } from "@/app/interfaces/ICharacterRule";
 import { EEffectType, stringToEEffectType } from "./enums/EEffectType";
-import { INumberInstance } from "./INumberInstances";
 import { IStatTuple } from "./IStatTuple";
 import { addOptions } from "./IEffectOptions";
 import { IEffectImplication } from "./IEffectImplication";
@@ -58,7 +57,7 @@ export class Updater {
     }
 
     private cleanNameForPath(s: string) {
-        s = s.replaceAll(" of ", " Of ").replaceAll(" the ", " The ")
+        s = s.replaceAll(" of ", " Of ").replaceAll(" the ", " The ").replaceAll('"', "")
         return s.replaceAll(" ", "").replaceAll("'", "").replaceAll("-", "")
     }
 
@@ -124,7 +123,6 @@ export class Updater {
             let implicationsSet : IEffectImplication[][] = []
             let implications : IEffectImplication[] = []
             let statChanges : IStatTuple[] = []
-            
             if (effectType != undefined) {
                 switch (effectType) {
                     case EEffectType.STATIC:
@@ -638,13 +636,10 @@ export class Updater {
         const uidList = await fsPromises.readdir(path.join(process.cwd(), "/", process.env.DATA_PATH!, "/"))
         if (!uidList.includes(uid)) {
             let p = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid)
-            console.warn("create ".concat(p))
             await fsPromises.mkdir(p)
             p = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/characters")
-            console.warn("create ".concat(p))
             await fsPromises.mkdir(p)
             p = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/rules")
-            console.warn("create ".concat(p))
             await fsPromises.mkdir(p)
         }
 
@@ -679,12 +674,6 @@ export class Updater {
 
     public async writeRule(uid: string, rule: ICharacterRule) {
         const pr = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/rules")
-            // const content = {
-            //     "name": rule.character,
-            //     "rule": rule.stats,
-            //     "lastUpdated": Date.now()
-            //         }
-
-                await fsPromises.writeFile(pr.concat("/", rule.character), JSON.stringify(rule))
+        await fsPromises.writeFile(pr.concat("/", rule.character), JSON.stringify(rule))
     }
 }

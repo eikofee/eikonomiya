@@ -190,7 +190,7 @@ export class EnkaBridge {
     }
 
     public async loadPlayerData(): Promise<IEnkaPlayerInfo> {
-        const fullDataRequest = await fetch("https://enka.network/api/uid/".concat(this.uid))
+        const fullDataRequest = await fetch("https://enka.network/api/uid/".concat(this.uid), {cache: "no-cache"})
         if (fullDataRequest.status != 200) {
             return Promise.reject("UID does not exist.")
         }

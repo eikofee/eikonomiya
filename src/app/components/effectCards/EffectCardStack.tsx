@@ -39,8 +39,14 @@ export default function EffectCardStack({effect: effect, effectUpdateCallback: e
 
     const stackClassname = "flex flex-col text-sm w-full p-1 ".concat(effect.options.enabled ? "" : "rounded-b-md")
     const stackButtons = []
-    for (let i = 0; i < effect.options.maxstack + 1; ++i) {
-        stackButtons.push(<button onClick={switchCallback(i)} className={"h-1/2 w-6 rounded-md text-sm mr-1 border ".concat(colorDirector.borderAccent(5), effect.options.stack == i ? i == 0 ? " bg-red-300" : " bg-green-300" : "")}>{i}</button>)
+    if (effect.options.maxstack < 10) {
+        for (let i = 0; i < effect.options.maxstack + 1; ++i) {
+            stackButtons.push(<button onClick={switchCallback(i)} className={"h-1/2 w-full min-w-6 rounded-md text-sm mr-1 border ".concat(colorDirector.borderAccent(5), effect.options.stack == i ? i == 0 ? " bg-red-300" : " bg-green-300" : "")}>{i}</button>)
+        }
+    } else {
+        for (let i = 0; i < effect.options.maxstack + 1; i += 50) {
+            stackButtons.push(<button onClick={switchCallback(i)} className={"h-1/2 w-full rounded-md text-sm mr-1 border ".concat(colorDirector.borderAccent(5), effect.options.stack == i ? i == 0 ? " bg-red-300" : " bg-green-300" : "")}>{i}</button>)
+        }
     }
 
     const controller = <div className={stackClassname}>

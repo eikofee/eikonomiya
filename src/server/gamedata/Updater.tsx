@@ -575,6 +575,13 @@ export class Updater {
                 }
             }
 
+            if (currentStats.keys().includes(EStat.ELEM_DMG_P)) {
+                const elemStats = [EStat.ANEMO_DMG_P, EStat.GEO_DMG_P, EStat.ELECTRO_DMG_P, EStat.DENDRO_DMG_P, EStat.HYDRO_DMG_P, EStat.PYRO_DMG_P, EStat.CRYO_DMG_P]
+                for (let i = 0; i < elemStats.length; ++i) {
+                    currentStats.addStat({name: elemStats[i], value: currentStats.get(EStat.ELEM_DMG_P).value})
+                }
+            }
+            
             const anomalies = new StatBag()
             for (let j = 0; j < c.finalStats.keys().length; ++j) {
                 const currentStat = c.finalStats.keys()[j]

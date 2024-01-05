@@ -628,7 +628,7 @@ export class Updater {
             profilePictureCharacterName: this.enkaTranslator.translate(enkaData.profilePicture) 
         }
 
-        this.writeData(this.uid, res)
+        await this.writeData(this.uid, res)
         return res
     }
 

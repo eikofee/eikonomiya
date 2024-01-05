@@ -99,28 +99,31 @@ export class EnkaBridge {
         for (let i = 0; i < data["equipList"].length; ++i) {
             const e = data["equipList"][i]
             const k: string[] = Object.keys(e)
+            let subStats: ISubStat[] = []
             if (k.includes("reliquary")) {
-                const nbSubstats = e["flat"]["reliquarySubstats"].length
-                let subStats: ISubStat[] = []
-                for (let i = 0; i < nbSubstats; ++i) {
-                    const itemName = this.translator.translateArtefactStatName(e["flat"]["reliquarySubstats"][i]["appendPropId"])
-                    const itemValue = this.transformArtefactStatValue(e["flat"]["reliquarySubstats"][i]["appendPropId"], e["flat"]["reliquarySubstats"][i]["statValue"])
-                    let factor = 0
-                    switch (itemName) {
-                        case EStat.HP: factor = 298.75; break;
-                        case EStat.HP_P: factor = 0.058; break;
-                        case EStat.ATK: factor = 19.45; break;
-                        case EStat.ATK_P: factor = 0.058; break;
-                        case EStat.DEF: factor = 23.15; break;
-                        case EStat.DEF_P: factor = 0.073; break;
-                        case EStat.CR_P: factor = 0.039; break;
-                        case EStat.CDMG_P: factor = 0.078; break;
-                        case EStat.ER_P: factor = 0.0648; break;
-                        case EStat.EM: factor = 23.31; break;
-                    }
+                if (e["flat"]["reliquarySubstats"] != undefined) {
 
-                    const rollValue = itemValue / factor
-                    subStats.push({ name: itemName, value: itemValue, rollValue: rollValue })
+                    const nbSubstats = e["flat"]["reliquarySubstats"].length
+                    for (let i = 0; i < nbSubstats; ++i) {
+                            const itemName = this.translator.translateArtefactStatName(e["flat"]["reliquarySubstats"][i]["appendPropId"])
+                            const itemValue = this.transformArtefactStatValue(e["flat"]["reliquarySubstats"][i]["appendPropId"], e["flat"]["reliquarySubstats"][i]["statValue"])
+                        let factor = 0
+                        switch (itemName) {
+                            case EStat.HP: factor = 298.75; break;
+                            case EStat.HP_P: factor = 0.058; break;
+                            case EStat.ATK: factor = 19.45; break;
+                            case EStat.ATK_P: factor = 0.058; break;
+                            case EStat.DEF: factor = 23.15; break;
+                            case EStat.DEF_P: factor = 0.073; break;
+                            case EStat.CR_P: factor = 0.039; break;
+                            case EStat.CDMG_P: factor = 0.078; break;
+                            case EStat.ER_P: factor = 0.0648; break;
+                            case EStat.EM: factor = 23.31; break;
+                        }
+                        
+                        const rollValue = itemValue / factor
+                        subStats.push({ name: itemName, value: itemValue, rollValue: rollValue })
+                    }
                 }
 
                 let res: IEnkaArtefact = {

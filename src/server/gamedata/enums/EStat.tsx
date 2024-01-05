@@ -22,6 +22,7 @@ export enum EStat {
     HEAL_OUT_P = "heal out%",
     HEAL_IN_P = "heal in%",
     ELEM_DMG_P = "elem dmg%",
+    SHIELD_STR_P = "shield%",
 
     NA_DMG_P = "na dmg%",
     CA_DMG_P = "ca dmg%",
@@ -73,7 +74,8 @@ export function eStatToReadable (s: EStat) : string {
         case EStat.CRYO_DMG_P: return "Cryo DMG%";
         case EStat.HEAL_OUT_P: return "Heal out%";
         case EStat.HEAL_IN_P: return "Heal in%";
-        case EStat.ELEM_DMG_P: return "Elemental DMG%"
+        case EStat.ELEM_DMG_P: return "Elemental DMG%";
+        case EStat.SHIELD_STR_P: return "Shield Strength%";
         case EStat.NA_DMG_P: return "Normal ATK DMG%";
         case EStat.CA_DMG_P: return "Charged ATK DMG%";
         case EStat.PA_DMG_P: return "Plunging ATK DMG%";
@@ -126,6 +128,7 @@ export function stringToEStat (s: string): EStat {
         case "heal in%": return EStat.HEAL_IN_P;
         case "elem dmg%": return EStat.ELEM_DMG_P;
         case "dmg%": return EStat.DMG_P;
+        case "shield%": return EStat.SHIELD_STR_P;
     
         case "na dmg%": return EStat.NA_DMG_P;
         case "ca dmg%": return EStat.CA_DMG_P;

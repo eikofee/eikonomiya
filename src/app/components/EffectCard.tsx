@@ -21,7 +21,7 @@ export default function EffectCard({effect: effect, effectUpdateCallback: effect
     let child = <div className={"flex flex-row flex-grow w-full rounded-t-md ".concat(colorDirector.bgAccent(7))}>
                     <img alt="" src={effect.icon} className="aspect-square w-8 place-self-start"/>
                     <div className="pl-2 text-sm font-semibold place-self-center grow">{effect.source}</div>
-                    {effect.tag != "" ? <div className="text-right place-self-end self-center h-1/2 bg-orange-500 rounded-md text-sm mr-2 p-1">{effect.tag}</div> : ""}
+                    {effect.tag != "" ? <div className="text-right place-self-end self-center h-1/2 bg-orange-500 rounded-md text-xs mr-2 p-1">{effect.tag}</div> : ""}
                 </div>
     let title = effect.text == "" ? child : <Tooltip child={child} info={effect.text} />
 

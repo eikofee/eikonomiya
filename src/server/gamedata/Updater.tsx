@@ -564,6 +564,9 @@ export class Updater {
                                 }
 
                                 value = value * r.ratio
+                                if (r.maxvalue > 0 && value > r.maxvalue) {
+                                    value = r.maxvalue
+                                }
                                 currentStats.addStat({
                                     name: r.target,
                                     value: value

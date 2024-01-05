@@ -72,6 +72,9 @@ export function updateEffect(currentEffect: IEffect, currentStats: StatBag, appl
                     }
                     
                     value = value * r.ratio
+                    if (impl[i].ratioValue!.maxvalue > 0 && value > impl[i].ratioValue!.maxvalue) {
+                        value = impl[i].ratioValue!.maxvalue
+                    }
                     sc.push({
                         name: r.target,
                         value: value
@@ -99,6 +102,9 @@ export function updateEffect(currentEffect: IEffect, currentStats: StatBag, appl
                     }
                     
                     value = value * r.ratio
+                    if (currentEffect.implications[0][i].ratioValue!.maxvalue > 0 && value > currentEffect.implications[0][i].ratioValue!.maxvalue) {
+                        value = currentEffect.implications[0][i].ratioValue!.maxvalue
+                    }
                     sc.push({
                         name: r.target,
                         value: value

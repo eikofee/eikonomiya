@@ -168,7 +168,7 @@ export default function RootComponent({data: characters, currentCharacterName: c
             let fv = (s.includes("%") ? 1 : 0)
             let v = <div>{value.toFixed(fv).toString().concat(s.includes("%") ? "%" : "")}</div>
                 let content = <div className="bg-inherit">
-            <div className="pl-2 font-semibold bg-red-400 rounded-t-md">Anomalies in stats</div>
+            <div className="pl-2 font-semibold bg-red-400 rounded-t-md">Anomalies in stats (collected - processed)</div>
                 <ul>
                     <li className={classname}>
                         <div className="text-left basis-3/5 items-center">{n}</div>

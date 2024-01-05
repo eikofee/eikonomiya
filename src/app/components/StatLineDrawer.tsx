@@ -1,7 +1,7 @@
 import { EStat, eStatToReadable, stringToEStat } from "@/server/gamedata/enums/EStat"
 import Icon from "./Icon"
 
-export default function StatLineDraw({name, value, rounded, sub: sub}: {name: string, value: number, rounded: boolean, sub?: boolean}) {
+export default function StatLineDraw({name, value, secondaryValue, rounded, sub: sub}: {name: string, value: number, secondaryValue?: number, rounded: boolean, sub?: boolean}) {
 
     let liClassname = "flex flex-row justify-between items p-1 text-sm"
     if (rounded) {
@@ -14,6 +14,9 @@ export default function StatLineDraw({name, value, rounded, sub: sub}: {name: st
     let v = Math.floor(value).toLocaleString("fr")
     if (name.includes("%")) {
         v = (value * 100).toFixed(1).concat("%")
+    }
+    if (secondaryValue != undefined) {
+        v = v.concat(" -> ", Math.floor(secondaryValue).toLocaleString("fr"))
     }
     
     const lineName = stringToEStat(name) == EStat.UNKNOWN ? name : eStatToReadable(stringToEStat(name))

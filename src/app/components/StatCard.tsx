@@ -70,7 +70,7 @@ export default function StatCard({character, statbag} : {character: ICharacterDa
         if (expanded) {
             ls.push(<StatLineDraw name="Base" value={subBase} rounded={false} sub={true}/>)
             if (subBonus > 0) {
-                ls.push(<StatLineDraw name="Stat% bonus" value={subBonus} rounded={false} sub={true}/>)
+                ls.push(<StatLineDraw name="Stat% bonus" value={subBonus} secondaryValue={subBonus * subBase} rounded={false} sub={true}/>)
             }
             if (subFlat > 0) {
                 ls.push(<StatLineDraw name="Flat bonus" value={subFlat} rounded={false} sub={true}/>)

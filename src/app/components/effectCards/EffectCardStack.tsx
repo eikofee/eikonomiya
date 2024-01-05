@@ -47,6 +47,7 @@ export default function EffectCardStack({effect: effect, effectUpdateCallback: e
         for (let i = 0; i < effect.options.maxstack + 1; i += 50) {
             stackButtons.push(<button onClick={switchCallback(i)} className={"h-1/2 w-full rounded-md text-sm mr-1 border ".concat(colorDirector.borderAccent(5), effect.options.stack == i ? i == 0 ? " bg-red-300" : " bg-green-300" : "")}>{i}</button>)
         }
+        stackButtons.push(<button onClick={switchCallback(effect.options.maxstack)} className={"h-1/2 w-full rounded-md text-sm mr-1 border ".concat(colorDirector.borderAccent(5), effect.options.stack == effect.options.maxstack ? effect.options.maxstack == 0 ? " bg-red-300" : " bg-green-300" : "")}>{effect.options.maxstack}</button>)
     }
 
     const controller = <div className={stackClassname}>

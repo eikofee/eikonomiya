@@ -44,11 +44,11 @@ export function FullEquipCard({character, rule}:{character : ICharacterData, rul
                             <Card c={totalScoreContent} cname={"grow"} />
                         </div>
                         <WeaponCard equip={character.weapon} rule={rule}/>
-                        <ArtefactCard equip={artes[0]} rule={rule} scoreState={setScoreFleur} sortedStats={mvs}/>
-                        <ArtefactCard equip={artes[1]} rule={rule} scoreState={setScorePlume} sortedStats={mvs}/>
-                        <ArtefactCard equip={artes[2]} rule={rule} scoreState={setScoreSablier} sortedStats={mvs}/>
-                        <ArtefactCard equip={artes[3]} rule={rule} scoreState={setScoreCoupe} sortedStats={mvs}/>
-                        <ArtefactCard equip={artes[4]} rule={rule} scoreState={setScoreCouronne} sortedStats={mvs}/>
+                        { artes[0] != undefined ? <ArtefactCard equip={artes[0]} rule={rule} scoreState={setScoreFleur} sortedStats={mvs} /> : ""}
+                        { artes[1] != undefined ? <ArtefactCard equip={artes[1]} rule={rule} scoreState={setScorePlume} sortedStats={mvs} /> : ""}
+                        { artes[2] != undefined ? <ArtefactCard equip={artes[2]} rule={rule} scoreState={setScoreSablier} sortedStats={mvs} /> : ""}
+                        { artes[3] != undefined ? <ArtefactCard equip={artes[3]} rule={rule} scoreState={setScoreCoupe} sortedStats={mvs} /> : ""}
+                        { artes[4] != undefined ? <ArtefactCard equip={artes[4]} rule={rule} scoreState={setScoreCouronne} sortedStats={mvs} /> : ""}
         </div>
     )
 }

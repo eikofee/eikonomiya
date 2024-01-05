@@ -1,20 +1,14 @@
 import { Updater } from "@/server/gamedata/Updater";
 import { hostUrl } from "../host";
 import { ICharacterData } from "@/server/gamedata/ICharacterData";
-
-async function fetchAllData(endpoint: string, uid: string) {
-    const path = "/api/".concat(endpoint, "?uid=", uid)
-    const data = await fetch(hostUrl(path));
-    return data.json()
-}
+import { loadCharacters } from "@/server/DataLoader";
 
 export default async function Page({ params }: { params: { uid: string } }) {
     const uid = params.uid
-    // await fetch(hostUrl("/api/update?uid=".concat(uid)))
     const u = new Updater(uid)
     await u.initialize()
     const playerInfo = await u.loadPlayerData()
-    // let data: Record<string, any> = await fetchAllData("characters", uid);
+    playerInfo.characters = await loadCharacters(uid)
     if (playerInfo == undefined) {
         return (
             <div className="bg-blue-500 w-full">

@@ -1,6 +1,5 @@
 import React, { useContext } from "react"
 import { ThemeContext } from "./ThemeContext"
-import { randomUUID } from "crypto"
 
 interface CardProps {
     c: React.ReactNode

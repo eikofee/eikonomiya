@@ -3,7 +3,7 @@ import Icon from "./Icon"
 
 export default function StatLineDraw({name, value, secondaryValue, rounded, sub: sub}: {name: string, value: number, secondaryValue?: number, rounded: boolean, sub?: boolean}) {
 
-    let liClassname = "flex flex-row justify-between items p-1 text-sm"
+    let liClassname = "flex flex-row justify-between-items p-1 text-sm"
     if (rounded) {
         liClassname = liClassname.concat(" rounded-b-md")
     }

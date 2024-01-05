@@ -193,14 +193,14 @@ export default function RootComponent({data: characters, currentCharacterName: c
                     <div className={"basis-3/5 flex flex-col h-full"}>
                         <FullEquipCard character={characterData} rule={rule}/>
                         <div className="grid grid-cols-3 h-full">
-                            <div className="flex flex-col gap-2 m-1 max-h-full overflow-y-auto">
+                            <div className="flex flex-col gap-2 m-1 max-h-full">
                                 <StatCard character={characterData} statbag={statBag}/>
                             </div>
-                            <div className="flex flex-col gap-2 m-1 overflow-auto">
+                            <div className="flex flex-col gap-2 m-1">
                                 {staticEffectCards}
                                 {anomalyCards}
                             </div>
-                            <div className="flex flex-col gap-2 overflow-auto">
+                            <div className="flex flex-col gap-2">
                             </div>
                         </div>
                     </div>

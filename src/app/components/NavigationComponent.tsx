@@ -7,14 +7,14 @@ export default function NavigationComponent({currentCharacter, characterList, ui
 
     const {colorDirector} = useContext(ThemeContext)
     const buildCharacterCard = (c: ICharacterData, useHref: boolean, useLargeFont: boolean) => {
-        let content = <div className="basis-1/4 items-center h-full flex flex-row cursor-pointer">
-                    <div key={Math.random()} className="h-12 basis-1/2 overflow-hidden">
-                        <img alt="" className="aspect-square h-full" src={c.commonData.assets.characterPortrait} />
+        let content = <div className="items-center h-full flex flex-row cursor-pointer">
+                        <div className="h-12 basis-1/2 overflow-hidden">
+                            <img className="w-12" src={c.commonData.assets.characterPortrait} alt={""} />
+                        </div>
+                        <div className={"text-center text-ellipsis items-center w-full ".concat(useLargeFont ? "font-bold text-xl" : "")}>
+                            {c.name}
+                        </div>
                     </div>
-                    <div key={Math.random()} className={"items-center basis-1/2 ".concat(useLargeFont ? "font-bold text-xl" : "")}>
-                        {c.name}
-                    </div>
-                </div>
         if (useHref) {
             return <a href={"/".concat(uid,"/",c.name)}>{content}</a>
         } else {
@@ -24,7 +24,7 @@ export default function NavigationComponent({currentCharacter, characterList, ui
 
     let charList = []
     for (let i = 0; i < characterList.length; ++i) {
-        charList.push(<Card c={buildCharacterCard(characterList[i], true, false) } cname="px-3 cursor-pointer z-10" />)
+        charList.push(<Card c={buildCharacterCard(characterList[i], true, false) } cname="px-3 mb-2 cursor-pointer z-10" />)
     }
 
     const [hiddableClassname, setHiddableClassname] = useState("hidden")
@@ -48,8 +48,8 @@ export default function NavigationComponent({currentCharacter, characterList, ui
                 <Card c={currentButton} cname="px-3 cursor-pointer w-full"/>
             </div>
             <div className={hiddableClassname}>
-                <div className={"rounded-md border backdrop-blur-xl bg-white/25 p-2 grid grid-cols-5 w-1/2 gap-2 mb-2 z-10 ".concat(colorDirector.borderAccent(3))}>
-                    {charList}
+                <div className={"columns-1 xl:columns-5 lg:columns-4 md:columns-2 rounded-md border backdrop-blur-xl bg-white/25 p-2 w-3/4 z-10 border-slate-400"}>
+                                {charList}
                 </div>
             </div>
         </div>

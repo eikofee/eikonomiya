@@ -4,7 +4,7 @@ import { useContext, useState } from "react";
 import { ICharacterRule } from "../interfaces/ICharacterRule";
 import { Card } from "./Card";
 import Icon from "./Icon";
-import InfoDiv from "./Tooltip";
+import Tooltip from "./Tooltip";
 import { ThemeContext } from "./ThemeContext";
 import { IArtefact } from "@/server/gamedata/IArtefact";
 import { EStat, eStatToReadable } from "@/server/gamedata/enums/EStat";
@@ -114,7 +114,7 @@ export default function ArtefactCard({equip, rule, sortedStats, scoreState} : {e
             <div className="flex flex-col w-full py-1">
                 {statLine}
                 
-                    <InfoDiv child={scoreLineDisplay} info={infoLine} />
+                    <Tooltip child={scoreLineDisplay} info={infoLine} />
             </div>
         </li>
         )
@@ -145,7 +145,7 @@ export default function ArtefactCard({equip, rule, sortedStats, scoreState} : {e
             {statList}
         </ul>
         <div className="w-full flex flex-row">
-            <InfoDiv child={scoreLine} info={infoLine} childClassname="w-full"/>
+            <Tooltip child={scoreLine} info={infoLine} childClassname="w-full"/>
         </div>
     </div>
 </div>

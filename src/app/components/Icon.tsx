@@ -1,5 +1,4 @@
 import { ReactElement } from "react";
-import InfoDiv from "./Tooltip";
 import Tooltip from "./Tooltip";
 import { EStat, eStatToReadable, stringToEStat } from "@/server/gamedata/enums/EStat";
 

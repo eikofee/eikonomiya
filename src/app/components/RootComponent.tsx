@@ -69,7 +69,8 @@ export default function RootComponent({data: characters, currentCharacterName: c
                 c3: "",
                 c4: "",
                 c5: "",
-                c6: ""
+                c6: "",
+                characterNameCard: ""
             }
         },
         weapon: {

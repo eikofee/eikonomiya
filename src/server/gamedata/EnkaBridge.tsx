@@ -232,6 +232,23 @@ export class EnkaBridge {
             charShowcase.push(entry)
         }
 
+        let profilePictureCharacterName = "Lumine"
+        if (playerInfo["profilePicture"]["avatarId"] != undefined) {
+            profilePictureCharacterName = this.translator.translate((await this.getCharacterCommonData(playerInfo["profilePicture"]["avatarId"])).nameId)
+        } else if (playerInfo["profilePicture"]["id"] != undefined) {
+            const id = parseInt(playerInfo["profilePicture"]["id"])
+            const avatarDatabase = await(await fetch("https://gitlab.com/Dimbreath/AnimeGameData/-/raw/main/ExcelBinOutput/ProfilePictureExcelConfigData.json?ref_type=heads", {headers: this.headers})).json()
+            let i = 0;
+            while (i < avatarDatabase.length && avatarDatabase[i]["id"] != id) {
+                ++i;
+            }
+
+            if (i < avatarDatabase.length) {
+                const avatarId = avatarDatabase[i]["OKCAINGLHBG"].toString()
+                profilePictureCharacterName = this.translator.translate((await this.getCharacterCommonData(avatarId)).nameId)
+            }
+        }
+        
         const res: IEnkaPlayerInfo = {
             name: playerInfo["nickname"],
             arLevel: playerInfo["level"],
@@ -245,7 +262,7 @@ export class EnkaBridge {
             },
             charShowcase: charShowcase,
             cardShowcase: playerInfo["showNameCardIdList"],
-            profilePicture: playerInfo["profilePicture"]["avatarId"]
+            profilePicture: profilePictureCharacterName
         }
 
         return res

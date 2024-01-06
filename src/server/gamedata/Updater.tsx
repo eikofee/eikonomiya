@@ -1,7 +1,7 @@
 import { EnkaBridge } from "./EnkaBridge"
 import { EnkaTranslator, buildEnkaTranslator } from "./EnkaTranslator"
 import { ICharacterData } from "./ICharacterData"
-import { IPlayerInfo } from "./IPlayerInfo"
+import { IPlayerInfo, copyIPlayerInfoWithoutCharacters } from "./IPlayerInfo"
 import * as yaml from 'yaml';
 import { IWeapon } from "./IWeapon";
 import { IArtefact } from "./IArtefact";
@@ -626,6 +626,7 @@ export class Updater {
 
         const res : IPlayerInfo = {
             name: enkaData.name,
+            uid: this.uid,
             arLevel: enkaData.arLevel,
             description: enkaData.description,
             worldLevel: enkaData.worldLevel,
@@ -635,7 +636,7 @@ export class Updater {
                 chamber: enkaData.abysses.chamber
             },
             characters: characters,
-            profilePictureCharacterName: this.enkaTranslator.translate(enkaData.profilePicture) 
+            profilePictureCharacterName: "/characterPortraits/".concat(enkaData.profilePicture.toLowerCase(), ".png")
         }
 
         await this.writeData(this.uid, res)
@@ -652,8 +653,11 @@ export class Updater {
             p = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/rules")
             await fsPromises.mkdir(p)
         }
+        let p = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid)
+        const pi = copyIPlayerInfoWithoutCharacters(data)
+        await fsPromises.writeFile(p.concat("/player"), JSON.stringify(pi))
 
-        let p = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/characters")
+        p = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/characters")
 
         for (let i = 0; i < data.characters.length; ++i) {
             const currentChar = data.characters[i];

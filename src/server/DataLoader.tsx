@@ -17,12 +17,31 @@ import { stringToEEffectType } from "./gamedata/enums/EEffectType";
 import { IStatTuple } from "./gamedata/IStatTuple";
 import { IEffectImplication } from "./gamedata/IEffectImplication";
 import { ISubStat } from "./gamedata/ISubStat";
+import { IPlayerInfoWithoutCharacters, readIPlayerInfoWithoutCharacters } from "./gamedata/IPlayerInfo";
 
 export async function getUIDFolderList(): Promise<string[]> {
     const p = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/")
     const fileList = await fsPromises.readdir(p)
 
     return fileList;
+}
+
+export async function getPlayerInfoList(): Promise<IPlayerInfoWithoutCharacters[]> {
+    let res = []
+    const p = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/")
+    const fileList = await fsPromises.readdir(p)
+    for (let i = 0; i < fileList.length; ++i) {
+        const pl = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", fileList[i])
+        const files = await fsPromises.readdir(pl)
+        if (files.includes("player")) {
+            const jsonData = JSON.parse((await fsPromises.readFile(pl.concat("/player"))).toString())
+            const pi = readIPlayerInfoWithoutCharacters(jsonData)
+            res.push(pi)
+        }
+
+    }
+
+    return res;
 }
 
 function convertJsonToCharacterData(json: any): ICharacterData {

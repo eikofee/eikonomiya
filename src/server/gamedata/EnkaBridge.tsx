@@ -17,10 +17,12 @@ export class EnkaBridge {
 
     uid: string;
     translator: EnkaTranslator;
+    headers: Headers;
 
     constructor(uid: string, translator: EnkaTranslator) {
         this.uid = uid
         this.translator = translator
+        this.headers = new Headers({"User-Agent":"eikonomiya-docker/".concat(process.env.EIKONOMIYA_VERSION!)})
     }
 
     private transformArtefactStatValue(name: string, value: number) {
@@ -193,9 +195,25 @@ export class EnkaBridge {
     }
 
     public async loadPlayerData(): Promise<IEnkaPlayerInfo> {
-        const fullDataRequest = await fetch("https://enka.network/api/uid/".concat(this.uid), {cache: "no-cache"})
+        // const requestTest = await fetch('http://httpbin.org/headers', {cache: "no-cache", headers: this.headers})
+        const fullDataRequest = await fetch("https://enka.network/api/uid/".concat(this.uid), {cache: "no-cache", headers: this.headers})
         if (fullDataRequest.status != 200) {
-            return Promise.reject("UID does not exist.")
+            switch(fullDataRequest.status) {
+                case 400:
+                    return Promise.reject("[Enka Error] : Wrong UID format.")
+                case 404:
+                    return Promise.reject("[Enka Error] : UID does not exist (hoyo server).")
+                case 403:
+                    return Promise.reject("[Enka Error/Cloudflare] : Forbidden.")
+                case 424:
+                    return Promise.reject("[Enka Error] : Enka is down (maintenance/game update).")
+                case 429:
+                    return Promise.reject("[Enka Error] : Too many requests (Enka or hoyo).")
+                case 500:
+                    return Promise.reject("[Enka Error] : General server error.")
+                case 529:
+                    return Promise.reject("[Enka Error] : Server error (quote: 'I screwed up massively').")
+            }
         }
 
         const fullData = await fullDataRequest.json()

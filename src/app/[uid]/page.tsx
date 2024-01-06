@@ -5,18 +5,27 @@ import { loadCharacters } from "@/server/DataLoader";
 
 export default async function Page({ params }: { params: { uid: string } }) {
     const uid = params.uid
-    const u = new Updater(uid)
-    await u.initialize()
-    const playerInfo = await u.loadPlayerData()
-    playerInfo.characters = await loadCharacters(uid)
-    if (playerInfo == undefined) {
+    let playerInfo = undefined
+    if (!isNaN(parseInt(uid))) {
+        const u = new Updater(uid)
+        await u.initialize()
+        playerInfo = await u.loadPlayerData()
+    } else {
         return (
             <div className="bg-blue-500 w-full">
-                Fetching data, please wait...
-            </div>
+            Given UID is not a number : <code>{uid}</code>
+        </div>
         )
     }
-
+        if (playerInfo == undefined) {
+            return (
+                <div className="bg-blue-500 w-full">
+                Fetching data, please wait...
+            </div>
+            )
+        }
+    
+    playerInfo.characters = await loadCharacters(uid)
     const characters = playerInfo.characters
 
     const buildCharacterCard = (c: ICharacterData, useHref: boolean, useLargeFont: boolean) => {

@@ -178,7 +178,18 @@ function convertJsonToCharacterData(json: any): ICharacterData {
             ascensionStatBaseValue: json["commonData"]["ascensionStatBaseValue"],
             assets: {
                 characterPortrait: json["commonData"]["assets"]["characterPortrait"],
-                characterCard: json["commonData"]["assets"]["characterCard"]
+                characterCard: json["commonData"]["assets"]["characterCard"],
+                aa: json["commonData"]["assets"]["aa"],
+                skill: json["commonData"]["assets"]["skill"],
+                burst: json["commonData"]["assets"]["burst"],
+                a1: json["commonData"]["assets"]["a1"],
+                a4: json["commonData"]["assets"]["a4"],
+                c1: json["commonData"]["assets"]["c1"],
+                c2: json["commonData"]["assets"]["c2"],
+                c3: json["commonData"]["assets"]["c3"],
+                c4: json["commonData"]["assets"]["c4"],
+                c5: json["commonData"]["assets"]["c5"],
+                c6: json["commonData"]["assets"]["c6"]
             },
             baseStats: {
                 hp: json["commonData"]["baseStats"]["hp"],
@@ -212,6 +223,7 @@ function convertJsonToCharacterData(json: any): ICharacterData {
         anormalStats: anormalStats.toIStatBag(),
         staticEffects: staticEffects,
         dynamicEffects: [],
+        constellation: parseInt(json["constellation"])
     }
 
     return res;

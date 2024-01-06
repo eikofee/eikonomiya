@@ -187,7 +187,8 @@ export class EnkaBridge {
             weapon: weapon as IEnkaWeapon,
 
             friendship: data["fetterInfo"]["expLevel"],
-            baseStats: baseSb
+            baseStats: baseSb,
+            constellation: data["talentIdList"] == undefined ? 0 : data["talentIdList"].length
         }
 
         return res

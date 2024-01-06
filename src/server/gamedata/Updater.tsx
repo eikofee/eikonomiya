@@ -487,7 +487,18 @@ export class Updater {
                 ascensionStatBaseValue: ascensionValue,
                 assets: {
                     characterCard: charCard,
-                    characterPortrait: characterPortrait
+                    characterPortrait: characterPortrait,
+                    aa: "/characterTalents/aa_".concat(c.commonData.weapon,".png"),
+                    skill: "/characterTalents/skill_".concat(name,".png"),
+                    burst: "/characterTalents/burst_".concat(name,".png"),
+                    a1: "/characterTalents/a1_".concat(name,".png"),
+                    a4: "/characterTalents/a4_".concat(name,".png"),
+                    c1: "/characterTalents/c1_".concat(name,".png"),
+                    c2: "/characterTalents/c2_".concat(name,".png"),
+                    c3: "/characterTalents/c3_".concat(name,".png"),
+                    c4: "/characterTalents/c4_".concat(name,".png"),
+                    c5: "/characterTalents/c5_".concat(name,".png"),
+                    c6: "/characterTalents/c6_".concat(name,".png")
                 },
                 baseStats: {
                     hp: c.baseStats.get(EStat.HP)!.value,
@@ -606,6 +617,7 @@ export class Updater {
                 ascensionStatName: ascensionName,
                 ascensionStatValue: ascensionValue * ascendedFactor,
                 friendshipLevel: c.friendship,
+                constellation: c.constellation,
                 skills: {
                     levelAA: c.skills[0].level,
                     levelSkill: c.skills[1].level,

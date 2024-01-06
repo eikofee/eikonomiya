@@ -14,11 +14,18 @@ export interface ICharacterCommonData {
     assets : {
         characterPortrait: string,
         characterCard: string,
+        aa: string,
+        skill: string,
+        burst: string,
+        a1: string,
+        a4: string,
+        c1: string,
+        c2: string,
+        c3: string,
+        c4: string,
+        c5: string,
+        c6: string,
     }
-
-    // skillIdAA: string,
-    // skillIdSkill: string,
-    // skillIdUlt: string,
 
     ascensionStatName: EStat,
     ascensionStatBaseValue: number,

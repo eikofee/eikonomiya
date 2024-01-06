@@ -17,6 +17,7 @@ export interface ICharacterData {
     ascensionLevel: number
     ascensionStatName: EStat,
     ascensionStatValue: number,
+    constellation: number,
     friendshipLevel: number
     skills: {
         levelAA: number
@@ -45,7 +46,18 @@ export function copyCharacterData(ref: ICharacterData) : ICharacterData{
         weaponType: ref.commonData.weaponType,
         assets: {
             characterPortrait: ref.commonData.assets.characterPortrait,
-            characterCard: ref.commonData.assets.characterCard
+            characterCard: ref.commonData.assets.characterCard,
+            aa: ref.commonData.assets.aa,
+            skill: ref.commonData.assets.skill,
+            burst: ref.commonData.assets.burst,
+            a1: ref.commonData.assets.a1,
+            a4: ref.commonData.assets.a4,
+            c1: ref.commonData.assets.c1,
+            c2: ref.commonData.assets.c2,
+            c3: ref.commonData.assets.c3,
+            c4: ref.commonData.assets.c4,
+            c5: ref.commonData.assets.c5,
+            c6: ref.commonData.assets.c6
         },
         ascensionStatName: ref.commonData.ascensionStatName,
         ascensionStatBaseValue: ref.commonData.ascensionStatBaseValue,
@@ -130,7 +142,8 @@ export function copyCharacterData(ref: ICharacterData) : ICharacterData{
         lastUpdated: ref.lastUpdated,
         anormalStats: anomalies.toIStatBag(),
         staticEffects: staticEffects,
-        dynamicEffects: dynamicEffects
+        dynamicEffects: dynamicEffects,
+        constellation: ref.constellation
     }
 
     return res

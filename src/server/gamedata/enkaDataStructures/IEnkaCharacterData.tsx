@@ -14,6 +14,7 @@ export interface IEnkaCharacterData {
     skills: IEnkaSkill[],
     artefacts: IEnkaArtefact[],
     weapon: IEnkaWeapon,
+    constellation: number,
     friendship: number
 
 }

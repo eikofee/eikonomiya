@@ -58,7 +58,18 @@ export default function RootComponent({data: characters, currentCharacterName: c
             region: ERegion.UNKNOWN,
             assets: {
                 characterPortrait: "",
-                characterCard: ""
+                characterCard: "",
+                aa: "",
+                skill: "",
+                burst: "",
+                a1: "",
+                a4: "",
+                c1: "",
+                c2: "",
+                c3: "",
+                c4: "",
+                c5: "",
+                c6: ""
             }
         },
         weapon: {
@@ -89,7 +100,8 @@ export default function RootComponent({data: characters, currentCharacterName: c
         staticEffects: [],
         dynamicEffects: [],
         ascensionStatName: EStat.UNKNOWN,
-        ascensionStatValue: 0
+        ascensionStatValue: 0,
+        constellation: 0
     }
 
     let defaultRule : ICharacterRule = {

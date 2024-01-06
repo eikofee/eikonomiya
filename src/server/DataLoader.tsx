@@ -179,6 +179,7 @@ function convertJsonToCharacterData(json: any): ICharacterData {
             assets: {
                 characterPortrait: json["commonData"]["assets"]["characterPortrait"],
                 characterCard: json["commonData"]["assets"]["characterCard"],
+                characterNameCard: json["commonData"]["assets"]["characterNameCard"],
                 aa: json["commonData"]["assets"]["aa"],
                 skill: json["commonData"]["assets"]["skill"],
                 burst: json["commonData"]["assets"]["burst"],

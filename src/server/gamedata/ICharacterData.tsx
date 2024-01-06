@@ -47,6 +47,7 @@ export function copyCharacterData(ref: ICharacterData) : ICharacterData{
         assets: {
             characterPortrait: ref.commonData.assets.characterPortrait,
             characterCard: ref.commonData.assets.characterCard,
+            characterNameCard: ref.commonData.assets.characterNameCard,
             aa: ref.commonData.assets.aa,
             skill: ref.commonData.assets.skill,
             burst: ref.commonData.assets.burst,

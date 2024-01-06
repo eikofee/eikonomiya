@@ -488,6 +488,7 @@ export class Updater {
                 assets: {
                     characterCard: charCard,
                     characterPortrait: characterPortrait,
+                    characterNameCard: "/namecards/".concat(name.replaceAll(" ", "%20"),".png"),
                     aa: "/characterTalents/aa_".concat(c.commonData.weapon,".png"),
                     skill: "/characterTalents/skill_".concat(name,".png"),
                     burst: "/characterTalents/burst_".concat(name,".png"),

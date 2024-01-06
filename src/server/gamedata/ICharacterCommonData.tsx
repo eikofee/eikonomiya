@@ -14,6 +14,7 @@ export interface ICharacterCommonData {
     assets : {
         characterPortrait: string,
         characterCard: string,
+        characterNameCard: string,
         aa: string,
         skill: string,
         burst: string,

@@ -57,7 +57,7 @@ export class Updater {
     }
 
     private cleanNameForPath(s: string) {
-        s = s.replaceAll(" of ", " Of ").replaceAll(" the ", " The ").replaceAll('"', "")
+        s = s.replaceAll(" of ", " Of ").replaceAll(" the ", " The ").replaceAll('"', "").replaceAll(" for ", " For ")
         return s.replaceAll(" ", "").replaceAll("'", "").replaceAll("-", "")
     }
 

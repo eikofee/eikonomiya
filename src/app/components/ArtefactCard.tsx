@@ -49,7 +49,11 @@ export default function ArtefactCard({equip, rule, sortedStats, scoreState} : {e
 
     div = 6 * mvs[mainIndex].value
     for (let i = mainIndex + 1; i < mainIndex + 4; ++i) {
-        div += mvs[i].value
+        if (mvs[i].name != equip.mainStat.name) {
+            div += mvs[i].value
+        } else {
+            mainIndex += 1
+        }
     }
     div = Math.max(1, div)
 

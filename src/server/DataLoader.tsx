@@ -26,22 +26,26 @@ export async function getUIDFolderList(): Promise<string[]> {
     return fileList;
 }
 
-export async function getPlayerInfoList(): Promise<IPlayerInfoWithoutCharacters[]> {
+export async function getPlayerInfoList(): Promise<(number | IPlayerInfoWithoutCharacters[])[]> {
     let res = []
-    const p = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/")
+    const p = path.resolve(process.cwd(), process.env.DATA_PATH!)
     const fileList = await fsPromises.readdir(p)
     for (let i = 0; i < fileList.length; ++i) {
-        const pl = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", fileList[i])
-        const files = await fsPromises.readdir(pl)
-        if (files.includes("player")) {
-            const jsonData = JSON.parse((await fsPromises.readFile(pl.concat("/player"))).toString())
-            const pi = readIPlayerInfoWithoutCharacters(jsonData)
-            res.push(pi)
+        if (!fileList[i].includes(".")) {
+
+            const pl = path.resolve(process.cwd(), process.env.DATA_PATH!, fileList[i])
+            const files = await fsPromises.readdir(pl)
+            
+            if (files.includes("player")) {
+                const jsonData = JSON.parse((await fsPromises.readFile(pl.concat("/player"))).toString())
+                const pi = readIPlayerInfoWithoutCharacters(jsonData)
+                res.push(pi)
+            }
         }
 
     }
 
-    return res;
+    return [fileList.length, res];
 }
 
 function convertJsonToCharacterData(json: any): ICharacterData {

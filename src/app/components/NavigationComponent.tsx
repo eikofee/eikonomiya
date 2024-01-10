@@ -1,11 +1,11 @@
 import { useContext, useState } from "react";
 import { Card } from "./Card";
-import { ThemeContext } from "./ThemeContext";
+import { ConfigContext } from "./ConfigContext";
 import { ICharacterData } from "@/server/gamedata/ICharacterData";
 
 export default function NavigationComponent({currentCharacter, characterList, uid}:{currentCharacter: ICharacterData, characterList: ICharacterData[], uid: string}) {
 
-    const {colorDirector} = useContext(ThemeContext)
+    const {colorDirector} = useContext(ConfigContext)
     const buildCharacterCard = (c: ICharacterData, useHref: boolean, useLargeFont: boolean) => {
         let content = <div className="items-center h-12 w-full flex flex-row cursor-pointer">
                         <div className="h-12 w-full max-w-16 overflow-hidden">

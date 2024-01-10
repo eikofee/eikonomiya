@@ -3,13 +3,13 @@ import { eStatToReadable } from "@/server/gamedata/enums/EStat";
 import { useContext, useState } from "react";
 import { ICharacterData } from "@/server/gamedata/ICharacterData";
 import Icon from "../Icon";
-import { ThemeContext } from "../ThemeContext";
+import { ConfigContext } from "../ConfigContext";
 import Tooltip from "../Tooltip";
 import EffectCard from "../EffectCard";
 
 export default function EffectCardBasic({effect: effect, effectUpdateCallback: effectUpdateCallback, character: character} : ({effect: IEffect, effectUpdateCallback: (x: IEffect) => void, character: ICharacterData})) {
     let ls = []
-    const {colorDirector} = useContext(ThemeContext)
+    const {colorDirector} = useContext(ConfigContext)
 
     for (let i = 0; i < effect.statChanges.length; ++i) {
         let statChange = effect.statChanges[i]

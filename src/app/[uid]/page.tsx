@@ -1,5 +1,4 @@
 import { Updater } from "@/server/gamedata/Updater";
-import { hostUrl } from "../host";
 import { ICharacterData } from "@/server/gamedata/ICharacterData";
 import { loadCharacters } from "@/server/DataLoader";
 

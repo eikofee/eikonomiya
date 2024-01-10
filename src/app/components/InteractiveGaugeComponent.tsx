@@ -1,11 +1,11 @@
 import { useContext, useState } from "react"
 import { ICharacterRule } from "../interfaces/ICharacterRule"
-import { ThemeContext } from "./ThemeContext"
+import { ConfigContext } from "./ConfigContext"
 import { EStat } from "@/server/gamedata/enums/EStat";
 import { IStatTuple } from "@/server/gamedata/IStatTuple";
 
 export default function InteractiveGaugeComponent({label, rule, ruleSetterCallback}: {label: EStat, rule: ICharacterRule, ruleSetterCallback: (_x : ICharacterRule) => void}) {
-    const {colorDirector} = useContext(ThemeContext)
+    const {colorDirector} = useContext(ConfigContext)
     let baseValue = 3;
     let baseIndex = 0;
     for (let i = 0; i < rule.stats.length; ++i){

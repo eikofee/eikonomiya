@@ -1,14 +1,14 @@
 import { IEffect } from "@/server/gamedata/IEffect";
 import { Card } from "./Card";
 import { useContext, useState } from "react";
-import { ThemeContext } from "./ThemeContext";
+import { ConfigContext } from "./ConfigContext";
 import { ICharacterData } from "@/server/gamedata/ICharacterData";
 import Tooltip from "./Tooltip";
 import StatLineDraw from "./StatLineDrawer";
 
 export default function EffectCard({effect: effect, effectUpdateCallback: effectUpdateCallback, character: character, controller: controller} : ({effect: IEffect, effectUpdateCallback: (x: IEffect) => void, character: ICharacterData, controller?: JSX.Element[]})) {
     let ls = []
-    const {colorDirector} = useContext(ThemeContext)
+    const {colorDirector} = useContext(ConfigContext)
     if (effect.options.enabled) {
 
         for (let i = 0; i < effect.statChanges.length; ++i) {

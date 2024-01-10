@@ -1,5 +1,5 @@
 import React, { useContext } from "react"
-import { ThemeContext } from "./ThemeContext"
+import { ConfigContext } from "./ConfigContext"
 
 interface CardProps {
     c: React.ReactNode
@@ -7,7 +7,7 @@ interface CardProps {
 }
 
 export const Card = (c: CardProps) => {
-    const {colorDirector} = useContext(ThemeContext)
+    const {colorDirector} = useContext(ConfigContext)
     let cname = ""
     let baseCname = "group rounded-md border min-w-36 max-w-md backdrop-blur-xl bg-white/25 "
     if (c.cname != undefined) {

@@ -1,6 +1,6 @@
 "use client";
 import { useContext, useState } from "react"
-import { ThemeContext } from "./ThemeContext";
+import { ConfigContext } from "./ConfigContext";
 
 interface InfoDivProps {
     child: React.ReactNode,
@@ -12,7 +12,7 @@ interface InfoDivProps {
 export default function Tooltip(c: InfoDivProps) {
 
     let [ttClassName, setTTClassName] = useState("hidden")
-    const {colorDirector} = useContext(ThemeContext)
+    const {colorDirector} = useContext(ConfigContext)
     let cn = c.childClassname
     if (cn == undefined)
     {

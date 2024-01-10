@@ -3,7 +3,7 @@ import { useState } from "react";
 import CharacterCard from "./CharacterCard";
 import RuleCard from "./RuleCard";
 import { ColorDirector } from "../classes/ColorDirector";
-import { ThemeContext } from "./ThemeContext";
+import { ConfigContext } from "./ConfigContext";
 import StatCard from "./StatCard";
 import { FullEquipCard } from "./FullEquipCard";
 import BackgroundComponent from "./BackgroundComponent";
@@ -15,7 +15,6 @@ import { EWeaponType } from "@/server/gamedata/enums/EWeaponType";
 import { ERarity } from "@/server/gamedata/enums/ERarity";
 import { EStat, eStatToReadable, stringToEStat } from "@/server/gamedata/enums/EStat";
 import { ERegion } from "@/server/gamedata/enums/ERegion";
-import { hostUrl } from "../host";
 import Icon from "./Icon";
 import { Card } from "./Card";
 import { ETarget } from "@/server/gamedata/enums/EEffectTarget";
@@ -27,9 +26,10 @@ import EffectCardBoolean from "./effectCards/EffectCardBoolean";
 import EffectCardStack from "./effectCards/EffectCardStack";
 import { computeStats } from "@/server/gamedata/StatComputations";
 import { StatBag } from "@/server/gamedata/StatBag";
+import { ConfigDirector, IConfigDirector } from "../classes/ConfigDirector";
 
 
-export default function RootComponent({data: characters, currentCharacterName: currentCharacterName, rules, uid} : ({data: ICharacterData[], currentCharacterName: string, rules: ICharacterRule[], uid: string})) {
+export default function RootComponent({data: characters, currentCharacterName: currentCharacterName, rules, uid, iconfig} : ({data: ICharacterData[], currentCharacterName: string, rules: ICharacterRule[], uid: string, iconfig: IConfigDirector})) {
     
     let char: ICharacterData = {
         name: "Default Character",
@@ -120,6 +120,7 @@ export default function RootComponent({data: characters, currentCharacterName: c
     }
 
     let colorDirector = new ColorDirector(char.element)
+    let config = new ConfigDirector(iconfig)
 
     const [rule, setRule] = useState(defaultRule)
 
@@ -133,7 +134,7 @@ export default function RootComponent({data: characters, currentCharacterName: c
     const [statBag, setStatBag] = useState(defaultStatBag)
 
     async function saveRuleCallback(x: ICharacterRule) {
-        let url = hostUrl("/api/rules?mode=edit&characterName=".concat(x.character,"&uid=", uid))
+        let url = config.hostUrl("/api/rules?mode=edit&characterName=".concat(x.character,"&uid=", uid))
         for (let i = 0; i < x.stats.length; ++i) {
             url = url.concat("&", x.stats[i].name, "=", x.stats[i].value.toString())
         }
@@ -194,7 +195,7 @@ export default function RootComponent({data: characters, currentCharacterName: c
     }
 }
 
-    return <ThemeContext.Provider value={{colorDirector}}>
+    return <ConfigContext.Provider value={{colorDirector: colorDirector, config: config}}>
         <BackgroundComponent character={characterData}/>
         <div className="flex flex-col">
             <NavigationComponent currentCharacter={characterData} characterList={characters} uid={uid} />
@@ -223,5 +224,5 @@ export default function RootComponent({data: characters, currentCharacterName: c
 
             </div>
         </div>
-    </ThemeContext.Provider>
+    </ConfigContext.Provider>
 }

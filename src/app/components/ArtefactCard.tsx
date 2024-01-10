@@ -5,7 +5,7 @@ import { ICharacterRule } from "../interfaces/ICharacterRule";
 import { Card } from "./Card";
 import Icon from "./Icon";
 import Tooltip from "./Tooltip";
-import { ThemeContext } from "./ThemeContext";
+import { ConfigContext } from "./ConfigContext";
 import { IArtefact } from "@/server/gamedata/IArtefact";
 import { EStat, eStatToReadable } from "@/server/gamedata/enums/EStat";
 import { IStatTuple } from "@/server/gamedata/IStatTuple";
@@ -24,7 +24,7 @@ export default function ArtefactCard({equip, rule, sortedStats, scoreState} : {e
         return 0;
     }
     const isPercentage = (s: string) => s.includes("%")
-    const {colorDirector} = useContext(ThemeContext)
+    const {colorDirector} = useContext(ConfigContext)
     const fontWeight = [
         // "font-light", //0-1
         "font-normal", //1-2

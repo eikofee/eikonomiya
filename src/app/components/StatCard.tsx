@@ -1,6 +1,6 @@
 import { ReactNode, useContext, useState } from "react";
 import { Card } from "./Card";
-import { ThemeContext } from "./ThemeContext";
+import { ConfigContext } from "./ConfigContext";
 import { ICharacterData } from "@/server/gamedata/ICharacterData";
 import { EStat, eStatToReadable, stringToEStat } from "@/server/gamedata/enums/EStat";
 import { IStatBag } from "@/server/gamedata/IStatBag";
@@ -31,7 +31,7 @@ export default function StatCard({character, statbag} : {character: ICharacterDa
         setExpanded(!expanded)
     }
 
-    const {colorDirector} = useContext(ThemeContext)
+    const {colorDirector} = useContext(ConfigContext)
     const finalHP = character.commonData.baseStats.hp * (1+getStat(EStat.HP_P)) + getStat(EStat.HP)
     const finalATK = (character.commonData.baseStats.atk_nw! + character.weapon.mainStat.value) * (1+getStat(EStat.ATK_P)) + getStat(EStat.ATK)
     const finalDEF = character.commonData.baseStats.def * (1+getStat(EStat.DEF_P)) + getStat(EStat.DEF)

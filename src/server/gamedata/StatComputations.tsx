@@ -51,7 +51,42 @@ function buildBaseStats(character: ICharacterData) {
     }
 
     sb.addStat({name: characterBase.ascensionStatName, value: characterBase.ascensionStatBaseValue * ascendedFactor})
+    const baseStats = [characterBase.baseStats.hp, characterBase.baseStats.atk_nw + weapon.mainStat.value, characterBase.baseStats.def]
+    const bonusStats = [EStat.HP_P, EStat.ATK_P, EStat.DEF_P]
+    const flatStats = [EStat.HP, EStat.ATK, EStat.DEF]
+    const destStats = [EStat.F_HP, EStat.F_ATK, EStat.F_DEF,]
+    for (let i = 0; i < 3; ++i) {
+        let base = baseStats[i]
+        let bonus = sb.get(bonusStats[i])
+        if (bonus == undefined) {
+            bonus = {name: bonusStats[i], value: 0}
+        }
+
+        let flat = sb.get(flatStats[i])
+        if (flat == undefined) {
+            flat = {name: flatStats[i], value: 0}
+        }
+
+        const stat : IStatTuple = {name: destStats[i], value: base * (1 + bonus.value) + flat.value}
+        sb.addStat(stat)
+    }
+
     return sb
+}
+
+function convertFlatStatNameToFinalStat(s: EStat) {
+    switch(s) {
+        case EStat.HP:
+            return EStat.F_HP;
+            
+        case EStat.ATK:
+            return EStat.F_ATK;
+            
+        case EStat.DEF:
+            return EStat.F_DEF;
+        
+        default: return s
+    }
 }
 
 export function updateEffect(currentEffect: IEffect, currentStats: StatBag, applyRatio: boolean): IEffect {
@@ -66,9 +101,9 @@ export function updateEffect(currentEffect: IEffect, currentStats: StatBag, appl
                     sc.push(copyStatTuple(cb))
                 } else if (applyRatio && impl[i].ratioValue != undefined) {
                     const r = impl[i].ratioValue!
-                    let value = currentStats.get(r.source).value - r.base
+                    let value = currentStats.get(convertFlatStatNameToFinalStat(r.source)).value - r.base
                     if (r.step != 0) {
-                        value = value / r.step
+                        value = Math.floor(value / r.step)
                     }
                     
                     value = value * r.ratio

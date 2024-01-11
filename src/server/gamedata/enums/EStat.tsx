@@ -3,6 +3,10 @@ export enum EStat {
     ATK = "atk",
     DEF = "def",
 
+    F_HP = "final hp",
+    F_ATK = "final atk",
+    F_DEF = "final def",
+
     HP_P = "hp%",
     ATK_P = "atk%",
     DEF_P = "def%",
@@ -57,6 +61,9 @@ export function eStatToReadable (s: EStat) : string {
         case EStat.HP: return "HP";
         case EStat.ATK: return "ATK";
         case EStat.DEF: return "DEF";
+        case EStat.F_HP: return "Final HP";
+        case EStat.F_ATK: return "Final ATK";
+        case EStat.F_DEF: return "Final DEF";
         case EStat.HP_P: return "HP%";
         case EStat.ATK_P: return "ATK%";
         case EStat.DEF_P: return "DEF%";

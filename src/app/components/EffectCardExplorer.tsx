@@ -9,12 +9,15 @@ export default function EffectCardExplorer({allCards, addToCharacterCb} : {allCa
     let [currentSearch, setCurrentSearch] = useState("")
 
 
-
+    const cb = (x: IEffect) => {
+        setCurrentSearch("")
+        addToCharacterCb(x)
+    }
     let effectCards = []
     if (currentSearch != "") {
         for (let i = 0; i < allCards.length; ++i) {
             if (allCards[i].name.toLowerCase().includes(currentSearch.toLowerCase())) {
-                effectCards.push(<EffectCardSmall e={allCards[i]} addToCharacterCb={addToCharacterCb} />)
+                effectCards.push(<EffectCardSmall e={allCards[i]} addToCharacterCb={cb} />)
             }
         }
     }

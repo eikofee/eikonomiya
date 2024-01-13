@@ -6,7 +6,7 @@ import { ICharacterData } from "@/server/gamedata/ICharacterData";
 import Tooltip from "./Tooltip";
 import StatLineDraw from "./StatLineDrawer";
 
-export default function EffectCard({effect: effect, effectUpdateCallback: effectUpdateCallback, character: character, controller: controller} : ({effect: IEffect, effectUpdateCallback: (x: IEffect) => void, character: ICharacterData, controller?: JSX.Element[]})) {
+export default function EffectCard({effect: effect, effectUpdateCallback: effectUpdateCallback, character: character, controller: controller, removable} : ({effect: IEffect, effectUpdateCallback: (x: IEffect) => void, character: ICharacterData, controller?: JSX.Element[], removable: undefined | (() => void) })) {
     let ls = []
     const {colorDirector} = useContext(ConfigContext)
     if (effect.options.enabled) {
@@ -18,10 +18,12 @@ export default function EffectCard({effect: effect, effectUpdateCallback: effect
         }
     }
 
+
     let child = <div className={"flex flex-row flex-grow w-full rounded-t-md ".concat(colorDirector.bgAccent(7))}>
                     <img alt="" src={effect.icon} className="aspect-square w-8 place-self-start"/>
-                    <div className="pl-2 text-sm font-semibold place-self-center grow">{effect.source}</div>
-                    {effect.tag != "" ? <div className="text-right place-self-end self-center h-1/2 bg-orange-500 rounded-md text-xs mr-2 p-1">{effect.tag}</div> : ""}
+                    <div className="pl-2 text-sm font-semibold place-self-center grow">{effect.name}</div>
+                    {removable != undefined ? <button onClick={removable} className={"pr-2 text-sm text-right cursor-pointer ".concat(colorDirector.textAccent(3))}>Remove</button> : ""}
+                    {effect.tag != "" ? <div className={"text-right place-self-end self-center h-1/2 rounded-md text-xs mr-2 p-1 text-white ".concat(colorDirector.bgAccent(3))}>{effect.tag}</div> : ""}
                 </div>
     let title = effect.text == "" ? child : <Tooltip child={child} info={effect.text} />
 

@@ -8,7 +8,7 @@ import { ConfigContext } from "../ConfigContext";
 import Tooltip from "../Tooltip";
 import EffectCard from "../EffectCard";
 
-export default function EffectCardBoolean({effect: effect, effectUpdateCallback: effectUpdateCallback, character: character} : ({effect: IEffect, effectUpdateCallback: (x: IEffect) => void, character: ICharacterData})) {
+export default function EffectCardBoolean({effect: effect, effectUpdateCallback: effectUpdateCallback, character: character, removable} : ({effect: IEffect, effectUpdateCallback: (x: IEffect) => void, character: ICharacterData, removable: undefined | (() => void) })) {
     let ls = []
     const {colorDirector} = useContext(ConfigContext)
 
@@ -39,5 +39,5 @@ export default function EffectCardBoolean({effect: effect, effectUpdateCallback:
     const boolClassname = "text-sm cursor-pointer h-full self-start text-center w-full ".concat(effect.options.enabled ? "bg-green-300" : "bg-red-300 rounded-b-md" )
     const controller = <div className={boolClassname} onClick={enableCallback}>{effect.options.enabled ? "Enabled" : "Disabled"}</div>
 
-    return <EffectCard effect={effect} effectUpdateCallback={effectUpdateCallback} character={character} controller={[controller]} />
+    return <EffectCard effect={effect} effectUpdateCallback={effectUpdateCallback} character={character} controller={[controller]} removable={removable}/>
 }

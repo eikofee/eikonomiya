@@ -1,11 +1,12 @@
 import { IEffectImplication } from "./IEffectImplication";
 import { IEffectOptions } from "./IEffectOptions";
-import { INumberInstance, copyNumberInstance } from "./INumberInstances";
 import { IStatTuple, copyStatTuple } from "./IStatTuple";
 import { EEffectType } from "./enums/EEffectType";
 
 export interface IEffect {
+    name: string,
     source: string,
+    source2: string,
     tag: string,
     icon: string,
     text: string,
@@ -50,7 +51,9 @@ export function copyEffect(x: IEffect): IEffect {
         implicationsSet.push(implications)
     }
     const res: IEffect = {
+        name: x.name,
         source: x.source,
+        source2: x.source2,
         tag: x.tag,
         icon: x.icon,
         text: x.text,

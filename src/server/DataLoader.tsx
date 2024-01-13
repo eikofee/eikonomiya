@@ -13,17 +13,293 @@ import { IArtefact } from "./gamedata/IArtefact";
 import { stringToEArtefact } from "./gamedata/enums/EArtefact";
 import { ICharacterRule } from "@/app/interfaces/ICharacterRule";
 import { stringToERegion } from "./gamedata/enums/ERegion";
-import { stringToEEffectType } from "./gamedata/enums/EEffectType";
+import { EEffectType, stringToEEffectType } from "./gamedata/enums/EEffectType";
 import { IStatTuple } from "./gamedata/IStatTuple";
 import { IEffectImplication } from "./gamedata/IEffectImplication";
 import { ISubStat } from "./gamedata/ISubStat";
 import { IPlayerInfoWithoutCharacters, readIPlayerInfoWithoutCharacters } from "./gamedata/IPlayerInfo";
+import { addOptions } from "./gamedata/IEffectOptions";
+import { IStatRatio } from "./gamedata/IStatRatio";
 
 export async function getUIDFolderList(): Promise<string[]> {
     const p = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/")
     const fileList = await fsPromises.readdir(p)
 
     return fileList;
+}
+
+export function parseEffect(data: any[], defaultName: string, defaultIcon: string) : IEffect[] {
+    let res = []
+    const refinement = 0
+    for (let i = 0; i < data.length; ++i) {
+        let effectName = defaultName
+        const rawEffect = data[i];
+        if (rawEffect["name"] != undefined) {
+            effectName = rawEffect["name"]
+        }
+
+        let effectTag = ""
+        if (rawEffect["tag"] != undefined) {
+            effectTag = rawEffect["tag"]
+        }
+
+        let effectSource = ""
+        if (rawEffect["source"] != undefined) {
+            effectSource = rawEffect["source"]
+        }
+
+        let effectSource2 = ""
+        if (rawEffect["source2"] != undefined) {
+            effectSource2 = rawEffect["source2"]
+        }
+
+        const effectType = stringToEEffectType(rawEffect["type"])
+        const text = rawEffect["text"] != undefined ? rawEffect["text"] : ""
+        const maxstack = rawEffect["maxstack"] != undefined ? rawEffect["maxstack"] : 0
+        let implicationsSet : IEffectImplication[][] = []
+        let implications : IEffectImplication[] = []
+        let statChanges : IStatTuple[] = []
+        if (effectType != undefined) {
+            switch (effectType) {
+                case EEffectType.STATIC:
+                case EEffectType.BOOLEAN:
+                    implications = []
+                    for (let k = 0; k < rawEffect["effects"].length; ++k) {
+                        const e = rawEffect["effects"][k]
+                        const target = e["target"]
+                        let flatValue : IStatTuple | undefined = undefined
+                        let ratioValue : IStatRatio | undefined = undefined
+                        if (e["source"] != undefined) {
+                            const sourceStat = stringToEStat(e["source"])
+                            const targetStat = stringToEStat(e["stat"])
+                            let ratio = 1
+                            if (e["ratio"] != undefined) {
+                                ratio = parseFloat(e["ratio"])
+                            } else {
+                                const minratio = parseFloat(e["minratio"])
+                                const maxratio = parseFloat(e["maxratio"])
+                                const interval = maxratio - minratio
+                                const step = interval / 4
+                                ratio = minratio + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
+                            }
+
+                            const base = (e["base"] != undefined ? parseFloat(e["base"]) : 0)
+                            const step = (e["step"] != undefined ? parseFloat(e["step"]) : 0)
+
+                            let maxvalue = 0
+                            if (e["minmaxvalue"] != undefined) {
+                                const minmaxvalue = parseFloat(e["minmaxvalue"])
+                                const maxmaxvalue = parseFloat(e["maxmaxvalue"])
+                                const interval = maxmaxvalue - minmaxvalue
+                                const step = interval / 4
+                                maxvalue = minmaxvalue + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
+                            } else {
+                                maxvalue = parseFloat(e["maxvalue"])
+                            }
+
+                            ratioValue = {
+                                base: base,
+                                maxvalue: maxvalue,
+                                ratio: ratio,
+                                source: sourceStat,
+                                step: step,
+                                target: targetStat
+                            }
+
+                        } else {
+                            const stat = stringToEStat(e["stat"])
+                            let value = 0;
+                            if (e["value"] != undefined) {
+                                value = parseFloat(e["value"])
+                            } else {
+                                const minvalue = parseFloat(e["minvalue"])
+                                const maxvalue = parseFloat(e["maxvalue"])
+                                const interval = maxvalue - minvalue
+                                const step = interval / 4
+                                value = minvalue + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
+                            }
+
+                            flatValue = {
+                                name: stat,
+                                value: value
+                            }
+                        }
+
+                        implications.push({
+                            target: target,
+                            flatValue: flatValue,
+                            ratioValue: ratioValue
+                        })
+
+                    }
+
+                    implicationsSet.push(implications)
+                    break;
+                
+                case EEffectType.STACK:
+                    implications = []
+                    for (let k = 0; k < rawEffect["effects"].length; ++k) {
+                        let flatValue : IStatTuple | undefined = undefined
+                        let ratioValue : IStatRatio | undefined = undefined
+                        const e = rawEffect["effects"][k]
+                        const target = e["target"]
+                        const stat = stringToEStat(e["stat"])
+                        if (e["source"] != undefined) {
+                            const sourceStat = stringToEStat(e["source"])
+                            const targetStat = stringToEStat(e["stat"])
+                            let ratio = 1
+                            if (e["ratio"] != undefined) {
+                                ratio = parseFloat(e["ratio"])
+                            } else {
+                                const minratio = parseFloat(e["minratio"])
+                                const maxratio = parseFloat(e["maxratio"])
+                                const interval = maxratio - minratio
+                                const step = interval / 4
+                                ratio = minratio + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
+                            }
+
+                            const base = (e["base"] != undefined ? parseFloat(e["base"]) : 0)
+                            const step = (e["step"] != undefined ? parseFloat(e["step"]) : 0)
+
+                            let maxvalue = 0
+                            if (e["minmaxvalue"] != undefined) {
+                                const minmaxvalue = parseFloat(e["minmaxvalue"])
+                                const maxmaxvalue = parseFloat(e["maxmaxvalue"])
+                                const interval = maxmaxvalue - minmaxvalue
+                                const step = interval / 4
+                                maxvalue = minmaxvalue + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
+                            }
+
+                            ratioValue = {
+                                base: base,
+                                maxvalue: maxvalue,
+                                ratio: ratio,
+                                source: sourceStat,
+                                step: step,
+                                target: targetStat
+                            }
+
+                        } else {
+                            let value = 0;
+                            if (e["value"] != undefined) {
+                                value = parseFloat(e["value"])
+                            } else {
+                                const minvalue = parseFloat(e["minvalue"])
+                                const maxvalue = parseFloat(e["maxvalue"])
+                                const interval = maxvalue - minvalue
+                                const step = interval / 4
+                                value = minvalue + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
+                            }
+
+                            flatValue = {
+                                name: stat,
+                                value: value
+                            }
+
+                        }
+
+                        implications.push({
+                            target: target,
+                            flatValue: flatValue,
+                            ratioValue: ratioValue
+                        })
+
+                    }
+
+                    implicationsSet.push(implications)
+                break;
+                case EEffectType.STACK_PRECISE:
+                    for (let kk = 1; kk < maxstack + 1; ++kk) {
+                        implications = []
+                        for (let k = 0; k < rawEffect["effects"][kk].length; ++k) {
+                            let flatValue : IStatTuple | undefined = undefined
+                            let ratioValue : IStatRatio | undefined = undefined
+                            const e = rawEffect["effects"][kk][k]
+                            const target = e["target"]
+                            const stat = stringToEStat(e["stat"])
+                            if (e["source"] != undefined) {
+                                const sourceStat = stringToEStat(e["source"])
+                                const targetStat = stringToEStat(e["stat"])
+                                let ratio = 1
+                                if (e["ratio"] != undefined) {
+                                    ratio = parseFloat(e["ratio"])
+                                } else {
+                                    const minratio = parseFloat(e["minratio"])
+                                    const maxratio = parseFloat(e["maxratio"])
+                                    const interval = maxratio - minratio
+                                    const step = interval / 4
+                                    ratio = minratio + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
+                                }
+
+                                const base = (e["base"] != undefined ? parseFloat(e["base"]) : 0)
+                                const step = (e["step"] != undefined ? parseFloat(e["step"]) : 0)
+
+                                let maxvalue = 0
+                                if (e["minmaxvalue"] != undefined) {
+                                    const minmaxvalue = parseFloat(e["minmaxvalue"])
+                                    const maxmaxvalue = parseFloat(e["maxmaxvalue"])
+                                    const interval = maxmaxvalue - minmaxvalue
+                                    const step = interval / 4
+                                    maxvalue = minmaxvalue + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
+                                }
+
+                                ratioValue = {
+                                    base: base,
+                                    maxvalue: maxvalue,
+                                    ratio: ratio,
+                                    source: sourceStat,
+                                    step: step,
+                                    target: targetStat
+                                }
+                                
+                            } else {
+                                let value = 0;
+                                if (e["value"] != undefined) {
+                                    value = parseFloat(e["value"])
+                                } else {
+                                    const minvalue = parseFloat(e["minvalue"])
+                                    const maxvalue = parseFloat(e["maxvalue"])
+                                    const interval = maxvalue - minvalue
+                                    const step = interval / 4
+                                    value = minvalue + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
+                                }
+                                
+                                flatValue = {
+                                    name: stat,
+                                    value: value
+                                }
+                            }
+
+                            implications.push({
+                                target: target,
+                                flatValue: flatValue,
+                                ratioValue: ratioValue
+                            })
+                        }
+
+                        implicationsSet.push(implications)
+
+                }
+            }
+        }
+
+        const effect : IEffect = {
+            name: effectName,
+            source: effectSource,
+            source2: effectSource2,
+            tag: effectTag,
+            icon: defaultIcon,
+            type: effectType,
+            text: text,
+            options: addOptions(effectType, maxstack),
+            statChanges: statChanges,
+            implications: implicationsSet
+        }
+
+        res.push(effect)
+    }
+
+    return res
 }
 
 export async function getPlayerInfoList(): Promise<(number | IPlayerInfoWithoutCharacters[])[]> {
@@ -112,7 +388,9 @@ function convertJsonToCharacterData(json: any): ICharacterData {
         }
             
         const effect: IEffect = {
+            name: item["name"],
             source: item["source"],
+            source2: item["source2"],
             icon: item["icon"],
             text: item["text"],
             options: {

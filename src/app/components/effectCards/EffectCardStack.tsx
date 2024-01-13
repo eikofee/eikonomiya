@@ -6,7 +6,7 @@ import Icon from "../Icon";
 import { ConfigContext } from "../ConfigContext";
 import EffectCard from "../EffectCard";
 
-export default function EffectCardStack({effect: effect, effectUpdateCallback: effectUpdateCallback, character: character} : ({effect: IEffect, effectUpdateCallback: (x: IEffect) => void, character: ICharacterData})) {
+export default function EffectCardStack({effect: effect, effectUpdateCallback: effectUpdateCallback, character: character, removable} : ({effect: IEffect, effectUpdateCallback: (x: IEffect) => void, character: ICharacterData, removable: undefined | (() => void) })) {
     let ls = []
     const {colorDirector} = useContext(ConfigContext)
 
@@ -58,19 +58,5 @@ export default function EffectCardStack({effect: effect, effectUpdateCallback: e
     </div>
 
 
-    let content = <div className="bg-inherit">
-        <div className={"flex flex-row flex-grow w-full rounded-t-md ".concat(colorDirector.bgAccent(7))}>
-            <img alt="" src={effect.icon} className="aspect-square w-8 place-self-start"/>
-            <div className="pl-2 font-semibold place-self-center grow">{effect.source}</div>
-            {effect.tag != "" ? <div className="text-right place-self-end self-center h-1/2 bg-orange-500 rounded-md text-sm mr-2 p-1">{effect.tag}</div> : ""}
-        </div>
-        {controller}
-        {effect.text != "" ? <div className={"text-left m-1 text-sm "}>{effect.text}</div>: ""}
-        <ul>
-            {ls}
-        </ul>
-    </div>;
-
-    // return <Card c={content} />
-    return <EffectCard effect={effect} effectUpdateCallback={effectUpdateCallback} character={character} controller={[controller]} />
+    return <EffectCard effect={effect} effectUpdateCallback={effectUpdateCallback} character={character} controller={[controller]} removable={removable} />
 }

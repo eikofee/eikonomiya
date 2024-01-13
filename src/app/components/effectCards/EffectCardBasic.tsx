@@ -7,7 +7,7 @@ import { ConfigContext } from "../ConfigContext";
 import Tooltip from "../Tooltip";
 import EffectCard from "../EffectCard";
 
-export default function EffectCardBasic({effect: effect, effectUpdateCallback: effectUpdateCallback, character: character} : ({effect: IEffect, effectUpdateCallback: (x: IEffect) => void, character: ICharacterData})) {
+export default function EffectCardBasic({effect: effect, effectUpdateCallback: effectUpdateCallback, character: character, removable} : ({effect: IEffect, effectUpdateCallback: (x: IEffect) => void, character: ICharacterData, removable: undefined | (() => void) })) {
     let ls = []
     const {colorDirector} = useContext(ConfigContext)
 
@@ -31,18 +31,7 @@ export default function EffectCardBasic({effect: effect, effectUpdateCallback: e
     }
 
     let title = <Tooltip child={effect.source} info={effect.text} />
-    let content = <div className="bg-inherit">
-        <div className={"flex flex-row flex-grow w-full rounded-t-md ".concat(colorDirector.bgAccent(7))}>
-            <img alt="" src={effect.icon} className="aspect-square w-8 place-self-start"/>
-            <div className="pl-2 font-semibold place-self-center grow">{title}</div>
-            {effect.tag != "" ? <div className="text-right place-self-end self-center h-1/2 bg-orange-500 rounded-md text-sm mr-2 p-1">{effect.tag}</div> : ""}
-        </div>
-        {/* {effect.text != "" ? <div className={"text-left m-1 text-sm "}>{effect.text}</div>: ""} */}
-        <ul>
-            {ls}
-        </ul>
-    </div>;
 
     // return <Card c={content} />
-    return <EffectCard effect={effect} effectUpdateCallback={effectUpdateCallback} character={character} />
+    return <EffectCard effect={effect} effectUpdateCallback={effectUpdateCallback} character={character}  removable={removable}/>
 }

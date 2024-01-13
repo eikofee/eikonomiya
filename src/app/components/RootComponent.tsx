@@ -27,9 +27,13 @@ import EffectCardStack from "./effectCards/EffectCardStack";
 import { computeStats } from "@/server/gamedata/StatComputations";
 import { StatBag } from "@/server/gamedata/StatBag";
 import { ConfigDirector, IConfigDirector } from "../classes/ConfigDirector";
+import { IStatBag } from "@/server/gamedata/IStatBag";
+import EffectList, { EEffectListType } from "./EffectList";
+import EffectCardSmall from "./EffectCardSmall";
+import EffectCardExplorer from "./EffectCardExplorer";
 
 
-export default function RootComponent({data: characters, currentCharacterName: currentCharacterName, rules, uid, iconfig} : ({data: ICharacterData[], currentCharacterName: string, rules: ICharacterRule[], uid: string, iconfig: IConfigDirector})) {
+export default function RootComponent({data: characters, currentCharacterName: currentCharacterName, rules, uid, iconfig, defaultEffectCards} : ({data: ICharacterData[], currentCharacterName: string, rules: ICharacterRule[], uid: string, iconfig: IConfigDirector, defaultEffectCards: IEffect[]})) {
     
     let char: ICharacterData = {
         name: "Default Character",
@@ -128,10 +132,32 @@ export default function RootComponent({data: characters, currentCharacterName: c
         setRule(x)
     }
 
+    const effectCb = (a: ICharacterData, b: IStatBag) => {
+        let effectList = []
+        let currentEffectsNames = []
+        for (let i = 0; i < a.staticEffects.length; ++i) {
+            currentEffectsNames.push(a.staticEffects[i].name)
+        }
+
+        for (let i = 0; i < a.dynamicEffects.length; ++i) {
+            currentEffectsNames.push(a.dynamicEffects[i].name)
+        }
+
+        for (let i = 0; i < defaultEffectCards.length; ++i) {
+            if (!currentEffectsNames.includes(defaultEffectCards[i].name)) {
+                effectList.push(defaultEffectCards[i])
+            }
+        }
+        setCharacterData(a)
+        setStatBag(b)
+        setEffectCards(effectList)
+    }
+
     const firstComputation = computeStats(char)
     const [characterData, setCharacterData] = useState(firstComputation.a)
     const defaultStatBag = firstComputation.b
     const [statBag, setStatBag] = useState(defaultStatBag)
+    const [effectCards, setEffectCards] = useState(defaultEffectCards)
 
     async function saveRuleCallback(x: ICharacterRule) {
         let url = config.hostUrl("/api/rules?mode=edit&characterName=".concat(x.character,"&uid=", uid))
@@ -142,33 +168,7 @@ export default function RootComponent({data: characters, currentCharacterName: c
         await fetch(url)
     }
 
-    function updateEffect(i: number) {
-        return (x: IEffect) => {
-            let c = copyCharacterData(characterData)
-            c.staticEffects[i] = x
-            const res = computeStats(c)
-            c = res.a
-            setCharacterData(c)
-            setStatBag(res.b)
-        }
-    }
 
-    let staticEffectCards = []
-    for (let e = 0; e < characterData.staticEffects.length; ++e) {
-        const effect = characterData.staticEffects[e]
-        switch (effect.type) {
-            case EEffectType.BOOLEAN:
-                staticEffectCards.push(<EffectCardBoolean effect={effect} character={characterData} effectUpdateCallback={updateEffect(e)}/>)
-                break;
-            case EEffectType.STACK:
-            case EEffectType.STACK_PRECISE:
-                staticEffectCards.push(<EffectCardStack effect={effect} character={characterData} effectUpdateCallback={updateEffect(e)}/>)
-                break;
-            default:
-                staticEffectCards.push(<EffectCardBasic effect={effect} character={characterData} effectUpdateCallback={updateEffect(e)}/>)
-                break;
-        }
-    }
 
     let anomalyCards = []
     for (let e = 0; e < characterData.anormalStats.names.length; ++e) {
@@ -191,9 +191,34 @@ export default function RootComponent({data: characters, currentCharacterName: c
                 </ul>
             </div>;
 
-    anomalyCards.push(<Card c={content}/>)
+            anomalyCards.push(<Card c={content}/>)
+        }
     }
-}
+
+    const addToCharacterCb = (x: IEffect) => {
+        let newChar = copyCharacterData(characterData)
+        newChar.dynamicEffects.push(x)
+        const res = computeStats(newChar)
+        let effectList = []
+        let currentEffectsNames = []
+        for (let i = 0; i < newChar.staticEffects.length; ++i) {
+            currentEffectsNames.push(newChar.staticEffects[i].name)
+        }
+
+        for (let i = 0; i < newChar.dynamicEffects.length; ++i) {
+            currentEffectsNames.push(newChar.dynamicEffects[i].name)
+        }
+
+        for (let i = 0; i < defaultEffectCards.length; ++i) {
+            if (!currentEffectsNames.includes(defaultEffectCards[i].name)) {
+                effectList.push(defaultEffectCards[i])
+            }
+        }
+        setCharacterData(res.a)
+        setStatBag(res.b)
+        setEffectCards(effectList)
+    }
+
 
     return <ConfigContext.Provider value={{colorDirector: colorDirector, config: config}}>
         <BackgroundComponent character={characterData}/>
@@ -209,12 +234,15 @@ export default function RootComponent({data: characters, currentCharacterName: c
                         <div className="grid grid-cols-3 h-full">
                             <div className="flex flex-col gap-2 m-1 max-h-full">
                                 <StatCard character={characterData} statbag={statBag}/>
-                            </div>
-                            <div className="flex flex-col gap-2 m-1">
-                                {staticEffectCards}
                                 {anomalyCards}
                             </div>
-                            <div className="flex flex-col gap-2">
+                            <div className="flex flex-col gap-2 m-1">
+                                {/* {staticEffectCards} */}
+                                <EffectList char={characterData} effects={characterData.staticEffects} type={EEffectListType.STATIC} cb={effectCb}/>
+                            </div>
+                            <div className="flex flex-col gap-2 m-1">
+                                <EffectList char={characterData} effects={characterData.dynamicEffects} type={EEffectListType.DYNAMIC} cb={effectCb}/>
+                                <EffectCardExplorer allCards={effectCards} addToCharacterCb={addToCharacterCb} />
                             </div>
                         </div>
                     </div>

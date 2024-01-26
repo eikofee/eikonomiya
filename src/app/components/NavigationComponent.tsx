@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { Card } from "./Card";
 import { ConfigContext } from "./ConfigContext";
 import { ICharacterData } from "@/server/gamedata/ICharacterData";
+import CharacterSmallCard from "./CharacterSmallCard";
 
 export default function NavigationComponent({currentCharacter, characterList, uid}:{currentCharacter: ICharacterData, characterList: ICharacterData[], uid: string}) {
 
@@ -24,7 +25,8 @@ export default function NavigationComponent({currentCharacter, characterList, ui
 
     let charList = []
     for (let i = 0; i < characterList.length; ++i) {
-        charList.push(<Card c={buildCharacterCard(characterList[i], true, false) } cname="px-3 cursor-pointer z-10 h-full" />)
+        // charList.push(<Card c={buildCharacterCard(characterList[i], true, false) } cname="px-3 cursor-pointer z-10 h-full" />)
+        charList.push(<CharacterSmallCard uid={uid} character={characterList[i]} useHref={true} useLargeFont={false} useBackground={false} borderColor={colorDirector.borderAccent(3)} />)
     }
 
     const [hiddableClassname, setHiddableClassname] = useState("hidden")

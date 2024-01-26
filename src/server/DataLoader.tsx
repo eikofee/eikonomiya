@@ -28,6 +28,12 @@ export async function getUIDFolderList(): Promise<string[]> {
     return fileList;
 }
 
+export async function checkDataFolderExistence(): Promise<boolean> {
+    const p = path.resolve(process.cwd())
+    const fileList = await fsPromises.readdir(p)
+    return fileList.includes("data")
+}
+
 export function parseEffect(data: any[], defaultName: string, defaultIcon: string) : IEffect[] {
     let res = []
     const refinement = 0
@@ -302,26 +308,47 @@ export function parseEffect(data: any[], defaultName: string, defaultIcon: strin
     return res
 }
 
-export async function getPlayerInfoList(): Promise<(number | IPlayerInfoWithoutCharacters[])[]> {
-    let res = []
-    const p = path.resolve(process.cwd(), process.env.DATA_PATH!)
-    const fileList = await fsPromises.readdir(p)
-    for (let i = 0; i < fileList.length; ++i) {
-        if (!fileList[i].includes(".")) {
+export interface PlayerInfoListContainer {
+    path: string,
+    list: IPlayerInfoWithoutCharacters[],
+    scannedFiles: string[],
+}
 
-            const pl = path.resolve(process.cwd(), process.env.DATA_PATH!, fileList[i])
-            const files = await fsPromises.readdir(pl)
-            
-            if (files.includes("player")) {
-                const jsonData = JSON.parse((await fsPromises.readFile(pl.concat("/player"))).toString())
-                const pi = readIPlayerInfoWithoutCharacters(jsonData)
-                res.push(pi)
+export async function getPlayerInfoList(): Promise<PlayerInfoListContainer> {
+    if (await checkDataFolderExistence()) {
+
+        let res = []
+        const p = path.resolve(process.cwd(), process.env.DATA_PATH!)
+        let scannedFiles = [];
+        const fileList = await fsPromises.readdir(p)
+        for (let i = 0; i < fileList.length; ++i) {
+            scannedFiles.push(fileList[i])
+            if (!fileList[i].includes(".")) {
+                
+                const pl = path.resolve(process.cwd(), process.env.DATA_PATH!, fileList[i])
+                const files = await fsPromises.readdir(pl)
+                
+                if (files.includes("player")) {
+                    const jsonData = JSON.parse((await fsPromises.readFile(pl.concat("/player"))).toString())
+                    const pi = readIPlayerInfoWithoutCharacters(jsonData)
+                    res.push(pi)
+                }
             }
+            
         }
-
+        
+        return {
+            path: p,
+            list: res,
+            scannedFiles: scannedFiles
+        };
+    } else {
+        return {
+            path: "NO /APP/DATA FOLDER FOUND",
+            list: [],
+            scannedFiles: []
+        }
     }
-
-    return [fileList.length, res];
 }
 
 function convertJsonToCharacterData(json: any): ICharacterData {
@@ -514,38 +541,44 @@ function convertJsonToCharacterData(json: any): ICharacterData {
 }
 
 export async function loadCharacters(uid: string) : Promise<ICharacterData[]>{
-    const p = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/characters")
-    const fileList = await fsPromises.readdir(p)
     let res: ICharacterData[] = []
-    for (let i = 0; i < fileList.length; ++i) {
-        let f = fileList[i]
-        const jsonData = JSON.parse((await fsPromises.readFile(p.concat("/", f))).toString())
-        res.push(convertJsonToCharacterData(jsonData))
+    if (await checkDataFolderExistence()) {
+
+        const p = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/characters")
+        const fileList = await fsPromises.readdir(p)
+        for (let i = 0; i < fileList.length; ++i) {
+            let f = fileList[i]
+            const jsonData = JSON.parse((await fsPromises.readFile(p.concat("/", f))).toString())
+            res.push(convertJsonToCharacterData(jsonData))
+        }
     }
 
     return res
 }
 
 export async function loadRules(uid: string) : Promise<ICharacterRule[]>{
-    const p = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/rules")
-    const fileList = await fsPromises.readdir(p)
+    
     let res: ICharacterRule[] = []
-    for (let i = 0; i < fileList.length; ++i) {
-        let f = fileList[i]
-        const jsonData = JSON.parse((await fsPromises.readFile(p.concat("/", f))).toString())
-        let values : IStatTuple[] = []
-        for (let j = 0; j < jsonData["stats"].length; ++j) {
-            values.push({
-                name: jsonData["stats"][j]["name"],
-                value: jsonData["stats"][j]["value"],
+    if (await checkDataFolderExistence()) {
+        const p = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/rules")
+        const fileList = await fsPromises.readdir(p)
+        for (let i = 0; i < fileList.length; ++i) {
+            let f = fileList[i]
+            const jsonData = JSON.parse((await fsPromises.readFile(p.concat("/", f))).toString())
+            let values : IStatTuple[] = []
+            for (let j = 0; j < jsonData["stats"].length; ++j) {
+                values.push({
+                    name: jsonData["stats"][j]["name"],
+                    value: jsonData["stats"][j]["value"],
+                })
+            }
+
+            res.push({
+                ruleName: "defaultRuleName",
+                character: jsonData["character"],
+                stats: values
             })
         }
-
-        res.push({
-            ruleName: "defaultRuleName",
-            character: jsonData["character"],
-            stats: values
-        })
     }
 
     return res

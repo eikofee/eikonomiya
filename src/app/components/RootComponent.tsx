@@ -160,7 +160,7 @@ export default function RootComponent({data: characters, currentCharacterName: c
     const [effectCards, setEffectCards] = useState(defaultEffectCards)
 
     async function saveRuleCallback(x: ICharacterRule) {
-        let url = config.hostUrl("/api/rules?mode=edit&characterName=".concat(x.character,"&uid=", uid))
+        let url = "/api/rules?mode=edit&characterName=".concat(x.character,"&uid=", uid)
         for (let i = 0; i < x.stats.length; ++i) {
             url = url.concat("&", x.stats[i].name, "=", x.stats[i].value.toString())
         }

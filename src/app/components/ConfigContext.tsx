@@ -5,5 +5,5 @@ import { ConfigDirector, ETheme } from "../classes/ConfigDirector";
 
 export const ConfigContext = createContext({
     colorDirector : new ColorDirector(EElement.NONE),
-    config : new ConfigDirector({host: "http://localhost:3000", theme: ETheme.LIGHT}),
+    config : new ConfigDirector({theme: ETheme.LIGHT}),
 })

@@ -16,21 +16,14 @@ export function stringToETheme(s: string) {
 }
 
 export interface IConfigDirector {
-    host: string,
     theme: ETheme
 }
 
 
 export class ConfigDirector {
-    host: string
     theme: ETheme
 
     constructor(i: IConfigDirector) {
-        this.host = i.host
         this.theme = i.theme
-    }
-
-    public hostUrl(s: string) {
-        return this.host.concat(s)
     }
 }

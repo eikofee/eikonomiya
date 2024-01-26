@@ -3,6 +3,7 @@ import { ICharacterData } from "@/server/gamedata/ICharacterData";
 import { getPlayerInfoList, loadCharacters } from "@/server/DataLoader";
 import { IPlayerInfoWithoutCharacters } from "@/server/gamedata/IPlayerInfo";
 import { IConfigDirector, ETheme, ConfigDirector } from "../classes/ConfigDirector";
+import AddUidWidget from "../components/AddUidWidget";
 
 export default async function Page({ params }: { params: { uid: string } }) {
     const uid = params.uid
@@ -37,9 +38,9 @@ export default async function Page({ params }: { params: { uid: string } }) {
         for (let i = 0; i < playerInfoList.list.length; ++i) {
             piList.push(<div className="group rounded-md border min-w-36 max-w-md backdrop-blur-xl bg-white/25 px-3 cursor-pointer z-10 gap-10 text-center" >{buildPlayerCard(playerInfoList.list[i])}</div>)
         }
-            let infoElement = <div className={""}>
+            let infoElement = <div className="w-1/3">
             <div className={"w-full rounded-md border backdrop-blur-xl bg-white/25 p-2 gap-2 mb-2 z-10 border-slate-400"}>
-                Please indicate your UID in the address bar : <code className="px-2">{config.hostUrl("/<UID>")}</code> to start using Eikonomiya.
+                <AddUidWidget />
             </div>
         </div>
         

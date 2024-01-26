@@ -25,7 +25,7 @@ export default function CharacterCard({char} : {char: ICharacterData}) {
     <div>
         <img alt="" className="rounded-t-md" src={fname} />
     </div>
-    <div className="grid grid-cols-3 items-center">
+    <div className="grid grid-cols-3 justify-items-center">
     <div className="w-16 h-16 rounded-full bg-slate-700/70 m-3 relative">
                 <img src={char.commonData.assets.aa} />
                 <div className={"absolute rounded-md text-sm px-1 left-3/4 top-3/4 ".concat(colorDirector.bgAccent(5))}>{char.skills.levelAA}</div>
@@ -39,7 +39,7 @@ export default function CharacterCard({char} : {char: ICharacterData}) {
                 <div className={"absolute rounded-md text-sm px-1 left-3/4 top-3/4 ".concat(colorDirector.bgAccent(5))}>{char.skills.levelUlt}</div>
             </div>
     </div>
-    <div className="grid grid-cols-6">
+    <div className="grid grid-cols-6 justify-items-center">
         {constellations}
     </div>
 

@@ -67,7 +67,24 @@ export function copyCharacterData(ref: ICharacterData) : ICharacterData{
             atk: ref.commonData.baseStats.atk,
             atk_nw: ref.commonData.baseStats.atk_nw,
             def: ref.commonData.baseStats.def
-        }
+        },
+        constNames: {
+            c1: ref.commonData.constNames.c1,
+            c2: ref.commonData.constNames.c2,
+            c3: ref.commonData.constNames.c3,
+            c4: ref.commonData.constNames.c4,
+            c5: ref.commonData.constNames.c5,
+            c6: ref.commonData.constNames.c6
+        },
+        constTexts: {
+            c1: ref.commonData.constTexts.c1,
+            c2: ref.commonData.constTexts.c2,
+            c3: ref.commonData.constTexts.c3,
+            c4: ref.commonData.constTexts.c4,
+            c5: ref.commonData.constTexts.c5,
+            c6: ref.commonData.constTexts.c6
+        },
+        
     }
 
     const totalStats = new StatBag()

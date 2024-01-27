@@ -453,6 +453,22 @@ export function parseCharacterData(json: any): ICharacterData {
                 atk: json["commonData"]["baseStats"]["atk"],
                 atk_nw: json["commonData"]["baseStats"]["atk_nw"],
                 def: json["commonData"]["baseStats"]["def"]
+            },
+            constNames: {
+                c1: json["commonData"]["constNames"]["c1"],
+                c2: json["commonData"]["constNames"]["c2"],
+                c3: json["commonData"]["constNames"]["c3"],
+                c4: json["commonData"]["constNames"]["c4"],
+                c5: json["commonData"]["constNames"]["c5"],
+                c6: json["commonData"]["constNames"]["c6"]
+            },
+            constTexts: {
+                c1: json["commonData"]["constTexts"]["c1"],
+                c2: json["commonData"]["constTexts"]["c2"],
+                c3: json["commonData"]["constTexts"]["c3"],
+                c4: json["commonData"]["constTexts"]["c4"],
+                c5: json["commonData"]["constTexts"]["c5"],
+                c6: json["commonData"]["constTexts"]["c6"]
             }
         },
         weapon: {

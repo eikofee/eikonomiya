@@ -19,7 +19,7 @@ import { IStatTuple } from "./IStatTuple";
 import { addOptions } from "./IEffectOptions";
 import { IEffectImplication } from "./IEffectImplication";
 import { IStatRatio } from "./IStatRatio";
-import { stringToERegion } from "./enums/ERegion";
+import { ERegion, stringToERegion } from "./enums/ERegion";
 
 
 export class Updater {
@@ -442,6 +442,8 @@ export class Updater {
         let characters : ICharacterData[] = []
         const regionRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/regions.yml")).text()
         const reg = yaml.parse(regionRawData)
+        const constInfoRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/character-const-text.yml")).text()
+        const constInfo = yaml.parse(constInfoRawData)
         for (let i = 0; i < enkaData.charShowcase.length; ++i) {
             const c = enkaData.charShowcase[i].info
             const name = this.enkaTranslator.translate(c.commonData.nameId)
@@ -489,10 +491,27 @@ export class Updater {
                 }
             }
 
+            let r = ERegion.UNKNOWN
+            if (reg[name] != undefined) {
+                r = stringToERegion(reg[name])
+            }
+
+            let constNames = []
+            let constTexts = []
+            for (let ii = 0; ii < 6; ++ii) {
+                if (constInfo[name] != undefined && constInfo[name]["c".concat((ii + 1).toString())] != undefined) {
+                    constNames.push(constInfo[name]["c".concat((ii + 1).toString())]["name"])
+                    constTexts.push(constInfo[name]["c".concat((ii + 1).toString())]["text"])
+                } else {
+                    constNames.push("UNKNOWN NAME - PLEASE REPORT THE ISSUE")
+                    constTexts.push("UNKNOWN TEXT - PLEASE REPORT THE ISSUE")
+                }
+            }
+
             const common: ICharacterCommonData = {
                 name: name,
                 element: c.commonData.element,
-                region: stringToERegion(reg[name]),
+                region: r,
                 rarity: c.commonData.rarity,
                 weaponType: c.commonData.weapon,
                 ascensionStatName: ascensionName,
@@ -500,24 +519,40 @@ export class Updater {
                 assets: {
                     characterCard: charCard,
                     characterPortrait: characterPortrait,
-                    characterNameCard: "/namecards/".concat(name.replaceAll(" ", "%20"),".png"),
-                    aa: "/characterTalents/aa_".concat(c.commonData.weapon,".png"),
-                    skill: "/characterTalents/skill_".concat(name,".png"),
-                    burst: "/characterTalents/burst_".concat(name,".png"),
-                    a1: "/characterTalents/a1_".concat(name,".png"),
-                    a4: "/characterTalents/a4_".concat(name,".png"),
-                    c1: "/characterTalents/c1_".concat(name,".png"),
-                    c2: "/characterTalents/c2_".concat(name,".png"),
-                    c3: "/characterTalents/c3_".concat(name,".png"),
-                    c4: "/characterTalents/c4_".concat(name,".png"),
-                    c5: "/characterTalents/c5_".concat(name,".png"),
-                    c6: "/characterTalents/c6_".concat(name,".png")
+                    characterNameCard: "/namecards/".concat(name.replaceAll(" ", "%20"), ".png"),
+                    aa: "/characterTalents/aa_".concat(c.commonData.weapon, ".png"),
+                    skill: "/characterTalents/skill_".concat(name, ".png"),
+                    burst: "/characterTalents/burst_".concat(name, ".png"),
+                    a1: "/characterTalents/a1_".concat(name, ".png"),
+                    a4: "/characterTalents/a4_".concat(name, ".png"),
+                    c1: "/characterTalents/c1_".concat(name, ".png"),
+                    c2: "/characterTalents/c2_".concat(name, ".png"),
+                    c3: "/characterTalents/c3_".concat(name, ".png"),
+                    c4: "/characterTalents/c4_".concat(name, ".png"),
+                    c5: "/characterTalents/c5_".concat(name, ".png"),
+                    c6: "/characterTalents/c6_".concat(name, ".png")
                 },
                 baseStats: {
                     hp: c.baseStats.get(EStat.HP)!.value,
                     atk: c.baseStats.get(EStat.ATK)!.value,
                     atk_nw: c.baseStats.get(EStat.ATK)!.value - c.weapon.mainStat.value,
                     def: c.baseStats.get(EStat.DEF)!.value
+                },
+                constNames: {
+                    c1: constNames[0],
+                    c2: constNames[1],
+                    c3: constNames[2],
+                    c4: constNames[3],
+                    c5: constNames[4],
+                    c6: constNames[5]
+                },
+                constTexts: {
+                    c1: constTexts[0],
+                    c2: constTexts[1],
+                    c3: constTexts[2],
+                    c4: constTexts[3],
+                    c5: constTexts[4],
+                    c6: constTexts[5]
                 }
             }
 

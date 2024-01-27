@@ -28,6 +28,24 @@ export interface ICharacterCommonData {
         c6: string,
     }
 
+    constNames: {
+        c1: string,
+        c2: string,
+        c3: string,
+        c4: string,
+        c5: string,
+        c6: string
+    }
+
+    constTexts: {
+        c1: string,
+        c2: string,
+        c3: string,
+        c4: string,
+        c5: string,
+        c6: string
+    }
+
     ascensionStatName: EStat,
     ascensionStatBaseValue: number,
 

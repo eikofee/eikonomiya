@@ -45,11 +45,11 @@ export default function CharacterSmallCard({uid, character, useHref, useLargeFon
     }
 
     if (useBackground) {
-        return <div className="group rounded-md border bg-white/25 px-3 cursor-pointer z-10 mb-2" style={{
+        return <div className="transition ease-in-out group rounded-md border bg-white/25 px-3 cursor-pointer z-10 mb-2 hover:shadow-lg" style={{
             backgroundImage : "url(".concat(character.commonData.assets.characterNameCard, ")"),
             backgroundSize : "cover"
         }} >{content}</div>
     } else {
-        return <div className={"group rounded-md border bg-white/25 px-3 cursor-pointer z-10 mb-2 ".concat(borderColor)}>{content}</div>
+        return <div className={"transition ease-in-out group rounded-md border bg-white/25 px-3 cursor-pointer z-10 hover:shadow-lg ".concat(borderColor)}>{content}</div>
     }
 }

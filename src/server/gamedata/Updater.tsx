@@ -1,7 +1,7 @@
 import { EnkaBridge } from "./EnkaBridge"
 import { EnkaTranslator, buildEnkaTranslator } from "./EnkaTranslator"
 import { ICharacterData } from "./ICharacterData"
-import { IPlayerInfo, copyIPlayerInfoWithoutCharacters } from "./IPlayerInfo"
+import { IPlayerInfo, copyIPlayerInfoWithoutCharacters, readIPlayerInfoWithoutCharacters } from "./IPlayerInfo"
 import * as yaml from 'yaml';
 import { IWeapon } from "./IWeapon";
 import { IArtefact } from "./IArtefact";
@@ -438,269 +438,292 @@ export class Updater {
     }
 
     public async loadPlayerData() : Promise<IPlayerInfo> {
-        const enkaData = await this.bridge.loadPlayerData()
-        let characters : ICharacterData[] = []
-        const regionRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/regions.yml")).text()
-        const reg = yaml.parse(regionRawData)
-        const constInfoRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/character-const-text.yml")).text()
-        const constInfo = yaml.parse(constInfoRawData)
-        for (let i = 0; i < enkaData.charShowcase.length; ++i) {
-            const c = enkaData.charShowcase[i].info
-            const name = this.enkaTranslator.translate(c.commonData.nameId)
-            const ascensionName = await this.getAscensionStatName(name)
-            const ascensionValue = await this.computeAscensionStatValue(ascensionName, name, c.commonData.rarity)
-            let ascendedFactor = 1
-            switch (c.ascensionLevel) {
-                case 0:
-                case 1:
-                    ascendedFactor = 0;
-                    break;
-                case 2:
-                    ascendedFactor = 1;
-                    break;
-                case 3:
-                case 4:
-                    ascendedFactor = 2;
-                    break;
-                case 5:
-                    ascendedFactor = 3;
-                    break;
-                case 6:
-                    ascendedFactor = 4;
-                    break;
-            }
 
-            let p = path.join(process.cwd(), "/public/characterCards")
-            let fileList = await fsPromises.readdir(p)
-            const extensions = [".jpg", ".jpeg", ".png"]
-            let charCard = "";
-            for (let i = 0; i < extensions.length; ++i) {
-                const fname = name.toLowerCase().concat(extensions[i])
-                if (fileList.includes(fname)) {
-                    charCard = "/characterCards/".concat(fname)
+        try {
+            const enkaData = await this.bridge.loadPlayerData()
+            let characters : ICharacterData[] = []
+            const regionRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/regions.yml")).text()
+            const reg = yaml.parse(regionRawData)
+            const constInfoRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/character-const-text.yml")).text()
+            const constInfo = yaml.parse(constInfoRawData)
+            for (let i = 0; i < enkaData.charShowcase.length; ++i) {
+                const c = enkaData.charShowcase[i].info
+                const name = this.enkaTranslator.translate(c.commonData.nameId)
+                const ascensionName = await this.getAscensionStatName(name)
+                const ascensionValue = await this.computeAscensionStatValue(ascensionName, name, c.commonData.rarity)
+                let ascendedFactor = 1
+                switch (c.ascensionLevel) {
+                    case 0:
+                    case 1:
+                        ascendedFactor = 0;
+                        break;
+                    case 2:
+                        ascendedFactor = 1;
+                        break;
+                    case 3:
+                    case 4:
+                        ascendedFactor = 2;
+                        break;
+                    case 5:
+                        ascendedFactor = 3;
+                        break;
+                    case 6:
+                        ascendedFactor = 4;
+                        break;
                 }
-            }
 
-            p = path.join(process.cwd(), "/public/characterPortraits")
-            fileList = await fsPromises.readdir(p)
-            let characterPortrait = "";
-            for (let i = 0; i < extensions.length; ++i) {
-                const fname = name.toLowerCase().concat(extensions[i])
-                if (fileList.includes(fname)) {
-                    characterPortrait = "/characterPortraits/".concat(fname)
+                let p = path.join(process.cwd(), "/public/characterCards")
+                let fileList = await fsPromises.readdir(p)
+                const extensions = [".jpg", ".jpeg", ".png"]
+                let charCard = "";
+                for (let i = 0; i < extensions.length; ++i) {
+                    const fname = name.toLowerCase().concat(extensions[i])
+                    if (fileList.includes(fname)) {
+                        charCard = "/characterCards/".concat(fname)
+                    }
                 }
-            }
 
-            let r = ERegion.UNKNOWN
-            if (reg[name] != undefined) {
-                r = stringToERegion(reg[name])
-            }
-
-            let constNames = []
-            let constTexts = []
-            for (let ii = 0; ii < 6; ++ii) {
-                if (constInfo[name] != undefined && constInfo[name]["c".concat((ii + 1).toString())] != undefined) {
-                    constNames.push(constInfo[name]["c".concat((ii + 1).toString())]["name"])
-                    constTexts.push(constInfo[name]["c".concat((ii + 1).toString())]["text"])
-                } else {
-                    constNames.push("UNKNOWN NAME - PLEASE REPORT THE ISSUE")
-                    constTexts.push("UNKNOWN TEXT - PLEASE REPORT THE ISSUE")
+                p = path.join(process.cwd(), "/public/characterPortraits")
+                fileList = await fsPromises.readdir(p)
+                let characterPortrait = "";
+                for (let i = 0; i < extensions.length; ++i) {
+                    const fname = name.toLowerCase().concat(extensions[i])
+                    if (fileList.includes(fname)) {
+                        characterPortrait = "/characterPortraits/".concat(fname)
+                    }
                 }
-            }
 
-            const common: ICharacterCommonData = {
-                name: name,
-                element: c.commonData.element,
-                region: r,
-                rarity: c.commonData.rarity,
-                weaponType: c.commonData.weapon,
-                ascensionStatName: ascensionName,
-                ascensionStatBaseValue: ascensionValue,
-                assets: {
-                    characterCard: charCard,
-                    characterPortrait: characterPortrait,
-                    characterNameCard: "/namecards/".concat(name.replaceAll(" ", "%20"), ".png"),
-                    aa: "/characterTalents/aa_".concat(c.commonData.weapon, ".png"),
-                    skill: "/characterTalents/skill_".concat(name, ".png"),
-                    burst: "/characterTalents/burst_".concat(name, ".png"),
-                    a1: "/characterTalents/a1_".concat(name, ".png"),
-                    a4: "/characterTalents/a4_".concat(name, ".png"),
-                    c1: "/characterTalents/c1_".concat(name, ".png"),
-                    c2: "/characterTalents/c2_".concat(name, ".png"),
-                    c3: "/characterTalents/c3_".concat(name, ".png"),
-                    c4: "/characterTalents/c4_".concat(name, ".png"),
-                    c5: "/characterTalents/c5_".concat(name, ".png"),
-                    c6: "/characterTalents/c6_".concat(name, ".png")
-                },
-                baseStats: {
-                    hp: c.baseStats.get(EStat.HP)!.value,
-                    atk: c.baseStats.get(EStat.ATK)!.value,
-                    atk_nw: c.baseStats.get(EStat.ATK)!.value - c.weapon.mainStat.value,
-                    def: c.baseStats.get(EStat.DEF)!.value
-                },
-                constNames: {
-                    c1: constNames[0],
-                    c2: constNames[1],
-                    c3: constNames[2],
-                    c4: constNames[3],
-                    c5: constNames[4],
-                    c6: constNames[5]
-                },
-                constTexts: {
-                    c1: constTexts[0],
-                    c2: constTexts[1],
-                    c3: constTexts[2],
-                    c4: constTexts[3],
-                    c5: constTexts[4],
-                    c6: constTexts[5]
+                let r = ERegion.UNKNOWN
+                if (reg[name] != undefined) {
+                    r = stringToERegion(reg[name])
                 }
-            }
 
-            const weapon : IWeapon = {
-                type: c.weapon.type,
-                name: this.enkaTranslator.translate(c.weapon.name),
-                mainStat: c.weapon.mainStat,
-                level: c.weapon.level,
-                rarity: c.weapon.rarity,
-                subStat: c.weapon.subStat,
-                refinement: c.weapon.refinement == undefined ? 1 : c.weapon.refinement,
-                ascensionLevel: c.weapon.ascensionLevel,
-                assets: {
-                    icon: "/weaponIcons/".concat(this.cleanNameForPath(c.weapon.name), "/weapon", c.weapon.ascensionLevel > 1 ? "-awake.png":".png")
+                let constNames = []
+                let constTexts = []
+                for (let ii = 0; ii < 6; ++ii) {
+                    if (constInfo[name] != undefined && constInfo[name]["c".concat((ii + 1).toString())] != undefined) {
+                        constNames.push(constInfo[name]["c".concat((ii + 1).toString())]["name"])
+                        constTexts.push(constInfo[name]["c".concat((ii + 1).toString())]["text"])
+                    } else {
+                        constNames.push("UNKNOWN NAME - PLEASE REPORT THE ISSUE")
+                        constTexts.push("UNKNOWN TEXT - PLEASE REPORT THE ISSUE")
+                    }
                 }
-            }
 
-            let artes = []
-            for (let j = 0; j < c.artefacts.length; ++j) {
-                const arte = c.artefacts[j]
-                const a : IArtefact = {
-                    type: arte.type,
-                    name: this.enkaTranslator.translate(arte.name),
-                    set: arte.set,
-                    level: arte.level,
-                    rarity: arte.rarity,
-                    mainStat: arte.mainStat,
-                    subStats: arte.subStats,
+                const common: ICharacterCommonData = {
+                    name: name,
+                    element: c.commonData.element,
+                    region: r,
+                    rarity: c.commonData.rarity,
+                    weaponType: c.commonData.weapon,
+                    ascensionStatName: ascensionName,
+                    ascensionStatBaseValue: ascensionValue,
                     assets: {
-                        icon: "/artefactIcons/".concat(this.cleanNameForPath(arte.set), "/", arte.type, ".png")
+                        characterCard: charCard,
+                        characterPortrait: characterPortrait,
+                        characterNameCard: "/namecards/".concat(name.replaceAll(" ", "%20"), ".png"),
+                        aa: "/characterTalents/aa_".concat(c.commonData.weapon, ".png"),
+                        skill: "/characterTalents/skill_".concat(name, ".png"),
+                        burst: "/characterTalents/burst_".concat(name, ".png"),
+                        a1: "/characterTalents/a1_".concat(name, ".png"),
+                        a4: "/characterTalents/a4_".concat(name, ".png"),
+                        c1: "/characterTalents/c1_".concat(name, ".png"),
+                        c2: "/characterTalents/c2_".concat(name, ".png"),
+                        c3: "/characterTalents/c3_".concat(name, ".png"),
+                        c4: "/characterTalents/c4_".concat(name, ".png"),
+                        c5: "/characterTalents/c5_".concat(name, ".png"),
+                        c6: "/characterTalents/c6_".concat(name, ".png")
+                    },
+                    baseStats: {
+                        hp: c.baseStats.get(EStat.HP)!.value,
+                        atk: c.baseStats.get(EStat.ATK)!.value,
+                        atk_nw: c.baseStats.get(EStat.ATK)!.value - c.weapon.mainStat.value,
+                        def: c.baseStats.get(EStat.DEF)!.value
+                    },
+                    constNames: {
+                        c1: constNames[0],
+                        c2: constNames[1],
+                        c3: constNames[2],
+                        c4: constNames[3],
+                        c5: constNames[4],
+                        c6: constNames[5]
+                    },
+                    constTexts: {
+                        c1: constTexts[0],
+                        c2: constTexts[1],
+                        c3: constTexts[2],
+                        c4: constTexts[3],
+                        c5: constTexts[4],
+                        c6: constTexts[5]
                     }
                 }
 
-                artes.push(a)
-            }
+                const weapon : IWeapon = {
+                    type: c.weapon.type,
+                    name: this.enkaTranslator.translate(c.weapon.name),
+                    mainStat: c.weapon.mainStat,
+                    level: c.weapon.level,
+                    rarity: c.weapon.rarity,
+                    subStat: c.weapon.subStat,
+                    refinement: c.weapon.refinement == undefined ? 1 : c.weapon.refinement,
+                    ascensionLevel: c.weapon.ascensionLevel,
+                    assets: {
+                        icon: "/weaponIcons/".concat(this.cleanNameForPath(c.weapon.name), "/weapon", c.weapon.ascensionLevel > 1 ? "-awake.png":".png")
+                    }
+                }
 
-            let currentStats = this.buildBaseStats(common, weapon, artes, c.ascensionLevel)
-            const artefactEffects = await this.getArtefactEffects(artes)
-            const weaponEffects = await this.getWeaponEffects(weapon)
-            const inherentEffect = await this.getCharacterEffects(common)
-            const currentEffects = artefactEffects.concat(weaponEffects, inherentEffect)
+                let artes = []
+                for (let j = 0; j < c.artefacts.length; ++j) {
+                    const arte = c.artefacts[j]
+                    const a : IArtefact = {
+                        type: arte.type,
+                        name: this.enkaTranslator.translate(arte.name),
+                        set: arte.set,
+                        level: arte.level,
+                        rarity: arte.rarity,
+                        mainStat: arte.mainStat,
+                        subStats: arte.subStats,
+                        assets: {
+                            icon: "/artefactIcons/".concat(this.cleanNameForPath(arte.set), "/", arte.type, ".png")
+                        }
+                    }
+
+                    artes.push(a)
+                }
+
+                let currentStats = this.buildBaseStats(common, weapon, artes, c.ascensionLevel)
+                const artefactEffects = await this.getArtefactEffects(artes)
+                const weaponEffects = await this.getWeaponEffects(weapon)
+                const inherentEffect = await this.getCharacterEffects(common)
+                const currentEffects = artefactEffects.concat(weaponEffects, inherentEffect)
 
 
-            for (let j = 0; j < currentEffects.length; ++j) {
-                const currentEffect = currentEffects[j]
-                if (currentEffect.type == EEffectType.STATIC) {
-                    for (let k = 0; k < currentEffect.implications[0].length; ++k) {
-                        if (currentEffect.options.enabled && (currentEffect.implications[0][k].target == ETarget.SELF || currentEffect.implications[0][k].target == ETarget.TEAM)){
-                            if (currentEffect.implications[0][k].flatValue != undefined) {
-                                currentStats.addStat(currentEffect.implications[0][k].flatValue!)
+                for (let j = 0; j < currentEffects.length; ++j) {
+                    const currentEffect = currentEffects[j]
+                    if (currentEffect.type == EEffectType.STATIC) {
+                        for (let k = 0; k < currentEffect.implications[0].length; ++k) {
+                            if (currentEffect.options.enabled && (currentEffect.implications[0][k].target == ETarget.SELF || currentEffect.implications[0][k].target == ETarget.TEAM)){
+                                if (currentEffect.implications[0][k].flatValue != undefined) {
+                                    currentStats.addStat(currentEffect.implications[0][k].flatValue!)
+                                }
+
                             }
-
                         }
                     }
                 }
-            }
 
-            for (let j = 0; j < currentEffects.length; ++j) {
-                const currentEffect = currentEffects[j]
-                if (currentEffect.type == EEffectType.STATIC) {
-                    for (let k = 0; k < currentEffect.implications[0].length; ++k) {
-                        if (currentEffect.options.enabled && (currentEffect.implications[0][k].target == ETarget.SELF || currentEffect.implications[0][k].target == ETarget.TEAM)){
-                            if (currentEffect.implications[0][k].ratioValue != undefined) {
-                                const r = currentEffect.implications[0][k].ratioValue!
-                                let value = currentStats.get(r.source).value - r.base
-                                if (r.step != 0) {
-                                    value = value / r.step
+                for (let j = 0; j < currentEffects.length; ++j) {
+                    const currentEffect = currentEffects[j]
+                    if (currentEffect.type == EEffectType.STATIC) {
+                        for (let k = 0; k < currentEffect.implications[0].length; ++k) {
+                            if (currentEffect.options.enabled && (currentEffect.implications[0][k].target == ETarget.SELF || currentEffect.implications[0][k].target == ETarget.TEAM)){
+                                if (currentEffect.implications[0][k].ratioValue != undefined) {
+                                    const r = currentEffect.implications[0][k].ratioValue!
+                                    let value = currentStats.get(r.source).value - r.base
+                                    if (r.step != 0) {
+                                        value = value / r.step
+                                    }
+
+                                    value = value * r.ratio
+                                    if (r.maxvalue > 0 && value > r.maxvalue) {
+                                        value = r.maxvalue
+                                    }
+                                    currentStats.addStat({
+                                        name: r.target,
+                                        value: value
+                                    })
                                 }
 
-                                value = value * r.ratio
-                                if (r.maxvalue > 0 && value > r.maxvalue) {
-                                    value = r.maxvalue
-                                }
-                                currentStats.addStat({
-                                    name: r.target,
-                                    value: value
-                                })
                             }
-
                         }
                     }
                 }
-            }
 
-            if (currentStats.keys().includes(EStat.ELEM_DMG_P)) {
-                const elemStats = [EStat.ANEMO_DMG_P, EStat.GEO_DMG_P, EStat.ELECTRO_DMG_P, EStat.DENDRO_DMG_P, EStat.HYDRO_DMG_P, EStat.PYRO_DMG_P, EStat.CRYO_DMG_P]
-                for (let i = 0; i < elemStats.length; ++i) {
-                    currentStats.addStat({name: elemStats[i], value: currentStats.get(EStat.ELEM_DMG_P).value})
-                }
-            }
-            
-            const anomalies = new StatBag()
-            for (let j = 0; j < c.finalStats.keys().length; ++j) {
-                const currentStat = c.finalStats.keys()[j]
-                if (currentStats.keys().includes(currentStat)) {
-                    const statDiff = c.finalStats.get(currentStat)!.value / currentStats.get(currentStat)!.value
-                    if (statDiff < 0.98 || statDiff > 1.02) {
-                        anomalies.addStat({name: currentStat, value: c.finalStats.get(currentStat)!.value - currentStats.get(currentStat)!.value})
+                if (currentStats.keys().includes(EStat.ELEM_DMG_P)) {
+                    const elemStats = [EStat.ANEMO_DMG_P, EStat.GEO_DMG_P, EStat.ELECTRO_DMG_P, EStat.DENDRO_DMG_P, EStat.HYDRO_DMG_P, EStat.PYRO_DMG_P, EStat.CRYO_DMG_P]
+                    for (let i = 0; i < elemStats.length; ++i) {
+                        currentStats.addStat({name: elemStats[i], value: currentStats.get(EStat.ELEM_DMG_P).value})
                     }
-                } else {
-                    anomalies.addStat(c.finalStats.get(currentStat)!)
                 }
+                
+                const anomalies = new StatBag()
+                for (let j = 0; j < c.finalStats.keys().length; ++j) {
+                    const currentStat = c.finalStats.keys()[j]
+                    if (currentStats.keys().includes(currentStat)) {
+                        const statDiff = c.finalStats.get(currentStat)!.value / currentStats.get(currentStat)!.value
+                        if (statDiff < 0.98 || statDiff > 1.02) {
+                            anomalies.addStat({name: currentStat, value: c.finalStats.get(currentStat)!.value - currentStats.get(currentStat)!.value})
+                        }
+                    } else {
+                        anomalies.addStat(c.finalStats.get(currentStat)!)
+                    }
+                }
+
+                const char: ICharacterData = {
+                    name: name,
+                    element: c.commonData.element,
+                    level: c.level,
+                    ascensionLevel: c.ascensionLevel,
+                    ascensionStatName: ascensionName,
+                    ascensionStatValue: ascensionValue * ascendedFactor,
+                    friendshipLevel: c.friendship,
+                    constellation: c.constellation,
+                    skills: {
+                        levelAA: c.skills[0].level,
+                        levelSkill: c.skills[1].level,
+                        levelUlt: c.skills[2].level
+                    },
+                    commonData: common,
+                    weapon: weapon,
+                    artefacts: artes,
+                    totalStats: currentStats.toIStatBag(),
+                    dynamicEffects: [],
+                    lastUpdated: Date.now(),
+                    staticEffects: currentEffects,
+                    anormalStats: anomalies.toIStatBag(),
+                }
+
+                characters.push(char)
             }
 
-            const char: ICharacterData = {
-                name: name,
-                element: c.commonData.element,
-                level: c.level,
-                ascensionLevel: c.ascensionLevel,
-                ascensionStatName: ascensionName,
-                ascensionStatValue: ascensionValue * ascendedFactor,
-                friendshipLevel: c.friendship,
-                constellation: c.constellation,
-                skills: {
-                    levelAA: c.skills[0].level,
-                    levelSkill: c.skills[1].level,
-                    levelUlt: c.skills[2].level
+            const res : IPlayerInfo = {
+                name: enkaData.name,
+                uid: this.uid,
+                arLevel: enkaData.arLevel,
+                description: enkaData.description,
+                worldLevel: enkaData.worldLevel,
+                achievementCount: enkaData.achievementCount,
+                abysses: {
+                    floor: enkaData.abysses.floor,
+                    chamber: enkaData.abysses.chamber
                 },
-                commonData: common,
-                weapon: weapon,
-                artefacts: artes,
-                totalStats: currentStats.toIStatBag(),
-                dynamicEffects: [],
-                lastUpdated: Date.now(),
-                staticEffects: currentEffects,
-                anormalStats: anomalies.toIStatBag(),
+                characters: characters,
+                profilePictureCharacterName: "/characterPortraits/".concat(enkaData.profilePicture.toLowerCase(), ".png")
             }
 
-            characters.push(char)
+            await this.writeData(this.uid, res)
+            return res
+        } catch(e) {
+            try {
+                const p = path.join(process.cwd(), process.env.DATA_PATH!, this.uid, "player")
+                const data = (await fsPromises.readFile(p)).toString()
+                const resi = readIPlayerInfoWithoutCharacters(JSON.parse((data)))
+                const res : IPlayerInfo = {
+                    name: resi.name,
+                    uid: resi.uid,
+                    arLevel: resi.arLevel,
+                    description: resi.description,
+                    worldLevel: resi.worldLevel,
+                    achievementCount: resi.achievementCount,
+                    abysses: resi.abysses,
+                    characters: [],
+                    profilePictureCharacterName: resi.profilePictureCharacterName
+                }
+                return res
+            } catch (ee) {
+                return Promise.reject("[Updater Error] : Could not load online or local player data.")
+            }
         }
-
-        const res : IPlayerInfo = {
-            name: enkaData.name,
-            uid: this.uid,
-            arLevel: enkaData.arLevel,
-            description: enkaData.description,
-            worldLevel: enkaData.worldLevel,
-            achievementCount: enkaData.achievementCount,
-            abysses: {
-                floor: enkaData.abysses.floor,
-                chamber: enkaData.abysses.chamber
-            },
-            characters: characters,
-            profilePictureCharacterName: "/characterPortraits/".concat(enkaData.profilePicture.toLowerCase(), ".png")
-        }
-
-        await this.writeData(this.uid, res)
-        return res
     }
 
     public async writeData(uid: string, data: IPlayerInfo) {

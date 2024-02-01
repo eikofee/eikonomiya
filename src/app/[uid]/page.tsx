@@ -76,7 +76,7 @@ export default async function Page({ params }: { params: { uid: string } }) {
             Given UID is not a number : <code>{uid}</code>
         </div>
         )
-    }   if (loadStatus.message != "") {
+    } if (loadStatus.message != "") {
         return <div className="bg-blue-500 w-full">
                 {loadStatus.message}
             </div>

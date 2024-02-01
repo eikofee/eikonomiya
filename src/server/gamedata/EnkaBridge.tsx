@@ -245,7 +245,7 @@ export class EnkaBridge {
             }
 
             if (i < avatarDatabase.length) {
-                const avatarId = avatarDatabase[i]["OKCAINGLHBG"].toString()
+                const avatarId = avatarDatabase[i]["HLNPELJOHLF"].toString()
                 profilePictureCharacterName = this.translator.translate((await this.getCharacterCommonData(avatarId)).nameId)
             }
         }
@@ -279,10 +279,11 @@ export class EnkaBridge {
 
             for (let x = 1; x < 9; ++x) {
                 let cid = id.toString().concat("-", (subCharId + x).toString())
-                if (c[cid].length > 0) {
+                if (c[cid]["SkillOrder"] != undefined) {
                     let ss = (c[cid]["SkillOrder"]).toString()
                     if (ss.includes(refSkillId)) {
                         id = cid
+                        x = 90
                     }
                 }
             }

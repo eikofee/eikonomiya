@@ -20,6 +20,7 @@ import { addOptions } from "./IEffectOptions";
 import { IEffectImplication } from "./IEffectImplication";
 import { IStatRatio } from "./IStatRatio";
 import { ERegion, stringToERegion } from "./enums/ERegion";
+import { EElement } from "./enums/EElement";
 
 export enum ELoadStatus {
     SUCCESS,
@@ -448,6 +449,21 @@ export class Updater {
         return res;
     }
 
+    private getCName(name: string, e: EElement) : string {
+        if (name == "Lumine" || name == "Aether") {
+            switch(e) {
+                case EElement.ANEMO : return "traveler-anemo";
+                case EElement.GEO : return "traveler-geo";
+                case EElement.ELECTRO : return "traveler-electro";
+                case EElement.DENDRO : return "traveler-dendro";
+                case EElement.HYDRO : return "traveler-hydro";
+                default: return "traveler-default"
+            }
+        }
+
+        return name
+    }
+
     public async loadPlayerData() : Promise<ILoadPlayerInfoStatus> {
         let res : ILoadPlayerInfoStatus = {
             status: ELoadStatus.FAILED,
@@ -515,10 +531,11 @@ export class Updater {
 
                 let constNames = []
                 let constTexts = []
+                let cname = this.getCName(name, c.commonData.element)
                 for (let ii = 0; ii < 6; ++ii) {
-                    if (constInfo[name] != undefined && constInfo[name]["c".concat((ii + 1).toString())] != undefined) {
-                        constNames.push(constInfo[name]["c".concat((ii + 1).toString())]["name"])
-                        constTexts.push(constInfo[name]["c".concat((ii + 1).toString())]["text"])
+                    if (cname != undefined && constInfo[cname]["c".concat((ii + 1).toString())] != undefined) {
+                        constNames.push(constInfo[cname]["c".concat((ii + 1).toString())]["name"])
+                        constTexts.push(constInfo[cname]["c".concat((ii + 1).toString())]["text"])
                     } else {
                         constNames.push("UNKNOWN NAME - PLEASE REPORT THE ISSUE")
                         constTexts.push("UNKNOWN TEXT - PLEASE REPORT THE ISSUE")
@@ -538,16 +555,16 @@ export class Updater {
                         characterPortrait: characterPortrait,
                         characterNameCard: "/namecards/".concat(name.replaceAll(" ", "%20"), ".png"),
                         aa: "/characterTalents/aa_".concat(c.commonData.weapon, ".png"),
-                        skill: "/characterTalents/skill_".concat(name, ".png"),
-                        burst: "/characterTalents/burst_".concat(name, ".png"),
-                        a1: "/characterTalents/a1_".concat(name, ".png"),
-                        a4: "/characterTalents/a4_".concat(name, ".png"),
-                        c1: "/characterTalents/c1_".concat(name, ".png"),
-                        c2: "/characterTalents/c2_".concat(name, ".png"),
-                        c3: "/characterTalents/c3_".concat(name, ".png"),
-                        c4: "/characterTalents/c4_".concat(name, ".png"),
-                        c5: "/characterTalents/c5_".concat(name, ".png"),
-                        c6: "/characterTalents/c6_".concat(name, ".png")
+                        skill: "/characterTalents/skill_".concat(cname, ".png"),
+                        burst: "/characterTalents/burst_".concat(cname, ".png"),
+                        a1: "/characterTalents/a1_".concat(cname, ".png"),
+                        a4: "/characterTalents/a4_".concat(cname, ".png"),
+                        c1: "/characterTalents/c1_".concat(cname, ".png"),
+                        c2: "/characterTalents/c2_".concat(cname, ".png"),
+                        c3: "/characterTalents/c3_".concat(cname, ".png"),
+                        c4: "/characterTalents/c4_".concat(cname, ".png"),
+                        c5: "/characterTalents/c5_".concat(cname, ".png"),
+                        c6: "/characterTalents/c6_".concat(cname, ".png")
                     },
                     baseStats: {
                         hp: c.baseStats.get(EStat.HP)!.value,

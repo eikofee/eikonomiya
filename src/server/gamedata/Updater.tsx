@@ -21,6 +21,17 @@ import { IEffectImplication } from "./IEffectImplication";
 import { IStatRatio } from "./IStatRatio";
 import { ERegion, stringToERegion } from "./enums/ERegion";
 
+export enum ELoadStatus {
+    SUCCESS,
+    LOCAL_ONLY,
+    FAILED,
+}
+
+export interface ILoadPlayerInfoStatus {
+    playerInfo? : IPlayerInfo,
+    status: ELoadStatus,
+    message: string
+}
 
 export class Updater {
 
@@ -437,7 +448,11 @@ export class Updater {
         return res;
     }
 
-    public async loadPlayerData() : Promise<IPlayerInfo> {
+    public async loadPlayerData() : Promise<ILoadPlayerInfoStatus> {
+        let res : ILoadPlayerInfoStatus = {
+            status: ELoadStatus.FAILED,
+            message: ""
+        }
 
         try {
             const enkaData = await this.bridge.loadPlayerData()
@@ -686,7 +701,7 @@ export class Updater {
                 characters.push(char)
             }
 
-            const res : IPlayerInfo = {
+            const pi : IPlayerInfo = {
                 name: enkaData.name,
                 uid: this.uid,
                 arLevel: enkaData.arLevel,
@@ -701,14 +716,16 @@ export class Updater {
                 profilePictureCharacterName: "/characterPortraits/".concat(enkaData.profilePicture.toLowerCase(), ".png")
             }
 
-            await this.writeData(this.uid, res)
+            await this.writeData(this.uid, pi)
+            res.playerInfo = pi
+            res.status = ELoadStatus.SUCCESS
             return res
-        } catch(e) {
+        } catch(e: any) {
             try {
                 const p = path.join(process.cwd(), process.env.DATA_PATH!, this.uid, "player")
                 const data = (await fsPromises.readFile(p)).toString()
                 const resi = readIPlayerInfoWithoutCharacters(JSON.parse((data)))
-                const res : IPlayerInfo = {
+                const pi : IPlayerInfo = {
                     name: resi.name,
                     uid: resi.uid,
                     arLevel: resi.arLevel,
@@ -719,9 +736,13 @@ export class Updater {
                     characters: [],
                     profilePictureCharacterName: resi.profilePictureCharacterName
                 }
+                res.playerInfo = pi
+                res.status = ELoadStatus.LOCAL_ONLY
+                res.message = "Enka.network API threw error : ".concat(e)
                 return res
-            } catch (ee) {
-                return Promise.reject("[Updater Error] : Could not load online or local player data.")
+            } catch (ee: any) {
+                res.message = "[Updater Error] : Could not load online or local player data. Enka Error : ".concat(e)
+                return res
             }
         }
     }

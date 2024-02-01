@@ -1,4 +1,4 @@
-import { Updater } from "@/server/gamedata/Updater";
+import { ELoadStatus, ILoadPlayerInfoStatus, Updater } from "@/server/gamedata/Updater";
 import { ICharacterData } from "@/server/gamedata/ICharacterData";
 import { getPlayerInfoList, loadCharacters, loadConfigFile } from "@/server/DataLoader";
 import { IPlayerInfoWithoutCharacters } from "@/server/gamedata/IPlayerInfo";
@@ -57,20 +57,30 @@ async function home() {
 export default async function Page({ params }: { params: { uid: string } }) {
     const uid = params.uid
     let playerInfo = undefined
+    let loadStatus : ILoadPlayerInfoStatus = {
+        status: ELoadStatus.FAILED,
+        message: ""
+    }
     if (uid == "home") {
         return await home()
     } else if (!isNaN(parseInt(uid))) {
         const u = new Updater(uid)
         await u.initialize()
-        playerInfo = await u.loadPlayerData()
+        loadStatus = await u.loadPlayerData()
+        if (loadStatus.status != ELoadStatus.FAILED) {
+            playerInfo = loadStatus.playerInfo!
+        }
     } else {
         return (
             <div className="bg-blue-500 w-full">
             Given UID is not a number : <code>{uid}</code>
         </div>
         )
-    }
-        if (playerInfo == undefined) {
+    }   if (loadStatus.message != "") {
+        return <div className="bg-blue-500 w-full">
+                {loadStatus.message}
+            </div>
+    } else if (playerInfo == undefined) {
             return (
                 <div className="bg-blue-500 w-full">
                 Fetching data, please wait...

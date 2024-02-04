@@ -26,10 +26,10 @@ then run it using
 ```
 docker run -p 3000:3000 -v <full path to data folder>:/app/data eikonomiya
 ```
-Then go to `localhost:3000/<your uid>` to see stuff.
+Then go to `localhost:3000` to start using Eikonomiya.
 
 ### Using npm (dev build)
-Create a folder named `_data` at the root of the repo, then run
+Create a folder named `data` at the root of the repo, then run
 ```
 npm run dev
 ```

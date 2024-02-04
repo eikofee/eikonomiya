@@ -17,19 +17,11 @@ import { EStat, eStatToReadable, stringToEStat } from "@/server/gamedata/enums/E
 import { ERegion } from "@/server/gamedata/enums/ERegion";
 import Icon from "./Icon";
 import { Card } from "./Card";
-import { ETarget } from "@/server/gamedata/enums/EEffectTarget";
-import EffectCard from "./EffectCard";
 import { IEffect } from "@/server/gamedata/IEffect";
-import { EEffectType } from "@/server/gamedata/enums/EEffectType";
-import EffectCardBasic from "./effectCards/EffectCardBasic";
-import EffectCardBoolean from "./effectCards/EffectCardBoolean";
-import EffectCardStack from "./effectCards/EffectCardStack";
 import { computeStats } from "@/server/gamedata/StatComputations";
-import { StatBag } from "@/server/gamedata/StatBag";
 import { ConfigDirector, IConfigDirector } from "../classes/ConfigDirector";
 import { IStatBag } from "@/server/gamedata/IStatBag";
 import EffectList, { EEffectListType } from "./EffectList";
-import EffectCardSmall from "./EffectCardSmall";
 import EffectCardExplorer from "./EffectCardExplorer";
 
 
@@ -234,7 +226,6 @@ export default function RootComponent({data: characters, currentCharacterName: c
         setStatBag(res.b)
         setEffectCards(effectList)
     }
-
 
     return <ConfigContext.Provider value={{colorDirector: colorDirector, config: config}}>
         <BackgroundComponent character={characterData}/>

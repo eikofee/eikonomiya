@@ -1,14 +1,13 @@
 import { ICharacterData } from "./ICharacterData"
 import { IEffect } from "./IEffect"
-import { INumberInstance, copyNumberInstance } from "./INumberInstances"
 import { IStatBag } from "./IStatBag"
 import { IStatTuple, copyStatTuple } from "./IStatTuple"
 import { StatBag } from "./StatBag"
 import { ETarget } from "./enums/EEffectTarget"
 import { EEffectType } from "./enums/EEffectType"
-import { EStat } from "./enums/EStat"
+import { EStat, stringToEStat } from "./enums/EStat"
 
-function buildBaseStats(character: ICharacterData) {
+function buildBaseStats(character: ICharacterData, additionalStats: IStatBag) {
     const characterBase = character.commonData
     const weapon = character.weapon
     const artefacts = character.artefacts
@@ -19,6 +18,11 @@ function buildBaseStats(character: ICharacterData) {
     sb.addStat({name: EStat.CDMG_P, value: 0.5})
     if (weapon.subStat != undefined) {
         sb.addStat({name: weapon.subStat.name, value: weapon.subStat.value})
+    }
+
+    let as = new StatBag()
+    for (let i = 0; i < additionalStats.names.length; ++i) {
+        as.addStat({name: stringToEStat(additionalStats.names[i]), value: additionalStats.values[i]})
     }
 
     for (let i = 0; i < artefacts.length; ++i) {
@@ -62,9 +66,19 @@ function buildBaseStats(character: ICharacterData) {
             bonus = {name: bonusStats[i], value: 0}
         }
 
+        let bonus2 = as.get(bonusStats[i])
+        if (bonus2 != undefined) {
+            bonus = {name: bonusStats[i], value: bonus.value + bonus2.value}
+        }
+
         let flat = sb.get(flatStats[i])
         if (flat == undefined) {
             flat = {name: flatStats[i], value: 0}
+        }
+
+        let flat2 = as.get(flatStats[i])
+        if (flat2 != undefined) {
+            flat = {name: flatStats[i], value: flat.value + flat2.value}
         }
 
         const stat : IStatTuple = {name: destStats[i], value: base * (1 + bonus.value) + flat.value}
@@ -101,7 +115,8 @@ export function updateEffect(currentEffect: IEffect, currentStats: StatBag, appl
                     sc.push(copyStatTuple(cb))
                 } else if (applyRatio && impl[i].ratioValue != undefined) {
                     const r = impl[i].ratioValue!
-                    let value = currentStats.get(convertFlatStatNameToFinalStat(r.source)).value - r.base
+                    const statName = convertFlatStatNameToFinalStat(r.source)
+                    let value = currentStats.get(statName).value - r.base
                     if (r.step != 0) {
                         value = Math.floor(value / r.step)
                     }
@@ -194,7 +209,8 @@ export function updateEffect(currentEffect: IEffect, currentStats: StatBag, appl
 }
 
 export function computeStats(c: ICharacterData) : {a: ICharacterData, b: IStatBag}{
-    let currentStats = buildBaseStats(c)
+    let additionalStats = new StatBag()
+    let currentStats = buildBaseStats(c, additionalStats.toIStatBag())
     let finalStats = currentStats.copy()
 
     for (let i = 0; i < c.staticEffects.length; ++i) {
@@ -210,10 +226,13 @@ export function computeStats(c: ICharacterData) : {a: ICharacterData, b: IStatBa
     for (let i = 0; i < currentEffects.length; ++i) {
         if (currentEffects[i].options.enabled) {
             for (let j = 0; j < currentEffects[i].statChanges.length; ++j) {
-                currentStats.addStat(currentEffects[i].statChanges[j])
+                // currentStats.addStat(currentEffects[i].statChanges[j])
+                additionalStats.addStat(currentEffects[i].statChanges[j])
             }
         }
     }
+
+    currentStats = buildBaseStats(c, additionalStats.toIStatBag())
     
     for (let i = 0; i < c.staticEffects.length; ++i) {
         c.staticEffects[i] = updateEffect(c.staticEffects[i], currentStats, true)
@@ -230,7 +249,6 @@ export function computeStats(c: ICharacterData) : {a: ICharacterData, b: IStatBa
             }
         }
     }
-
     return {a: c, b: finalStats.toIStatBag()}
 }
 

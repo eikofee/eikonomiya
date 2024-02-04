@@ -31,7 +31,11 @@ Then go to `localhost:3000` to start using Eikonomiya.
 ### Using npm (dev build)
 Create a folder named `data` at the root of the repo, then run
 ```
-npm run dev
+npm run build
+```
+to build the application. You can then start it using
+```
+npm run start
 ```
 ## API
 (to be documented, maybe use swagger ?)

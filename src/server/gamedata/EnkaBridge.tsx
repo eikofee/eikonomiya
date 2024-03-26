@@ -240,12 +240,15 @@ export class EnkaBridge {
             const id = parseInt(playerInfo["profilePicture"]["id"])
             const avatarDatabase = await(await fetch("https://gitlab.com/Dimbreath/AnimeGameData/-/raw/main/ExcelBinOutput/ProfilePictureExcelConfigData.json?ref_type=heads", {headers: this.headers})).json()
             let i = 0;
+            const firstItem = avatarDatabase[0]
+            const keys = Object.keys(firstItem)
+            const constantKey = keys[keys.length - 1]
             while (i < avatarDatabase.length && avatarDatabase[i]["id"] != id) {
                 ++i;
             }
 
             if (i < avatarDatabase.length) {
-                const avatarId = avatarDatabase[i]["HLNPELJOHLF"].toString()
+                const avatarId = avatarDatabase[i][constantKey].toString()
                 profilePictureCharacterName = this.translator.translate((await this.getCharacterCommonData(avatarId)).nameId)
             }
         }

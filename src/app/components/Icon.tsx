@@ -122,9 +122,10 @@ const defaultDotIcon = () => {
 
 
 // export default function Icon({n}: {n: string}) {
-export default function Icon({n: n}: {n: string}) {
+export default function Icon({n, useTooltip = true}: {n: string, useTooltip?: boolean}) {
     let content : ReactElement[] = []
-    let svgClassname = "h-4 w-4"
+    // let svgClassname = "h-4 w-4"
+    let svgClassname = "h-full w-full"
     switch (n) {
         case "atk":
         case "atk%":
@@ -236,5 +237,9 @@ export default function Icon({n: n}: {n: string}) {
     let svg = <svg viewBox="0 0 24 24" className={svgClassname}>
                     {content}
                 </svg>
-    return <Tooltip child={svg} info={eStatToReadable(stringToEStat(n))} childClassname="" infoClassname="absolute bg-gray-800 text-white font-normal text-sm rounded p-2 whitespace-nowrap bottom-full left-1/2 transform -translate-x-1/2 " />
+    if (useTooltip) {
+        return <Tooltip child={svg} info={eStatToReadable(stringToEStat(n))} childClassname="w-full h-full" infoClassname="absolute bg-gray-800 text-white font-normal text-sm rounded p-2 whitespace-nowrap bottom-full left-1/2 transform -translate-x-1/2 " />
+    } else {
+        return svg
+    }
 }

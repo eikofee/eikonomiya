@@ -8,8 +8,8 @@ export default function StatLineDraw({name, value, secondaryValue, prefix, round
         liClassname = liClassname.concat(" rounded-b-md")
     }
     
-    let nameClassname = "text-left basis-3/5 items-center text-sm"
-    let valueClassname = "text-right basis-2/5"
+    let nameClassname = "text-left basis-3/5 items-center text-sm h-full w-full"
+    let valueClassname = "text-right basis-2/5 h-full w-full"
     
     let v = Math.floor(value).toLocaleString("fr")
     if (name.includes("%")) {
@@ -20,7 +20,12 @@ export default function StatLineDraw({name, value, secondaryValue, prefix, round
     }
     
     const lineName = stringToEStat(name) == EStat.UNKNOWN ? name : eStatToReadable(stringToEStat(name))
-    let n = <div className="flex flex-row items-center"><Icon n={name} /> <span className="pl-1">{lineName}</span></div>
+    let n = <div className="flex flex-row items-center h-full w-full">
+                <div className="h-4 w-4">
+                    <Icon n={name} />
+                </div>
+                <span className="pl-1">{lineName}</span>
+            </div>
     
     if (sub != undefined && sub) {
         liClassname = liClassname.concat(" text-xs h-3/4 text-gray-500 italic")

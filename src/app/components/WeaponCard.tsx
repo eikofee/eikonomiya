@@ -16,8 +16,10 @@ export default function WeaponCard({equip, rule} : {equip: IWeapon, rule: IChara
         subLine = <li className="flex justify-between place-items-center">
         <div className="flex flex-col w-full">
         <div className="w-full flex flex-row items-center">
-                <div className="text-left max-h-4">
-                    <Icon n={equip.subStat.name}/>
+                <div className="text-left">
+                    <div className="w-4 h-4">
+                        <Icon n={equip.subStat.name}/>
+                    </div>
                 </div>
                 <div className={"text-right grow"}>
                     {isPercentage(eStatToReadable(equip.subStat.name)) ? (equip.subStat.value! * 100).toFixed(1): equip.subStat.value}{isPercentage(equip.subStat.name) ? "%" : ""}
@@ -43,8 +45,10 @@ export default function WeaponCard({equip, rule} : {equip: IWeapon, rule: IChara
                         </div>
                     </div>
                     <div className="w-full flex flex-row items-center">
-                        <div className="text-left max-h-4">
-                            <Icon n={equip.mainStat.name}/>
+                        <div className="text-left">
+                            <div className="h-4 w-4">
+                                <Icon n={equip.mainStat.name}/>
+                            </div>
                         </div>
                         <div className={"text-right grow"}>
                             {isPercentage(equip.mainStat.name) ? (equip.mainStat.value * 100).toFixed(1): equip.mainStat.value}{isPercentage(equip.mainStat.name) ? "%" : ""}

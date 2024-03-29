@@ -6,8 +6,10 @@ export default function AscensionCard({char} : {char: ICharacterData}) {
     let statLine = (statName : string, statValue : number) =>{
         return <li className="flex justify-between place-items-center">
             <div className="w-full flex flex-row items-center">
-                            <div className="text-left max-h-4">
-                                <Icon n={statName.toLowerCase()}/>
+                            <div className="text-left">
+                                <div className="h-4 w-4">
+                                    <Icon n={statName.toLowerCase()}/>
+                                </div>
                             </div>
                             <div className="text-right grow">
                                 {(statName.includes("%") ? (statValue * 100).toFixed(1): statValue.toFixed(0)).concat(statName.includes("%") ? "%" : "")}

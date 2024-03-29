@@ -19,7 +19,7 @@ export default async function Page({ params }: { params: { character: string, ui
 
     const rules = await loadRules(uid)
     const configDirector = await loadConfigFile(true)
-    if (characters == undefined || rules == undefined) {
+    if (characters == undefined || rules == undefined || currentChar == undefined) {
         return (
             <div className="bg-blue-500 w-full">
                 Fetching data, please wait...

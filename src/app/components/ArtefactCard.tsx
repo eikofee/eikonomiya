@@ -59,8 +59,10 @@ export default function ArtefactCard({equip, rule, sortedStats, scoreState} : {e
 
     let statList = []
     let statLine = <div className="w-full flex flex-row items-center">
-                        <div className="text-left max-h-4">
-                            <Icon n={equip.mainStat.name.toString()}/>
+                        <div className="text-left">
+                            <div className="w-4 h-4">
+                                <Icon n={equip.mainStat.name.toString()}/>
+                            </div>
                         </div>
                         <div className={"text-right grow"}>
                             {isPercentage(equip.mainStat.name) ? (equip.mainStat.value * 100).toFixed(1): equip.mainStat.value}{isPercentage(equip.mainStat.name) ? "%" : ""}
@@ -96,8 +98,10 @@ export default function ArtefactCard({equip, rule, sortedStats, scoreState} : {e
 
         let statLineClassname = "w-full flex flex-row items-center ".concat(fontWeight[Math.floor(equip.subStats[i].rollValue)], " ", badStats.includes(equip.subStats[i].name) ? "text-slate-500/50 fill-slate-500/50 " : "text-current")
         let statLine = <div className={statLineClassname}>
-                            <div className={"text-left max-h-4"}>
-                                <Icon n={equip.subStats[i].name}/>
+                            <div className={"text-left"}>
+                                <div className="w-4 h-4">
+                                    <Icon n={equip.subStats[i].name}/>
+                                </div>
                             </div>
                             <div className={"text-right grow"}>
                                 {isPercentage(equip.subStats[i].name) ? (equip.subStats[i].value * 100).toFixed(1): equip.subStats[i].value}{isPercentage(equip.subStats[i].name) ? "%" : ""}

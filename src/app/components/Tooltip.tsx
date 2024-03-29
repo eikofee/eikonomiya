@@ -16,7 +16,7 @@ export default function Tooltip(c: InfoDivProps) {
     let cn = c.childClassname
     if (cn == undefined)
     {
-        cn = "w-full hover:bg-violet-500/10"
+        cn = "w-full h-full hover:bg-violet-500/10"
     }
 
     let iname = c.infoClassname

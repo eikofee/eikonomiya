@@ -16,6 +16,20 @@ export interface IEffect {
     statChanges: IStatTuple[],
 }
 
+export function addSpecialIcon(x: IEffect): IEffect {
+    if (x.icon != "") {
+        return x
+    }
+    
+    if (x.source == "no resonance") {
+        x.icon = "icon-def"
+    } else if (x.source.includes("resonance")) {
+        x.icon = "icon-".concat(x.source.replace(" resonance", ""))
+    }
+
+    return x
+}
+
 export function copyEffect(x: IEffect): IEffect {
     let statChanges: IStatTuple[] = []
     for (let i = 0; i < x.statChanges.length; ++i) {

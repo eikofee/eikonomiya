@@ -28,7 +28,7 @@ export default function RuleCard({rule, ruleSetterCallback, saveRuleCallback}: {
                 ls.push(
                     <li className={classname}>
             <div key={Math.random()} className={"text-left basis-1/2 items-center m-1 flex flex-row ".concat(iconDivClassName)}>
-                <div className={"mr-1"}>
+                <div className={"mr-1 h-4 w-4"}>
                     <Icon n={label} />
                 </div><p>
                     {eStatToReadable(label)}

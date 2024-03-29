@@ -274,11 +274,14 @@ export function parseEffect(data: any[], defaultName: string, defaultIcon: strin
             }
         }
 
+        const keywords = rawEffect["keywords"] != undefined ? rawEffect["keywords"].split(" ") : []
+
         const effect : IEffect = {
             name: effectName,
             source: effectSource,
             source2: effectSource2,
             tag: effectTag,
+            keywords: keywords,
             icon: defaultIcon,
             type: effectType,
             text: text,
@@ -367,6 +370,7 @@ export function parseCharacterData(json: any): ICharacterData {
             source2: item["source2"],
             icon: item["icon"],
             text: item["text"],
+            keywords: item["keywords"],
             options: {
                 enabled: item["options"]["enabled"],
                 stack: parseInt(item["options"]["stack"]),

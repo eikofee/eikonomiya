@@ -10,6 +10,7 @@ export interface IEffect {
     tag: string,
     icon: string,
     text: string,
+    keywords: string[]
     type: EEffectType,
     options: IEffectOptions,
     implications: IEffectImplication[][],
@@ -20,7 +21,7 @@ export function addSpecialIcon(x: IEffect): IEffect {
     if (x.icon != "") {
         return x
     }
-    
+
     if (x.source == "no resonance") {
         x.icon = "icon-def"
     } else if (x.source.includes("resonance")) {
@@ -69,6 +70,7 @@ export function copyEffect(x: IEffect): IEffect {
         source: x.source,
         source2: x.source2,
         tag: x.tag,
+        keywords: x.keywords,
         icon: x.icon,
         text: x.text,
         type: x.type,

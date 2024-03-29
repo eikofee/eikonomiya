@@ -1,4 +1,4 @@
-import { IEffect } from '@/server/gamedata/IEffect';
+import { IEffect, copyEffect } from '@/server/gamedata/IEffect';
 import EffectCardSmall from './EffectCardSmall';
 import { ChangeEvent, ChangeEventHandler, useContext, useState } from 'react';
 import { Card } from './Card';
@@ -15,10 +15,28 @@ export default function EffectCardExplorer({allCards, addToCharacterCb} : {allCa
     }
     let effectCards = []
     if (currentSearch != "") {
-        for (let i = 0; i < allCards.length; ++i) {
-            if (allCards[i].name.toLowerCase().includes(currentSearch.toLowerCase())) {
-                effectCards.push(<EffectCardSmall e={allCards[i]} addToCharacterCb={cb} />)
+        const csws = currentSearch.split(" ")
+        let candidates :IEffect[] = []
+        allCards.forEach(x => candidates.push(x))
+        // for (let ii = 0; ii < csws.length; ++ii) {
+        for (let ii = 0; ii < csws.length; ++ii) {
+            let currentCandidates : IEffect[] = []
+            const w = csws[ii]
+            if (w != "") {
+                for (let i = 0; i < candidates.length; ++i) {
+                    if (candidates[i].name.toLowerCase().includes(w.toLowerCase())
+                    || candidates[i].keywords.join(" ").toLowerCase().includes(w.toLowerCase())) {
+                        currentCandidates.push(candidates[i])
+                    }
+                }
+
+                candidates = []
+                currentCandidates.forEach(x => candidates.push(x))
             }
+        }
+
+        for (let i = 0; i < candidates.length; ++i) {
+            effectCards.push(<EffectCardSmall e={candidates[i]} addToCharacterCb={cb} />)
         }
     }
         

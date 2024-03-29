@@ -139,6 +139,11 @@ export class Updater {
                 effectSource2 = rawEffect["source2"]
             }
 
+            let keywords = []
+            if (rawEffect["keywords"] != undefined) {
+                keywords = rawEffect["keywords"]
+            }
+
             const effectType = stringToEEffectType(rawEffect["type"])
             const text = rawEffect["text"] != undefined ? rawEffect["text"] : ""
             const maxstack = rawEffect["maxstack"] != undefined ? rawEffect["maxstack"] : 0
@@ -374,6 +379,7 @@ export class Updater {
                 source: effectSource,
                 source2: effectSource2,
                 tag: effectTag,
+                keywords: keywords,
                 icon: defaultIcon,
                 type: effectType,
                 text: text,

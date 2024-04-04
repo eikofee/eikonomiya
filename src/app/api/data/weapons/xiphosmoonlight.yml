@@ -1,0 +1,16 @@
+cards:
+- effects:
+  - r1ratio: 0.00036
+    r5ratio: 0.00072
+    source: em
+    stat: er%
+    target: self
+  - r1ratio: 0.000108
+    r5ratio: 0.000216
+    source: em
+    stat: er%
+    target: team
+  name: Jinni's Whisper
+  text: Triggers every 10s. Can stack with multiple weapons (12s).
+  type: bool
+name: Xiphos' Moonlight

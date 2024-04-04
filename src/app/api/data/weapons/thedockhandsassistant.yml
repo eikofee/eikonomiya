@@ -1,0 +1,12 @@
+cards:
+- effects:
+  - r1value: 40
+    r5value: 80
+    stat: em
+    target: self
+  maxstack: 3
+  name: Stoic's Symbol
+  text: 'Gained when healed. Are consummed when using Elemental Skill or Burst (10s).
+    CD: 15s.'
+  type: stack
+name: The Dockhand's Assistant

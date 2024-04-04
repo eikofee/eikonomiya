@@ -1,0 +1,13 @@
+cards:
+- effects:
+  - r1value: 0.16
+    r5value: 0.32
+    stat: skill dmg%
+    target: self
+  - r1value: 0.06
+    r5value: 0.12
+    stat: skill cr%
+    target: self
+  name: Undying Admiration
+  type: static
+name: Festering Desire

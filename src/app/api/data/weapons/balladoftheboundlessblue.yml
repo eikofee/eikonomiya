@@ -1,0 +1,15 @@
+cards:
+- effects:
+  - r1value: 0.08
+    r5value: 0.16
+    stat: na dmg%
+    target: self
+  - r1value: 0.06
+    r5value: 0.12
+    stat: ca dmg%
+    target: self
+  maxstack: 3
+  name: Azure Skies
+  text: Character hits an opponent with NA or CA (6s).
+  type: stack
+name: Ballad of the Boundless Blue

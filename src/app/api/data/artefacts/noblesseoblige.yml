@@ -1,0 +1,16 @@
+cards:
+- effects:
+  - stat: burst dmg%
+    target: self
+    value: 0.2
+  tag: 2pc
+  type: static
+- effects:
+  - stat: atk%
+    target: team
+    value: 0.2
+  tag: 4pc
+  text: Using an Elemental Burst increases all party members' ATK by 20% for 12s.
+    This effect cannot stack.
+  type: bool
+name: Noblesse Oblige

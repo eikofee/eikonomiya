@@ -1,0 +1,23 @@
+cards:
+- effects:
+  - r1value: 0.06
+    r5value: 0.28
+    stat: dmg%
+    target: self
+  name: Radiance of the Deeps (Evengleam)
+  type: bool
+- effects:
+  - r1value: 0.1
+    r5value: 0.2
+    stat: dmg%
+    target: self
+  name: Radiance of the Deeps (Afterglow)
+  type: bool
+- effects:
+  - r1value: 0.14
+    r5value: 0.28
+    stat: dmg%
+    target: self
+  name: Radiance of the Deeps (Dawnblaze)
+  type: bool
+name: Fading Twilight

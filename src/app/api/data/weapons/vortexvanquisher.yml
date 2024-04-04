@@ -1,0 +1,27 @@
+cards:
+- effects:
+  - r1value: 0.2
+    r5value: 0.4
+    stat: shield%
+    target: self
+  name: Golden Majesty (1)
+  type: static
+- effects:
+  - r1value: 0.04
+    r5value: 0.08
+    stat: atk%
+    target: self
+  maxstack: 5
+  name: Golden Majesty (2, without shield)
+  text: Character hits an opponent (8s).
+  type: stack
+- effects:
+  - r1value: 0.08
+    r5value: 0.16
+    stat: atk%
+    target: self
+  maxstack: 5
+  name: Golden Majesty (2, with shield)
+  text: Character hits an opponent (8s).
+  type: stack
+name: Vortex Vanquisher

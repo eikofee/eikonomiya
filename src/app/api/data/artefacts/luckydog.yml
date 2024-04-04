@@ -1,0 +1,8 @@
+cards:
+- effects:
+  - stat: def
+    target: self
+    value: 100
+  tag: 2pc
+  type: static
+name: Lucky Dog

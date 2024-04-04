@@ -1,0 +1,17 @@
+cards:
+- effects:
+  - stat: dendro dmg%
+    target: self
+    value: 0.15
+  tag: 2pc
+  type: static
+- effects:
+  - stat: dendro res%
+    target: enemy
+    value: -0.3
+  tag: 4pc
+  text: After Elemental Skills or Bursts hit opponents, the targets' Dendro RES will
+    be decreased by 30% for 8s. This effect can be triggered even if the equipping
+    character is not on the field.
+  type: bool
+name: Deepwood Memories

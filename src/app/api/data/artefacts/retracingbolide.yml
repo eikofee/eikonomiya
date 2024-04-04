@@ -1,0 +1,19 @@
+cards:
+- effects:
+  - stat: shield%
+    target: self
+    value: 0.35
+  tag: 2pc
+  type: static
+- effects:
+  - stat: na dmg%
+    target: self
+    value: 0.4
+  - stat: ca dmg%
+    target: self
+    value: 0.4
+  tag: 4pc
+  text: While protected by a shield, gain an additional 40% Normal and Charged Attack
+    DMG.
+  type: bool
+name: Retracing Bolide

@@ -1,0 +1,10 @@
+cards:
+- effects:
+  - r1value: 0.16
+    r5value: 0.32
+    stat: dmg%
+    target: self
+  name: Benthic Pulse
+  text: Character is healed (8s).
+  type: bool
+name: Song of Stillness

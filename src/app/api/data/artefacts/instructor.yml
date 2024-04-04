@@ -1,0 +1,16 @@
+cards:
+- effects:
+  - stat: em
+    target: self
+    value: 80
+  tag: 2pc
+  type: static
+- effects:
+  - stat: em
+    target: team
+    value: 120
+  tag: 4pc
+  text: Upon triggering an Elemental Reaction, increases all party members' Elemental
+    Mastery by 120 for 8s.
+  type: bool
+name: Instructor

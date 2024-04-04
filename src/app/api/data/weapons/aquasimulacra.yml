@@ -1,0 +1,17 @@
+cards:
+- effects:
+  - r1value: 0.16
+    r5value: 0.32
+    stat: hp%
+    target: self
+  name: The Cleansing Form (1)
+  type: static
+- effects:
+  - r1value: 0.2
+    r5value: 0.4
+    stat: dmg%
+    target: self
+  name: The Cleansing Form (2)
+  text: Opponents are nearby.
+  type: bool
+name: Aqua Simulacra

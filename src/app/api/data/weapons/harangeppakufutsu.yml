@@ -1,0 +1,19 @@
+cards:
+- effects:
+  - r1value: 0.12
+    r5value: 0.24
+    stat: elem dmg%
+    target: self
+  name: Honed Flow
+  type: static
+- effects:
+  - r1value: 0.2
+    r5value: 0.4
+    stat: na dmg%
+    target: self
+  maxstack: 2
+  name: Rippling Upheaval
+  text: Other characters use Elemental Skills to gain stacks. Character uses Elemental
+    Skill (8s).
+  type: stack
+name: Haran Geppaku Futsu

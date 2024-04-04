@@ -1,0 +1,20 @@
+cards:
+- effects:
+  - r1ratio: 0.52
+    r5ratio: 1.04
+    source: em
+    stat: atk
+    target: self
+  name: Heat Haze at Horizon's End
+  type: static
+- effects:
+  - r1ratio: 0.28
+    r5ratio: 0.56
+    source: em
+    stat: atk
+    target: self
+  maxstack: 3
+  name: Dream of the Scarlet Sands
+  text: Elemental Skill hits opponents (10s).
+  type: stack
+name: Staff of the Scarlet Sands

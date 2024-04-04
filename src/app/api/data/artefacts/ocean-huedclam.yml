@@ -1,0 +1,10 @@
+cards:
+- effects:
+  - stat: heal out%
+    target: self
+    value: 0.15
+  tag: 2pc
+  type: static
+- tag: 4pc
+  type: none
+name: Ocean-Hued Clam

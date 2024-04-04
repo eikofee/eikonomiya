@@ -1,0 +1,18 @@
+cards:
+- effects:
+  - r1value: 0.12
+    r5value: 0.24
+    stat: atk%
+    target: self
+  name: Melussistance! (1)
+  type: static
+- effects:
+  - r1value: 0.01
+    r5value: 0.02
+    stat: atk%
+    target: self
+  maxstack: 12
+  name: Melussistance! (2)
+  text: Gain 1 stack for each Melusine helped.
+  type: stack
+name: Ultimate Overlord's Mega Magic Sword

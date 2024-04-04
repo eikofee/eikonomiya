@@ -1,0 +1,16 @@
+cards:
+- effects:
+  - stat: em
+    target: self
+    value: 80
+  tag: 2pc
+  type: static
+- effects:
+  - stat: ca dmg%
+    target: self
+    value: 0.35
+  tag: 4pc
+  text: Increases Charged Attack DMG by 35% if the character uses a Catalyst or a
+    Bow.
+  type: bool
+name: Wanderer's Troupe

@@ -1,0 +1,26 @@
+cards:
+- effects:
+  - r1value: 0.2
+    r5value: 0.4
+    stat: atk%
+    target: self
+  name: Desert Watch (1)
+  text: Elemental Skill hits an opponent (8s).
+  type: bool
+- effects:
+  - r1value: 0.2
+    r5value: 0.4
+    stat: atk%
+    target: self
+  name: Desert Watch (2)
+  text: Character takes damages (8s).
+  type: bool
+- effects:
+  - r1value: 0.32
+    r5value: 0.64
+    stat: hp%
+    target: self
+  name: Desert Watch (3)
+  text: Character is not protected by a shield.
+  type: bool
+name: Beacon of the Reed Sea

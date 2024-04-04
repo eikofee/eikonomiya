@@ -1,0 +1,17 @@
+cards:
+- effects:
+  - stat: dmg%
+    target: self
+    value: -0.1
+  name: Slingshot (disabled)
+  text: Arrow travels more than 0.3s.
+  type: bool
+- effects:
+  - r1value: 0.36
+    r5value: 0.6
+    stat: dmg%
+    target: self
+  name: Slingshot
+  text: Opponent is hit by the arrow within 0.3s after being fired.
+  type: bool
+name: Slingshot

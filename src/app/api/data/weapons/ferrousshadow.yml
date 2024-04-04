@@ -1,0 +1,10 @@
+cards:
+- effects:
+  - r1value: 0.3
+    r5value: 0.5
+    stat: ca dmg%
+    target: self
+  name: Unbending
+  text: Character's HP are below 70~90%.
+  type: bool
+name: Ferrous Shadow

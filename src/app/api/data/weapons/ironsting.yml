@@ -1,0 +1,11 @@
+cards:
+- effects:
+  - r1value: 0.06
+    r5value: 0.12
+    stat: elem dmg%
+    target: self
+  maxstack: 2
+  name: Infusion Stinger
+  text: Gain 1 stack when dealing elemental damages (6s).
+  type: stack
+name: Iron Sting

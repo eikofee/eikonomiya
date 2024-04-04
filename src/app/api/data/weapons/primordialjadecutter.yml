@@ -1,0 +1,17 @@
+cards:
+- effects:
+  - r1value: 0.2
+    r5value: 0.4
+    stat: hp%
+    target: self
+  name: Protector's Virtue (1)
+  type: static
+- effects:
+  - r1ratio: 0.012
+    r5ratio: 0.024
+    source: hp
+    stat: atk
+    target: self
+  name: Protectors' Virtue (2)
+  type: static
+name: Primordial Jade Cutter

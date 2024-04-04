@@ -1,0 +1,10 @@
+cards:
+- effects:
+  - r1value: 0.24
+    r5value: 0.48
+    stat: atk%
+    target: self
+  name: White Cruising Wave
+  text: Character is healed (8s).
+  type: bool
+name: Tidal Shadow

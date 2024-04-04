@@ -1,0 +1,13 @@
+cards:
+- effects:
+  - r1value: 0.24
+    r5value: 0.48
+    stat: skill dmg%
+    target: self
+  - r1value: 0.24
+    r5value: 0.48
+    stat: burst dmg%
+    target: self
+  name: Arrowless Song
+  type: static
+name: The Stringless

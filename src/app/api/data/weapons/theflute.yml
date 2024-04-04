@@ -1,0 +1,9 @@
+cards:
+- effects:
+  - info: Harmonics DMG (5 NA/CA)
+    r1value: 1
+    r5value: 2
+    source: atk
+  name: The Chord
+  type: info
+name: The Flute

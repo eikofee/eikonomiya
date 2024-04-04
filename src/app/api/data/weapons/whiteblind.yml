@@ -1,0 +1,15 @@
+cards:
+- effects:
+  - r1value: 0.06
+    r5value: 0.12
+    stat: atk%
+    target: self
+  - r1value: 0.06
+    r5value: 0.12
+    stat: def%
+    target: self
+  maxstack: 4
+  name: Infusion Blade
+  text: Gain 1 stack when hitting opponents (6s).
+  type: stack
+name: Whiteblind

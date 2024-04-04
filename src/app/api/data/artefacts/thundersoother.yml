@@ -1,0 +1,15 @@
+cards:
+- effects:
+  - stat: electro res%
+    target: self
+    value: 0.4
+  tag: 2pc
+  type: static
+- effects:
+  - stat: dmg%
+    target: self
+    value: 0.35
+  tag: 4pc
+  text: Increases DMG against opponents affected by Electro by 35%.
+  type: bool
+name: Thundersoother

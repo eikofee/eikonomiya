@@ -1,0 +1,9 @@
+cards:
+- effects:
+  - r1ratio: 0.8
+    r5ratio: 1.6
+    source: atk
+    text: 'Flowrider DMG (x3). CD: 12s.'
+  name: Net Snapper
+  type: info
+name: End of the Line

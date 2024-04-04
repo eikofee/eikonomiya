@@ -1,0 +1,11 @@
+cards:
+- effects:
+  - r1value: 40
+    r5value: 80
+    stat: em
+    target: self
+  maxstack: 2
+  name: Secret Wisdom's Favor
+  text: Gain 1 stack when hitting opponent with CA (6s).
+  type: stack
+name: Ibis Piercer

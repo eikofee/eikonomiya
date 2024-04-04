@@ -1,0 +1,14 @@
+cards:
+- effects:
+  - r1value: 0.12
+    r5value: 0.2
+    stat: atk%
+    target: self
+  - r1value: 0.12
+    r5value: 0.2
+    stat: mov spd%
+    target: self
+  name: Guerilla Tactics
+  text: Opponent has been defeated within 15s.
+  type: bool
+name: Twin Nephrite

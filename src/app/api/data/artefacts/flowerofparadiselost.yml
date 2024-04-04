@@ -1,0 +1,36 @@
+cards:
+- effects:
+  - stat: em
+    target: self
+    value: 80
+  tag: 2pc
+  type: static
+- effects:
+  - stat: bloom dmg%
+    target: self
+    value: 0.4
+  - stat: hyperbloom dmg%
+    target: self
+    value: 0.4
+  - stat: burgeon dmg%
+    target: self
+    value: 0.4
+  tag: 4pc
+  type: static
+- effects:
+  - stat: bloom dmg%
+    target: self
+    value: 0.1
+  - stat: hyperbloom dmg%
+    target: self
+    value: 0.1
+  - stat: burgeon dmg%
+    target: self
+    value: 0.1
+  maxstack: 4
+  tag: 4pc
+  text: After the equipping character triggers Bloom, Hyperbloom, or Burgeon, they
+    will gain another 25% bonus to the effect mentioned prior. Each stack of this
+    lasts 10s. Max 4 stacks simultaneously.
+  type: stack
+name: Flower of Paradise Lost

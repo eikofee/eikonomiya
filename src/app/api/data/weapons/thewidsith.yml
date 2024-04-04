@@ -1,0 +1,23 @@
+cards:
+- effects:
+  - r1value: 0.6
+    r5value: 1.2
+    stat: atk%
+    target: self
+  name: Debut (Recitative)
+  type: bool
+- effects:
+  - r1value: 0.48
+    r5value: 0.96
+    stat: elem dmg%
+    target: self
+  name: Debut (Aria)
+  type: bool
+- effects:
+  - r1value: 240
+    r5value: 480
+    stat: em
+    target: self
+  name: Interlude
+  type: bool
+name: The Widsith

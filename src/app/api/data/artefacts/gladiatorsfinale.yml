@@ -1,0 +1,16 @@
+cards:
+- effects:
+  - stat: atk%
+    target: self
+    value: 0.18
+  tag: 2pc
+  type: static
+- effects:
+  - stat: na dmg%
+    target: self
+    value: 0.35
+  tag: 4pc
+  text: If the wielder of this artifact set uses a Sword, Claymore or Polearm, increases
+    their Normal Attack DMG by 35%.
+  type: bool
+name: Gladiator's Finale

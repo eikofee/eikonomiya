@@ -1,0 +1,38 @@
+cards:
+- effects:
+  - r1value: 0.16
+    r5value: 0.32
+    stat: ca dmg%
+    target: self
+  name: Parsifal the Great
+  type: static
+- effects:
+  - r1value: 0.16
+    r5value: 0.32
+    stat: atk%
+    target: self
+  maxstack: 3
+  name: Gimmick
+  text: Characters in the party with the same element as the weilder (included).
+  type: stack
+- effects:
+    1:
+    - r1value: 0.04
+      r5value: 0.12
+      stat: mov spd%
+      target: self
+    2:
+    - r1value: 0.07
+      r5value: 0.15
+      stat: mov spd%
+      target: self
+    3:
+    - r1value: 0.1
+      r5value: 0.18
+      stat: mov spd%
+      target: self
+  maxstack: 3
+  name: Theatrics
+  text: Characters in the party with a different element from the weilder.
+  type: stack-precise
+name: The First Great Magic

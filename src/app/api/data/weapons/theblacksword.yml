@@ -1,0 +1,20 @@
+cards:
+- effects:
+  - r1value: 0.2
+    r5value: 0.4
+    stat: na dmg%
+    target: self
+  - r1value: 0.2
+    r5value: 0.4
+    stat: ca dmg%
+    target: self
+  name: Justice (1)
+  type: static
+- effects:
+  - info: 'Heal on Crit (CD: 5s)'
+    r1value: 0.6
+    r5value: 1
+    source: atk
+  name: Justice (2)
+  type: info
+name: The Black Sword

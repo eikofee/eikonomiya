@@ -1,0 +1,13 @@
+cards:
+- effects:
+  - stat: mov spd%
+    target: self
+    value: 0.1
+  - r1value: 0.36
+    r5value: 0.72
+    stat: atk%
+    target: self
+  name: Unreturning
+  text: CA hits weak point (10s).
+  type: bool
+name: Prototype Crescent

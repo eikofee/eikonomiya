@@ -1,0 +1,18 @@
+cards:
+- effects:
+  - r1value: 0.2
+    r5value: 0.4
+    stat: atk%
+    target: self
+  name: Many Oaths of Dawn and Dusk
+  type: static
+- effects:
+  - r1value: 0.18
+    r5value: 0.36
+    stat: skill dmg%
+    target: self
+  maxstack: 2
+  name: Seal
+  text: Gain 1 stack when obtaining Elemental Shard (15s).
+  type: stack
+name: Verdict

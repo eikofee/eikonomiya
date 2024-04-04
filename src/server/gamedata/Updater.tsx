@@ -520,15 +520,9 @@ export class Updater {
                     }
                 }
 
-                p = path.join(process.cwd(), "/public/characterPortraits")
+                p = path.join(process.cwd(), "/public/characters")
                 fileList = await fsPromises.readdir(p)
-                let characterPortrait = "";
-                for (let i = 0; i < extensions.length; ++i) {
-                    const fname = name.toLowerCase().concat(extensions[i])
-                    if (fileList.includes(fname)) {
-                        characterPortrait = "/characterPortraits/".concat(fname)
-                    }
-                }
+                let characterPortrait = "/characters/".concat(name.toLowerCase(), "/face.png");
 
                 let r = ERegion.UNKNOWN
                 if (reg[name] != undefined) {
@@ -559,18 +553,18 @@ export class Updater {
                     assets: {
                         characterCard: charCard,
                         characterPortrait: characterPortrait,
-                        characterNameCard: "/namecards/".concat(name.replaceAll(" ", "%20"), ".png"),
+                        characterNameCard: "/characters/".concat(name.toLowerCase(), "namecard.png"),
                         aa: "/characterTalents/aa_".concat(c.commonData.weapon, ".png"),
-                        skill: "/characterTalents/skill_".concat(cname, ".png"),
-                        burst: "/characterTalents/burst_".concat(cname, ".png"),
-                        a1: "/characterTalents/a1_".concat(cname, ".png"),
-                        a4: "/characterTalents/a4_".concat(cname, ".png"),
-                        c1: "/characterTalents/c1_".concat(cname, ".png"),
-                        c2: "/characterTalents/c2_".concat(cname, ".png"),
-                        c3: "/characterTalents/c3_".concat(cname, ".png"),
-                        c4: "/characterTalents/c4_".concat(cname, ".png"),
-                        c5: "/characterTalents/c5_".concat(cname, ".png"),
-                        c6: "/characterTalents/c6_".concat(cname, ".png")
+                        skill: "/characters/".concat(name.toLowerCase(), "skill.png"),
+                        burst: "/characters/".concat(name.toLowerCase(), "burst.png"),
+                        a1: "/characters/".concat(name.toLowerCase(), "a1.png"),
+                        a4: "/characters/".concat(name.toLowerCase(), "a4.png"),
+                        c1: "/characters/".concat(name.toLowerCase(), "c1.png"),
+                        c2: "/characters/".concat(name.toLowerCase(), "c2.png"),
+                        c3: "/characters/".concat(name.toLowerCase(), "c3.png"),
+                        c4: "/characters/".concat(name.toLowerCase(), "c4.png"),
+                        c5: "/characters/".concat(name.toLowerCase(), "c5.png"),
+                        c6: "/characters/".concat(name.toLowerCase(), "c6.png")
                     },
                     baseStats: {
                         hp: c.baseStats.get(EStat.HP)!.value,
@@ -736,7 +730,7 @@ export class Updater {
                     chamber: enkaData.abysses.chamber
                 },
                 characters: characters,
-                profilePictureCharacterName: "/characterPortraits/".concat(enkaData.profilePicture.toLowerCase(), ".png")
+                profilePictureCharacterName: "/characters/".concat(enkaData.profilePicture.toLowerCase(), "face.png")
             }
 
             await this.writeData(this.uid, pi)

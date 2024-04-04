@@ -1,0 +1,12 @@
+cards:
+- effects:
+  - r1value: 0.4
+    r5value: 0.8
+    stat: na dmg%
+    target: self
+  - stat: ca dmg%
+    target: self
+    value: -0.1
+  name: Rapid Firing
+  type: static
+name: Rust

@@ -1,0 +1,23 @@
+cards:
+- effects:
+  - stat: cryo dmg%
+    target: self
+    value: 0.15
+  tag: 2pc
+  type: static
+- effects:
+  - stat: cr%
+    target: self
+    value: 0.2
+  tag: 4pc
+  text: When a character attacks an opponent affected by Cryo, their CRIT Rate is
+    increased by 20%.
+  type: bool
+- effects:
+  - stat: cr%
+    target: self
+    value: 0.2
+  tag: 4pc
+  text: If the opponent is Frozen, CRIT Rate is increased by an additional 20%.
+  type: bool
+name: Blizzard Strayer

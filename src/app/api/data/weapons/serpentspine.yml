@@ -1,0 +1,11 @@
+cards:
+- effects:
+  - r1value: 0.06
+    r5value: 0.1
+    stat: dmg%
+    target: self
+  maxstack: 5
+  name: Wavesplitter
+  text: Gain 1 stack every 4s on-field.
+  type: stack
+name: Serpent Spine

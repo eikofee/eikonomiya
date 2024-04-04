@@ -1,0 +1,18 @@
+cards:
+- effects:
+  - stat: er%
+    target: self
+    value: 0.2
+  tag: 2pc
+  type: static
+- effects:
+  - maxvalue: 0.75
+    ratio: 0.25
+    source: er%
+    stat: burst dmg%
+    target: self
+  tag: 4pc
+  text: Increases Elemental Burst DMG by 25% of Energy Recharge. A maximum of 75%
+    bonus DMG can be obtained in this way.
+  type: static
+name: Emblem of Severed Fate

@@ -1,0 +1,9 @@
+cards:
+- effects:
+  - info: 'Additional DMG (CD: 15s)'
+    r1ratio: 2.4
+    r5ratio: 4.8
+    source: atk
+  name: Crush
+  type: info
+name: Prototype Archaic

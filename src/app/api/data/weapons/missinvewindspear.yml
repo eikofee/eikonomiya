@@ -1,0 +1,14 @@
+cards:
+- effects:
+  - r1value: 0.12
+    r5value: 0.24
+    stat: atk%
+    target: self
+  - r1value: 48
+    r5value: 96
+    stat: em
+    target: self
+  name: The Wind Unattained
+  text: Triggering Elemental reaction (10s).
+  type: bool
+name: Missinve Windspear

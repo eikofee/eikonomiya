@@ -1,0 +1,16 @@
+cards:
+- effects:
+  - r1ratio: 0.2
+    r5ratio: 0.4
+    source: atk
+    stat: na dmg
+    target: self
+  - r1ratio: 0.2
+    r5ratio: 0.4
+    source: atk
+    stat: ca dmg
+    target: self
+  name: Infusion Needle
+  text: Pick up Elemental Orb/Particle (5s).
+  type: bool
+name: Crescent Pike

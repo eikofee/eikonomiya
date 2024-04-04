@@ -1,0 +1,10 @@
+cards:
+- effects:
+  - r1value: 0.24
+    r5value: 0.48
+    stat: atk%
+    target: team
+  name: Heritage
+  text: 'Characted is being switched out (10s). CD: 20s.'
+  type: bool
+name: Thrilling Tales of Dragon Slayers

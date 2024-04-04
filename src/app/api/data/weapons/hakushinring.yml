@@ -1,0 +1,10 @@
+cards:
+- effects:
+  - r1value: 0.1
+    r5value: 0.2
+    stat: elem dmg%
+    target: team
+  name: Sakura Saiguu
+  text: Character triggers Electro elemental reaction (6s).
+  type: bool
+name: Hakushin Ring

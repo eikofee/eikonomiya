@@ -1,0 +1,29 @@
+cards:
+- effects:
+  - r1value: 0.16
+    r5value: 0.32
+    stat: na dmg%
+    target: self
+  - r1value: 0.24
+    r5value: 0.48
+    stat: skill dmg%
+    target: self
+  - r1value: 0.2
+    r5value: 0.4
+    stat: def%
+    target: self
+  name: Broad Bloom, Shrine Sword (1)
+  type: static
+- effects:
+  - r1value: 0.16
+    r5value: 0.32
+    stat: na dmg%
+    target: self
+  - r1value: 0.24
+    r5value: 0.48
+    stat: skill dmg%
+    target: self
+  name: Broad Bloom, Shrine Sword (2)
+  text: Nearby character deals Geo DMG (15s).
+  type: bool
+name: Uraku Misugiri

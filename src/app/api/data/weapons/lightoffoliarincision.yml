@@ -1,0 +1,24 @@
+cards:
+- effects:
+  - r1value: 0.04
+    r5value: 0.08
+    stat: cr%
+    target: self
+  name: Whitemoon Bristle
+  type: static
+- effects:
+  - r1ratio: 1.2
+    r5ratio: 2.4
+    source: em
+    stat: na dmg
+    target: self
+  - r1ratio: 1.2
+    r5ratio: 2.4
+    source: em
+    stat: skill dmg
+    target: self
+  name: Foliar Incision
+  text: 'Character deals elemental damages using NA. Lasts 28 attacks or 12s. CD:
+    12s.'
+  type: bool
+name: Light of Foliar Incision

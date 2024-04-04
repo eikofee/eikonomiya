@@ -1,0 +1,45 @@
+cards:
+- effects:
+  - r1value: 0.16
+    r5value: 0.32
+    stat: atk%
+    target: self
+  name: Golden Blood-Tide (1)
+  type: static
+- effects:
+    1:
+    - r1value: 0.16
+      r5value: 0.32
+      stat: na dmg%
+      target: self
+    - r1value: 0.14
+      r5value: 0.28
+      stat: ca dmg%
+      target: self
+    2:
+    - r1value: 0.32
+      r5value: 0.64
+      stat: na dmg%
+      target: self
+    - r1value: 0.28
+      r5value: 0.56
+      stat: ca dmg%
+      target: self
+    3:
+    - r1value: 0.48
+      r5value: 0.96
+      stat: na dmg%
+      target: self
+    - r1value: 0.42
+      r5value: 0.84
+      stat: ca dmg%
+      target: self
+    - r1value: 0.08
+      r5value: 0.16
+      stat: atk spd%
+      target: self
+  maxstack: 3
+  name: Golden Blood-Tide (2)
+  text: HP increase or decrease (4s). Can be triggered every 0.3s.
+  type: stack-precise
+name: Cashflow Supervision

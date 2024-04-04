@@ -1,0 +1,31 @@
+cards:
+- effects:
+  - r1value: 0.16
+    r5value: 0.32
+    stat: skill dmg%
+    target: self
+  - r1value: 0.16
+    r5value: 0.32
+    stat: burst dmg%
+    target: self
+  name: Northwind Wolf (1)
+  type: static
+- effects:
+  - r1value: 0.02
+    r5value: 0.04
+    stat: skill cr%
+    target: self
+  maxstack: 4
+  name: Northwind Wolf (2)
+  text: Elemental Skill hits opponent (10s)
+  type: stack
+- effects:
+  - r1value: 0.02
+    r5value: 0.04
+    stat: burst cr%
+    target: self
+  maxstack: 4
+  name: Northwind Wolf (3)
+  text: Elemental Burst hits opponent (10s)
+  type: stack
+name: Wolf-Fang

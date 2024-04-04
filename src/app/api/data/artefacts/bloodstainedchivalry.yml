@@ -1,0 +1,16 @@
+cards:
+- effects:
+  - stat: phys dmg%
+    target: self
+    value: 0.25
+  tag: 2pc
+  type: static
+- effects:
+  - stat: ca dmg%
+    target: self
+    value: 0.5
+  tag: 4pc
+  text: After defeating an opponent, increases Charged Attack DMG by 50%, and reduces
+    its Stamina cost to 0 for 10s.
+  type: bool
+name: Bloodstained Chivalry

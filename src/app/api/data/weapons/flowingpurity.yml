@@ -1,0 +1,23 @@
+cards:
+- effects:
+  - r1value: 0.08
+    r5value: 0.16
+    stat: elem dmg%
+    target: self
+  name: Unfinished Masterpiece
+  text: Elemental Skill is used (15s).
+  type: bool
+- effects:
+  - r1maxvalue: 0.12
+    r1ratio: 0.02
+    r5maxvalue: 0.24
+    r5ratio: 0.04
+    source: hp
+    sourcefactor: 0.24
+    stat: elem dmg%
+    step: 1000
+    target: self
+  name: Bond of Life
+  text: Bond of Life cleared (15s) (24% max hp considered).
+  type: bool
+name: Flowing Purity

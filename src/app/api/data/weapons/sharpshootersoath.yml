@@ -1,0 +1,18 @@
+cards:
+- effects:
+  - r1value: 0.24
+    r5value: 0.48
+    stat: na dmg%
+    target: self
+  name: Precise (NA)
+  text: Hit on weak point.
+  type: bool
+- effects:
+  - r1value: 0.24
+    r5value: 0.48
+    stat: ca dmg%
+    target: self
+  name: Precise (CA)
+  text: Hit on weak point.
+  type: bool
+name: Sharpshooter's Oath

@@ -1,0 +1,16 @@
+cards:
+- effects:
+  - r1value: 0.12
+    r5value: 0.24
+    stat: burst dmg%
+    target: self
+  name: Oceanic Victory
+  type: static
+- effects:
+  - info: 'Tuna DMG (CD: 15s)'
+    r1ratio: 1
+    r5ratio: 2
+    source: atk
+  name: Tuna
+  type: info
+name: Luxurious Sea-Lord

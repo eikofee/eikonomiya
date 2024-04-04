@@ -1,0 +1,21 @@
+cards:
+- effects:
+  - base: 1
+    r1maxvalue: 0.8
+    r1ratio: 0.28
+    r5maxvalue: 1.2
+    r5ratio: 0.56
+    source: er%
+    stat: atk%
+    target: self
+  name: 'Timeless Dream: Eternal Stove (1)'
+  type: static
+- effects:
+  - r1value: 0.3
+    r5value: 0.5
+    stat: er%
+    target: self
+  name: 'Timeless Dream: Eternal Stove (2)'
+  text: Elemental Burst used (12s).
+  type: bool
+name: Engulfing Lightning

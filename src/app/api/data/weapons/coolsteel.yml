@@ -1,0 +1,10 @@
+cards:
+- effects:
+  - r1value: 0.12
+    r5value: 0.24
+    stat: dmg%
+    target: self
+  name: Bane of Water and Ice
+  text: Opponent is affected by Hydro or Cryo
+  type: bool
+name: Cool Steel

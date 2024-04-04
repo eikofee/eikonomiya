@@ -1,0 +1,9 @@
+cards:
+- effects:
+  - info: 'Bonus crit dmg. CD: 10s'
+    r1ratio: 1
+    r5ratio: 2
+    source: atk
+  name: Archer's Message
+  type: info
+name: Messenger

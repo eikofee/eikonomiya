@@ -1,0 +1,10 @@
+cards:
+- effects:
+  - stat: skill dmg%
+    target: self
+    value: 0.2
+  tag: 2pc
+  type: static
+- tag: 4pc
+  type: none
+name: Gambler

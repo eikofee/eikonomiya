@@ -1,0 +1,10 @@
+cards:
+- effects:
+  - stat: heal in%
+    target: self
+    value: 0.2
+  tag: 2pc
+  type: static
+- tag: 4pc
+  type: none
+name: Traveling Doctor

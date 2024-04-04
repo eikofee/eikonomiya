@@ -1,0 +1,10 @@
+cards:
+- effects:
+  - r1value: 0.16
+    r5value: 0.32
+    stat: atk%
+    target: self
+  name: Windblume Wish
+  text: Elemental Skill is used (6s).
+  type: bool
+name: Windblume Ode

@@ -1,0 +1,26 @@
+cards:
+- effects:
+  - r1value: 0.12
+    r5value: 0.24
+    stat: na dmg%
+    target: self
+  - r1value: 0.12
+    r5value: 0.24
+    stat: ca dmg%
+    target: self
+  name: Strong-Willed (1)
+  type: static
+- effects:
+  - r1value: 0.08
+    r5value: 0.16
+    stat: na dmg%
+    target: self
+  - r1value: 0.08
+    r5value: 0.16
+    stat: ca dmg%
+    target: self
+  maxstack: 5
+  name: Strong-Willed (2)
+  text: Arrow is in the air for 0.1s up to 0.5s.
+  type: stack
+name: Amos' Bow

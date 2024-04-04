@@ -1,0 +1,29 @@
+cards:
+- effects:
+  - r1value: 0.04
+    r5value: 0.08
+    stat: cr%
+    target: self
+  name: Sky-Piercing Fang
+  type: static
+- effects:
+  - r1value: 0.1
+    stat: mov spd%
+    target: self
+  - stat: atk spd%
+    target: self
+    value: 0.1
+  - r1ratio: 0.2
+    r5ratio: 0.4
+    source: atk
+    stat: na dmg
+    target: self
+  - r1ratio: 0.2
+    r5ratio: 0.4
+    source: atk
+    stat: ca dmg
+    target: self
+  name: Skypiercing Might (1)
+  text: Character uses Elemental Burst (12s).
+  type: bool
+name: Skyward Blade

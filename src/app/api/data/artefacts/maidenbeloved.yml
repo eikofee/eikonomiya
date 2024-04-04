@@ -1,0 +1,16 @@
+cards:
+- effects:
+  - stat: heal out%
+    target: self
+    value: 0.15
+  tag: 2pc
+  type: static
+- effects:
+  - stat: heal in%
+    target: team
+    value: 0.2
+  tag: 4pc
+  text: Using an Elemental Skill or Burst increases healing received by all party
+    members by 20% for 10s.
+  type: bool
+name: Maiden Beloved

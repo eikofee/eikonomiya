@@ -1,0 +1,27 @@
+cards:
+- effects:
+  - r1value: 0.12
+    r5value: 0.24
+    stat: elem dmg%
+    target: self
+  name: Extinguishing Precept
+  type: static
+- effects:
+  - r1value: 0.032
+    r5value: 0.064
+    stat: atk%
+    target: self
+  maxstack: 6
+  name: Consummation (on-field)
+  text: Obtained after using Elemental Skill (20s). Gain 1 stack per second.
+  type: stack
+- effects:
+  - r1value: 0.064
+    r5value: 0.0128
+    stat: atk%
+    target: self
+  maxstack: 6
+  name: Consummation (off-field)
+  text: Obtained after using Elemental Skill (20s). Gain 1 stack per second.
+  type: stack
+name: Calamity Queller

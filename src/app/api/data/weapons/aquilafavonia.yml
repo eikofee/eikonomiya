@@ -1,0 +1,9 @@
+cards:
+- effects:
+  - r1value: 0.2
+    r5value: 0.4
+    stat: atk%
+    target: self
+  name: Falcon's Defiance
+  type: static
+name: Aquila Favonia

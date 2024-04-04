@@ -1,0 +1,32 @@
+cards:
+- effects:
+  - stat: pyro dmg%
+    target: self
+    value: 0.15
+  tag: 2pc
+  type: static
+- effects:
+  - stat: overloaded dmg%
+    target: self
+    value: 0.4
+  - stat: burning dmg%
+    target: self
+    value: 0.4
+  - stat: vaporize dmg%
+    target: self
+    value: 0.15
+  - stat: melt dmg%
+    target: self
+    value: 0.15
+  tag: 4pc
+  type: static
+- effects:
+  - stat: pyro dmg%
+    target: self
+    value: 0.075
+  maxstack: 3
+  tag: 4pc
+  text: Using Elemental Skill increases the 2-Piece Set Bonus by 50% of its starting
+    value for 10s. Max 3 stacks.
+  type: stack
+name: Crimson Witch of Flames

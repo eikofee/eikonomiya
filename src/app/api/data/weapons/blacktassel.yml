@@ -1,0 +1,10 @@
+cards:
+- effects:
+  - r1value: 0.4
+    r5value: 0.8
+    stat: dmg%
+    target: self
+  name: Bane of the Soft
+  text: Opponent is a slime
+  type: bool
+name: Black Tassel

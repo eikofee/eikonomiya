@@ -1,0 +1,22 @@
+cards:
+- effects:
+  - stat: na dmg%
+    target: self
+    value: 0.15
+  - stat: ca dmg%
+    target: self
+    value: 0.15
+  tag: 2pc
+  type: static
+- effects:
+  - stat: na dmg%
+    target: self
+    value: 0.25
+  - stat: ca dmg%
+    target: self
+    value: 0.25
+  tag: 4pc
+  text: After using Elemental Skill, increases Normal Attack and Charged Attack DMG
+    by 25% for 8s.
+  type: bool
+name: Martial Artist

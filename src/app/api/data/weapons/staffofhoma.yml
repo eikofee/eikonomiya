@@ -1,0 +1,25 @@
+cards:
+- effects:
+  - r1value: 0.2
+    r5value: 0.4
+    stat: hp%
+    target: self
+  name: Reckless Cinnabar (1)
+  type: static
+- effects:
+  - r1ratio: 0.008
+    r5ratio: 0.016
+    source: hp
+    stat: atk
+    target: self
+  name: Reckless Cinnabar (2, HP > 50%)
+  type: bool
+- effects:
+  - r1ratio: 0.01
+    r5ratio: 0.018
+    source: hp
+    stat: atk
+    target: self
+  name: Reckless Cinnabar (2, HP < 50%)
+  type: bool
+name: Staff of Homa

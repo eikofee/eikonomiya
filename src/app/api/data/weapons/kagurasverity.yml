@@ -1,0 +1,26 @@
+cards:
+- effects:
+    1:
+    - r1value: 0.12
+      r5value: 0.24
+      stat: skill dmg%
+      target: self
+    2:
+    - r1value: 0.24
+      r5value: 0.48
+      stat: skill dmg%
+      target: self
+    3:
+    - r1value: 0.36
+      r5value: 0.62
+      stat: skill dmg%
+      target: self
+    - r1value: 0.12
+      r5value: 0.24
+      stat: elem dmg%
+      target: self
+  maxstack: 3
+  name: Kagura Dance of the Sacred Sakura
+  text: Character deals Elemental Skill damages (16s).
+  type: stack-precise
+name: Kagura's Verity

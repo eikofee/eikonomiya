@@ -1,0 +1,26 @@
+cards:
+- effects:
+  - stat: em
+    target: self
+    value: 80
+  tag: 2pc
+  type: static
+- effects:
+  - stat: atk%
+    target: self
+    value: 0.14
+  maxstack: 3
+  tag: 4pc
+  text: Within 8s of triggering an Elemental Reaction, ATK is increased by 14% for
+    each party member whose Elemental Type is the same as the equipping character.
+  type: stack
+- effects:
+  - stat: em
+    target: self
+    value: 50
+  maxstack: 3
+  tag: 4pc
+  text: Within 8s of triggering an Elemental Reaction, Elemental Mastery is increased
+    by 50 for every party member with a different Elemental Type.
+  type: stack
+name: Gilded Dreams

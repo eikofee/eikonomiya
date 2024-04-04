@@ -1,0 +1,10 @@
+cards:
+- effects:
+  - r1value: 120
+    r5value: 240
+    stat: em
+    target: semf
+  name: Tales of the Tundra
+  text: Party has at least 3 different elements.
+  type: bool
+name: Ballad of the Fjords

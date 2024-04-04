@@ -1,0 +1,15 @@
+cards:
+- effects:
+  - r1ratio: 0.24
+    r5ratio: 0.48
+    source: em
+    stat: atk
+    target: self
+  - r1ratio: 0.072
+    r5ratio: 0.148
+    source: em
+    target: team
+  name: Desert Pavilion
+  text: Effect is triggered every 10s and instances can stack (12s).
+  type: bool
+name: Makhaira Aquamarine

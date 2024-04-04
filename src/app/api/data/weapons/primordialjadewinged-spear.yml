@@ -1,0 +1,46 @@
+cards:
+- effects:
+    1:
+    - r1value: 0.032
+      r5value: 0.06
+      stat: atk%
+      target: self
+    2:
+    - r1value: 0.064
+      r5value: 0.12
+      stat: atk%
+      target: self
+    3:
+    - r1value: 0.096
+      r5value: 0.18
+      stat: atk%
+      target: self
+    4:
+    - r1value: 0.128
+      r5value: 0.24
+      stat: atk%
+      target: self
+    5:
+    - r1value: 0.16
+      r5value: 0.3
+      stat: atk%
+      target: self
+    6:
+    - r1value: 0.192
+      r5value: 0.36
+      stat: atk%
+      target: self
+    7:
+    - r1value: 0.224
+      r5value: 0.42
+      stat: atk%
+      target: self
+    - r1value: 0.12
+      r5value: 0.24
+      stat: dmg%
+      target: self
+  maxstack: 7
+  name: Eagle Spear of Justice
+  text: Gain 1 stack when hitting an opponent (6s).
+  type: stack-precise
+name: Primordial Jade Winged-Spear

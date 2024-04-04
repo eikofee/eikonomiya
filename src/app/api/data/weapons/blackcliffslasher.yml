@@ -1,0 +1,11 @@
+cards:
+- effects:
+  - r1value: 0.12
+    r5value: 0.24
+    stat: atk%
+    target: self
+  maxstack: 3
+  name: Press the Advantage
+  text: Gain 1 stack per defeated opponent (30s).
+  type: stack
+name: Blackcliff Slasher

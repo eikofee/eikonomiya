@@ -1,0 +1,9 @@
+cards:
+- effects:
+  - r1value: 0.08
+    r5value: 0.16
+    stat: dmg%
+    target: self
+  name: Sky-ripping Dragon Spine
+  type: static
+name: Skyward Pride

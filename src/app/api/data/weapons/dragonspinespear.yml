@@ -1,0 +1,13 @@
+cards:
+- effects:
+  - r1ratio: 0.8
+    r5ratio: 1.4
+    source: atk
+    text: 'Everfrost Icicle (no Cryo). CD: 10s.'
+  - r1ratio: 2
+    r5ratio: 3.6
+    source: atk
+    text: 'Everfrost Icicle (Cryo). CD: 10s.'
+  name: Frost Burial
+  type: info
+name: Dragonspine Spear

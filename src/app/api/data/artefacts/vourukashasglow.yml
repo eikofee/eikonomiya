@@ -1,0 +1,31 @@
+cards:
+- effects:
+  - stat: hp%
+    target: self
+    value: 0.2
+  tag: 2pc
+  type: static
+- effects:
+  - stat: skill dmg%
+    target: self
+    value: 0.1
+  - stat: burst dmg%
+    target: self
+    value: 0.1
+  tag: 4pc
+  type: static
+- effects:
+  - stat: skill dmg%
+    target: self
+    value: 0.08
+  - stat: burst dmg%
+    target: self
+    value: 0.08
+  maxstack: 5
+  tag: 4pc
+  text: After the equipping character takes DMG, the aforementioned DMG Bonus is increased
+    by 80% for 5s. This effect increase can have 5 stacks. The duration of each stack
+    is counted independently. These effects can be triggered even when the equipping
+    character is not on the field.
+  type: stack
+name: Vourukasha's Glow

@@ -1,0 +1,29 @@
+cards:
+- effects:
+    r1value: 0.1
+    r5value: 0.2
+    stat: dmg%
+    target: self
+  name: Revolutionary Chorale
+  type: static
+- effects:
+  - r1value: 0.16
+    r5value: 0.32
+    stat: na dmg%
+    target: team
+  - r1value: 0.16
+    r5value: 0.32
+    stat: ca dmg%
+    target: team
+  - r1value: 0.16
+    r5value: 0.32
+    stat: pa dmg%
+    target: team
+  - r1value: 0.2
+    r5value: 0.4
+    stat: atk%
+    target: team
+  name: 'Millennial Movement: Song of Resistance'
+  text: 'Trigger 2 elemental reactions. Lasts for 12s. CD: 20s'
+  type: bool
+name: Freedom-Sworn

@@ -1,0 +1,37 @@
+cards:
+- effects:
+  - r1value: 0.2
+    r5value: 0.4
+    stat: hp%
+    target: self
+  name: Sunken Song of the Sands
+  type: static
+- effects:
+    1:
+    - r1ratio: 0.012
+      r5ratio: 0.024
+      source: hp
+      stat: em
+      target: self
+    2:
+    - r1ratio: 0.024
+      r5ratio: 0.048
+      source: hp
+      stat: em
+      target: self
+    3:
+    - r1ratio: 0.036
+      r5ratio: 0.052
+      source: hp
+      stat: em
+      target: self
+    - r1ratio: 0.2
+      r5ratio: 0.4
+      source: hp
+      stat: em
+      target: team
+  maxstack: 3
+  name: Grand Hymn
+  text: Elemental Skill hits opponents (20s).
+  type: stack-precise
+name: Key of Khaj-Nisut

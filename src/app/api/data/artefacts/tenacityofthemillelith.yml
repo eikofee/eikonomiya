@@ -1,0 +1,19 @@
+cards:
+- effects:
+  - stat: hp%
+    target: self
+    value: 0.2
+  tag: 2pc
+  type: static
+- effects:
+  - stat: atk%
+    target: team
+    value: 0.2
+  - stat: shield%
+    target: team
+    value: 0.3
+  tag: 4pc
+  text: When an Elemental Skill hits an opponent, the ATK of all nearby party members
+    is increased by 20% and their Shield Strength is increased by 30% for 3s
+  type: bool
+name: Tenacity of the Millelith

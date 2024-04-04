@@ -1,0 +1,17 @@
+cards:
+- effects:
+  - r1value: 0.08
+    r5value: 0.16
+    stat: skill cr%
+    target: self
+  name: Ironbone (1)
+  type: static
+- effects:
+  - r1value: 0.16
+    r5value: 0.32
+    stat: er%
+    target: self
+  name: Ironbone (2)
+  text: Elemental Skill is used (5s).
+  type: bool
+name: Fleuve Cendre Ferryman

@@ -1,0 +1,10 @@
+cards:
+- effects:
+  - r1value: 60
+    r5value: 120
+    stat: em
+    target: team
+  name: Forest Sanctuary
+  text: Can be picked-up (12s). Created when triggering Dendro-related reaction (10s).
+  type: bool
+name: Sapwood Blade

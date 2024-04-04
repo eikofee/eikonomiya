@@ -1,0 +1,18 @@
+cards:
+- effects:
+  - r1value: 0.16
+    r5value: 0.32
+    stat: atk%
+    target: self
+  name: \"The Silver Tongue\" (1)
+  text: 'Character is affected by Pyro (15s). (CD: 12s)'
+  type: bool
+- effects:
+  - r1value: 0.12
+    r5value: 0.24
+    stat: elem dmg%
+    target: self
+  name: \"The Silver Tongue\" (2)
+  text: 'Character is affected by Hydro, Cryo, Electro or Dendro (15s). (CD: 12s)'
+  type: bool
+name: Talking Stick

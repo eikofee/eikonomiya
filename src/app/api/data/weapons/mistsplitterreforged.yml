@@ -1,0 +1,30 @@
+cards:
+- effects:
+  - r1value: 0.12
+    r5value: 0.24
+    stat: elem dmg%
+    target: self
+  name: Mistsplitter's Edge
+  type: static
+- effects:
+    1:
+    - r1value: 0.08
+      r5value: 0.16
+      stat: elem dmg%
+      target: self
+    2:
+    - r1value: 0.16
+      r5value: 0.32
+      stat: elem dmg%
+      target: self
+    3:
+    - r1value: 0.28
+      r5value: 0.56
+      stat: elem dmg%
+      target: self
+  maxstack: 3
+  name: Mistsplitter's Emblem
+  text: 'Each condition gives 1 stack: Character deals elemental damages using NA
+    (5s), casts Elemental Burst (10s), has less than 100% Energy.'
+  type: stack-precise
+name: Mistsplitter Reforged

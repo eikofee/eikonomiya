@@ -1,0 +1,10 @@
+cards:
+- effects:
+  - r1value: 1.6
+    r5value: 3.2
+    stat: na dmg%
+    target: self
+  name: Heavy
+  text: 'NA only. CD: 10s.'
+  type: bool
+name: Halberd

@@ -1,0 +1,20 @@
+cards:
+- effects:
+  - stat: na dmg%
+    target: self
+    value: 0.15
+  - stat: ca dmg%
+    target: self
+    value: 0.15
+  tag: 2pc
+  type: static
+- effects:
+  - stat: cr%
+    target: self
+    value: 0.12
+  maxstack: 3
+  tag: 4pc
+  text: When current HP increases or decreases, CRIT Rate will be increased by 12%
+    for 5s. Max 3 stacks.
+  type: stack
+name: Marechaussee Hunter

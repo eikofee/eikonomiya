@@ -1,0 +1,30 @@
+cards:
+- effects:
+  - stat: geo dmg%
+    target: self
+    value: 0.15
+  tag: 2pc
+  type: static
+- elems:
+    cryo:
+    - stat: cryo dmg%
+      target: team
+      value: 0.35
+    electro:
+    - stat: electro dmg%
+      target: team
+      value: 0.35
+    hydro:
+    - stat: hydro dmg%
+      target: team
+      value: 0.35
+    pyro:
+    - stat: pyro dmg%
+      target: team
+      value: 0.35
+  tag: 4pc
+  text: Upon obtaining an Elemental Shard created through a Crystallize Reaction,
+    all party members gain a 35% DMG Bonus for that particular element for 10s. Only
+    one form of Elemental DMG Bonus can be gained in this manner at any one time.
+  type: bool-elem
+name: Archaic Petra

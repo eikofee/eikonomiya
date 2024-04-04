@@ -1,0 +1,22 @@
+cards:
+- effects:
+  - r1value: 0.28
+    r5value: 0.56
+    stat: def%
+    target: self
+  name: Gokadaiou Otogibanashi (1)
+  type: static
+- effects:
+  - r1ratio: 0.4
+    r5ratio: 0.8
+    source: def
+    stat: na dmg
+    target: self
+  - r1ratio: 0.4
+    r5ratio: 0.8
+    source: def
+    stat: ca dmg
+    target: self
+  name: Gokadaiou Otogibanashi (2)
+  type: static
+name: Redhorn Stonethresher

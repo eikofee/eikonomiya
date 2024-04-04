@@ -1,0 +1,21 @@
+cards:
+- effects:
+  - r1value: 0.16
+    r5value: 0.32
+    stat: atk%
+    target: self
+  name: Rebel's Banner-Hymn
+  type: static
+- effects:
+  - r1value: 0.12
+    r5value: 0.24
+    stat: na spd%
+    target: self
+  - r1value: 0.2
+    r5value: 0.4
+    stat: atk%
+    target: self
+  name: 'Millennial Movement: Banner-Hymn'
+  text: 'Character hits 4 times an opponent using NA or CA. Lasts for 12s. CD: 20s'
+  type: bool
+name: Song of Broken Pines

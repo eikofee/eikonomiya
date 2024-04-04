@@ -1,0 +1,10 @@
+cards:
+- effects:
+  - r1value: 0.24
+    r5value: 0.48
+    stat: er%
+    target: self
+  name: People of the Faltering Light
+  text: Elemental Skill is used (10s).
+  type: bool
+name: Oathsworn Eye

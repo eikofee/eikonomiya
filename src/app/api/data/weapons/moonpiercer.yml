@@ -1,0 +1,10 @@
+cards:
+- effects:
+  - r1value: 0.16
+    r5value: 0.32
+    stat: atk%
+    target: team
+  name: Stillwood Moonshadow
+  text: Can be picked-up (12s). Created when triggering Dendro-related reaction (10s).
+  type: bool
+name: Moonpiercer

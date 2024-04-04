@@ -1,0 +1,24 @@
+cards:
+- effects:
+  - r1value: 0.16
+    r5value: 0.32
+    stat: na dmg%
+    target: self
+  - r1value: 0.12
+    r5value: 0.24
+    stat: ca dmg%
+    target: self
+  name: Full Draw (Energy < 100%)
+  type: bool
+- effects:
+  - r1value: 0.32
+    r5value: 0.64
+    stat: na dmg%
+    target: self
+  - r1value: 0.24
+    r5value: 0.48
+    stat: ca dmg%
+    target: self
+  name: Full Draw (Energy at 100%)
+  type: bool
+name: Hamayumi

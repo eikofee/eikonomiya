@@ -1,0 +1,14 @@
+cards:
+- effects:
+  - stat: atk%
+    target: self
+    value: 0.18
+  tag: 2pc
+  type: static
+- effects:
+  - stat: ca cr%
+    target: self
+    value: 0.3
+  tag: 4pc
+  type: static
+name: Resolution of Sojourner

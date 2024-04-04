@@ -1,0 +1,23 @@
+cards:
+- effects:
+  - stat: electro dmg%
+    target: self
+    value: 0.15
+  tag: 2pc
+  type: static
+- effects:
+  - stat: overloaded dmg%
+    target: self
+    value: 0.4
+  - stat: electrocharged dmg%
+    target: self
+    value: 0.4
+  - stat: superconduct dmg%
+    target: self
+    value: 0.4
+  tag: 4pc
+  text: Increases damage caused by Overloaded, Electro-Charged and Superconduct by
+    40%. Triggering such effects decreases Elemental Skill CD by 1s. Can only occur
+    once every 0.8s.
+  type: static
+name: Thundering Fury

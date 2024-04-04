@@ -1,0 +1,9 @@
+cards:
+- effects:
+  - r1value: 0.2
+    r5value: 0.4
+    stat: cdmg%
+    target: self
+  name: Echoing Ballad
+  type: static
+name: Skyward Harp

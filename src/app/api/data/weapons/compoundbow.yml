@@ -1,0 +1,15 @@
+cards:
+- effects:
+  - r1value: 0.04
+    r5value: 0.08
+    stat: atk%
+    target: self
+  - r1value: 0.012
+    r5value: 0.024
+    stat: na spd%
+    target: self
+  maxstack: 4
+  name: Infusion Arrow
+  text: NA or CA hit an opponent (6s).
+  type: stack
+name: Compound Bow

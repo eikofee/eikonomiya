@@ -1,0 +1,35 @@
+cards:
+- effects:
+  - stat: anemo dmg%
+    target: self
+    value: 0.15
+  tag: 2pc
+  type: static
+- effects:
+  - stat: swirl dmg%
+    target: self
+    value: 0.6
+  tag: 4pc
+  type: static
+- elems:
+    cryo:
+    - stat: cryo res%
+      target: enemy
+      value: -0.4
+    electro:
+    - stat: electro res%
+      target: enemy
+      value: -0.4
+    hydro:
+    - stat: hydro res%
+      target: enemy
+      value: -0.4
+    pyro:
+    - stat: pyro res%
+      target: enemy
+      value: -0.4
+  tag: 4pc
+  text: Decreases opponent's Elemental RES to the element infused in the Swirl by
+    40% for 10s.
+  type: bool-elem
+name: Viridescent Venerer

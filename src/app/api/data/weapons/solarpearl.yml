@@ -1,0 +1,22 @@
+cards:
+- effects:
+  - r1value: 0.2
+    r5value: 0.4
+    stat: skill dmg%
+    target: self
+  - r1value: 0.2
+    r5value: 0.4
+    stat: burst dmg%
+    target: self
+  name: Solar Shine (1)
+  text: Hit opponent with NA (6s).
+  type: bool
+- effects:
+  - r1value: 0.2
+    r5value: 0.4
+    stat: na dmg%
+    target: self
+  name: Solar Shine (2)
+  text: Hit opponent with Elemental Skill or Burst (6s).
+  type: bool
+name: Solar Pearl

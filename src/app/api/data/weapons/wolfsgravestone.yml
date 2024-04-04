@@ -1,0 +1,17 @@
+cards:
+- effects:
+  - r1value: 0.2
+    r5value: 0.4
+    stat: atk%
+    target: self
+  name: Wolfish Tracker (1)
+  type: static
+- effects:
+  - r1value: 0.4
+    r5value: 0.8
+    stat: atk%
+    target: team
+  name: Wolfish Tracker (2)
+  text: 'Attacking opponents with less than 30% HP (12s). CD: 30s.'
+  type: bool
+name: Wolf's Gravestone

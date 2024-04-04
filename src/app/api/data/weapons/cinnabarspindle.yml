@@ -1,0 +1,10 @@
+cards:
+- effects:
+  - r1ratio: 0.4
+    r5ratio: 0.8
+    source: def
+    stat: skill dmg
+    target: self
+  name: Spotless Heart
+  type: static
+name: Cinnabar Spindle

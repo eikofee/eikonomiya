@@ -1,0 +1,26 @@
+cards:
+- effects:
+  - stat: anemo dmg%
+    target: self
+    value: 0.15
+  tag: 2pc
+  type: static
+- effects:
+  - stat: na spd%
+    target: self
+    value: 0.1
+  - stat: na dmg%
+    target: self
+    value: 0.4
+  - stat: ca dmg%
+    target: self
+    value: 0.4
+  - stat: pa dmg%
+    target: self
+    value: 0.4
+  tag: 4pc
+  text: When Charged Attacks hit opponents, the equipping character's Normal Attack
+    SPD will increase by 10% while Normal, Charged, and Plunging Attack DMG will increase
+    by 40% for 15s.
+  type: bool
+name: Desert Pavilion Chronicle

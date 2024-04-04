@@ -1,0 +1,10 @@
+cards:
+- effects:
+  - r1value: 0.2
+    r5value: 0.36
+    stat: dmg%
+    target: self
+  name: Bane of Storm and Tide
+  text: Opponent is affected by Hydro or Electro.
+  type: bool
+name: Rainslasher

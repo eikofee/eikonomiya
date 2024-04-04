@@ -1,0 +1,30 @@
+cards:
+- effects:
+  - r1value: 0.2
+    r5value: 0.4
+    stat: atk%
+    target: self
+  name: Rule By Thunder
+  type: static
+- effects:
+    1:
+    - r1value: 0.12
+      r5value: 0.24
+      stat: na dmg%
+      target: self
+    2:
+    - r1value: 0.24
+      r5value: 0.48
+      stat: na dmg%
+      target: self
+    3:
+    - r1value: 0.4
+      r5value: 0.8
+      stat: na dmg%
+      target: self
+  maxstack: 3
+  name: Thunder Emblem
+  text: 'Each condition gives 1 stack: Character deals damage using NA (5s), casts
+    Elemental Skills (10s), has less than 100% energy.'
+  type: stack-precise
+name: Thundering Pulse

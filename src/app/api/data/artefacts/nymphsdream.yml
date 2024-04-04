@@ -1,0 +1,39 @@
+cards:
+- effects:
+  - stat: hydro dmg%
+    target: self
+    value: 0.15
+  tag: 2pc
+  type: static
+- effects:
+    1:
+    - stat: atk%
+      target: self
+      value: 0.07
+    - stat: hydro dmg%
+      target: self
+      value: 0.04
+    2:
+    - stat: atk%
+      target: self
+      value: 0.16
+    - stat: hydro dmg%
+      target: self
+      value: 0.09
+    3:
+    - stat: atk%
+      target: self
+      value: 0.25
+    - stat: hydro dmg%
+      target: self
+      value: 0.15
+  maxstack: 3
+  tag: 4pc
+  text: After Normal, Charged, and Plunging Attacks, Elemental Skills, and Elemental
+    Bursts hit opponents, 1 stack of Mirrored Nymph will be triggered, lasting 8s.
+    When under the effect of 1, 2, or 3 or more Mirrored Nymph stacks, ATK will be
+    increased by 7%/16%/25%, and Hydro DMG Bonus will be increased by 4%/9%/15%. Mirrored
+    Nymph stacks created by Normal, Charged, and Plunging Attacks, Elemental Skills,
+    and Elemental Bursts exist independently.
+  type: stack-precise
+name: Nymph's Dream

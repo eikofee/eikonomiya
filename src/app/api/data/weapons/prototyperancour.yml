@@ -1,0 +1,15 @@
+cards:
+- effects:
+  - r1value: 0.04
+    r5value: 0.08
+    stat: atk%
+    target: self
+  - r1value: 0.04
+    r5value: 0.08
+    stat: def%
+    target: self
+  maxstack: 4
+  name: Smashed Stone
+  text: Hit opponents (6s).
+  type: stack
+name: Prototype Rancour

@@ -1,0 +1,21 @@
+cards:
+- effects:
+  - r1value: 60
+    r5value: 120
+    stat: em
+    target: self
+  name: The Parting Refrain
+  type: static
+- effects:
+  - r1value: 100
+    r5value: 200
+    stat: em
+    target: team
+  - r1value: 0.2
+    r5value: 0.4
+    stat: atk%
+    target: team
+  name: 'Millennial Movement: Farewell Song'
+  text: 'Elemental Skill/Burst hits opponents 4 times. Lasts 12s. CD: 20s.'
+  type: bool
+name: Elegy for the End

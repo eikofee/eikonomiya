@@ -1,0 +1,18 @@
+cards:
+- effects:
+  - r1value: 0.2
+    r5value: 0.4
+    stat: skill dmg%
+    target: self
+  name: Evernight Duet (1)
+  text: NA hits opponents (5s).
+  type: bool
+- effects:
+  - r1value: 0.2
+    r5value: 0.4
+    stat: na dmg%
+    target: self
+  name: Everning Duet (2)
+  text: Elemental Skill hits opponents (5s).
+  type: bool
+name: Mitternachts Waltz

@@ -1,0 +1,9 @@
+cards:
+- effects:
+  - r1value: 0.24
+    r5value: 0.48
+    stat: na dmg%
+    target: self
+  name: Sharp
+  type: static
+name: White Tassel

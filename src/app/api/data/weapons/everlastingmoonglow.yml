@@ -1,0 +1,17 @@
+cards:
+- effects:
+  - r1value: 0.1
+    r5value: 0.2
+    stat: heal out%
+    target: self
+  name: Byakuya Kougetsu (1)
+  type: static
+- effects:
+  - r1ratio: 0.01
+    r5ratio: 0.03
+    source: hp
+    stat: na dmg
+    target: self
+  name: Byakuya Kougetsu (2)
+  type: static
+name: Everlasting Moonglow

@@ -1,0 +1,11 @@
+cards:
+- effects:
+  - r1value: 0.02
+    r5value: 0.04
+    stat: dmg%
+    target: self
+  maxstack: 10
+  name: Oppidan Ambush
+  text: Gain 1 stack per second off-field.
+  type: stack
+name: Alley Hunter

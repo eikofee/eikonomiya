@@ -1,0 +1,20 @@
+cards:
+- effects:
+  - r1value: 0.08
+    r5value: 0.16
+    stat: skill dmg%
+    target: self
+  maxstack: 3
+  name: Dawn and Dusk by the Lake (1)
+  text: Character's HP increases or decreases (6s).
+  type: stack
+- effects:
+  - r1value: 0.14
+    r5value: 0.28
+    stat: hp%
+    target: self
+  maxstack: 2
+  name: Dawn and Dusk by the Lake (2)
+  text: Other characters' current HP increases or decreases (6s).
+  type: stack
+name: Splendor of Tranquil Waters

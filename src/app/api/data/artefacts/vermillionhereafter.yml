@@ -1,0 +1,28 @@
+cards:
+- effects:
+  - stat: atk%
+    target: self
+    value: 0.18
+  tag: 2pc
+  type: static
+- effects:
+  - stat: atk%
+    target: self
+    value: 0.08
+  tag: 4pc
+  text: After using an Elemental Burst, this character will gain the Nascent Light
+    effect, increasing their ATK by 8% for 16s.
+  type: bool
+- effects:
+  - stat: atk%
+    target: self
+    value: 0.1
+  maxstack: 4
+  tag: 4pc
+  text: When the character's HP decreases, their ATK will further increase by 10%.
+    This further increase can occur this way a maximum of 4 times. This effect can
+    be triggered once every 0.8s. Nascent Light will be dispelled when the character
+    leaves the field. If an Elemental Burst is used again during the duration of Nascent
+    Light, the original Nascent Light will be dispelled.
+  type: stack
+name: Vermillion Hereafter

@@ -1,0 +1,14 @@
+cards:
+- effects:
+  - r1value: 24
+    r5value: 36
+    stat: em
+    target: self
+  - stat: atk%
+    target: self
+    value: -0.05
+  maxstack: 5
+  name: Full Circle
+  text: Gain 1 stack everytime an elemental reaction is triggered (6s).
+  type: stack
+name: Fruit of Fulfillment

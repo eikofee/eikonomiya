@@ -1,0 +1,19 @@
+cards:
+- effects:
+  - r1value: 0.1
+    r5value: 0.2
+    stat: na spd%
+    target: self
+  name: Bygone Azure Teardrop (1)
+  type: static
+- effects:
+  - r1value: 0.048
+    r5value: 0.096
+    stat: na dmg%
+    target: self
+  maxstack: 10
+  name: Bygone Azure Teardrop (2)
+  text: Active when character uses Elemental Skill. Gain 1 stack per second (14s)
+    and 2 when NA hits opponents.
+  type: stack
+name: Tulaytullah's Remembrance

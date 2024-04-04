@@ -1,0 +1,14 @@
+cards:
+- effects:
+  - r1value: 0.12
+    r5value: 0.24
+    stat: atk%
+    target: self
+  - r1value: 0.12
+    r5value: 0.24
+    stat: mov spd%
+    target: self
+  name: Determination
+  text: Elemental Burst is used (15s).
+  type: bool
+name: Skyrider Sword

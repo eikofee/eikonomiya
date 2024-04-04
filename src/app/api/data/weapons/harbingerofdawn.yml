@@ -1,0 +1,10 @@
+cards:
+- effects:
+  - r1value: 0.14
+    r5value: 0.28
+    stat: cr%
+    target: self
+  name: Vigorous
+  text: Character's HP are above 90%
+  type: bool
+name: Harbinger of Dawn

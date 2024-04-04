@@ -1,0 +1,14 @@
+cards:
+- effects:
+  - r1value: 0.32
+    r5value: 0.64
+    stat: hp%
+    target: self
+  - r1value: 40
+    r5value: 80
+    stat: em
+    target: self
+  name: Jade Circulation
+  text: Character is off-field.
+  type: bool
+name: Sacrificial Jade

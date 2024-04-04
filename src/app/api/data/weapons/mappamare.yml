@@ -1,0 +1,11 @@
+cards:
+- effects:
+  - r1value: 0.08
+    r5value: 0.16
+    stat: elem dmg%
+    target: self
+  maxstack: 2
+  name: Infusion Scroll
+  text: Gain 1 stack when triggering Elemental reaction (10s).
+  type: stack
+name: Mappa Mare

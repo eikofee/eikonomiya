@@ -1,0 +1,10 @@
+cards:
+- effects:
+  - stat: er%
+    target: self
+    value: 0.2
+  tag: 2pc
+  type: static
+- tag: 4pc
+  type: none
+name: The Exile

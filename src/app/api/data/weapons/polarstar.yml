@@ -1,0 +1,39 @@
+cards:
+- effects:
+  - r1value: 0.12
+    r5value: 0.24
+    stat: skill dmg%
+    target: self
+  - r1value: 0.12
+    r5value: 0.24
+    stat: burst dmg%
+    target: self
+  name: Daylight's Augury
+  type: static
+- effects:
+    1:
+    - r1value: 0.1
+      r5value: 0.2
+      stat: atk%
+      target: self
+    2:
+    - r1value: 0.2
+      r5value: 0.4
+      stat: atk%
+      target: self
+    3:
+    - r1value: 0.3
+      r5value: 0.6
+      stat: atk%
+      target: self
+    4:
+    - r1value: 0.48
+      r5value: 0.96
+      stat: atk%
+      target: self
+  maxstack: 4
+  name: Ashen Nightstar
+  text: 'Each condition gives 1 stack: Character hit an opponent with NA, CA, Elemental
+    Skill or Elemental Burst. All stacks lasts 12s.'
+  type: stack-precise
+name: Polar Star

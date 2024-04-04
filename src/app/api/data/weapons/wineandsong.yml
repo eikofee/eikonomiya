@@ -1,0 +1,10 @@
+cards:
+- effects:
+  - r1value: 0.2
+    r5value: 0.4
+    stat: atk%
+    target: self
+  name: Ever-Changing
+  text: Character sprints (5s).
+  type: bool
+name: Wine and Song

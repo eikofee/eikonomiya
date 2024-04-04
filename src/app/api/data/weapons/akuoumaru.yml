@@ -1,0 +1,12 @@
+cards:
+- effects:
+  - r1value: 0.0012
+    r5value: 0.0024
+    stat: burst dmg%
+    target: self
+  maxstack: 333
+  name: Watatsumi Wavewalker
+  text: Gain 1 stack for every point of Energy capacity in the party. (333 max, up
+    to 0.08% incorrect value)
+  type: stack
+name: Akuoumaru

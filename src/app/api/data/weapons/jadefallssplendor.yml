@@ -1,0 +1,14 @@
+cards:
+- effects:
+  - r1maxvalue: 0.12
+    r1ratio: 0.003
+    r5maxvalue: 0.44
+    r5ratio: 0.011
+    source: hp
+    stat: elem dmg%
+    step: 1000
+    target: self
+  name: Primordial Jade Regalia
+  text: Character uses Elemental Burst or create a shield (3s).
+  type: bool
+name: Jadefall's Splendor

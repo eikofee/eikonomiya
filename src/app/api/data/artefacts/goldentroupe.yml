@@ -1,0 +1,21 @@
+name: Golden Troupe
+cards:
+  - tag: 2pc
+    type: static
+    effects:
+      - target: self
+        stat: skill dmg%
+        value: 0.2
+  - tag: 4pc
+    type: static
+    effects:
+      - target: self
+        stat: skill dmg%
+        value: 0.25
+  - tag: 4pc
+    type: bool
+    text: Additionally, when not on the field, Elemental Skill DMG will be further increased by 25%. This effect will be cleared 2s after taking the field.
+    effects:
+      - target: self
+        stat: skill dmg%
+        value: 0.25

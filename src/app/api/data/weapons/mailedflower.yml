@@ -1,0 +1,15 @@
+cards:
+- effects:
+  - r1value: 0.12
+    r5value: 0.24
+    stat: atk%
+    target: self
+  - r1value: 48
+    r5value: 96
+    stat: em
+    target: self
+  name: Whispers of Wind and Flower
+  text: Character hits an opponent with Elemental Skill or triggers an Elemental Reaction
+    (8s).
+  type: bool
+name: Mailed Flower

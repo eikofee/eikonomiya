@@ -1,0 +1,11 @@
+cards:
+- effects:
+  - r1value: 0.08
+    r5value: 0.16
+    stat: cr%
+    target: self
+  maxstack: 5
+  name: Focus
+  text: Gain 1 stack when hitting an opponent. Cleared on critical hit.
+  type: stack
+name: Royal Spear

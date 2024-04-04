@@ -1,0 +1,17 @@
+cards:
+- effects:
+  - r1value: 0.28
+    r5value: 0.56
+    stat: ca dmg%
+    target: self
+  name: Heartsearer
+  text: 'Opponent hit by Sunfire Arrow (CA) (10s). CD: 10s.'
+  type: bool
+- effects:
+  - info: 'Sunfire Arrow DMG (CD: 10s)'
+    r1ratio: 0.6
+    r5ratio: 1.2
+    source: atk
+  name: Sunfire Arrow
+  type: info
+name: Scion of the Blazing Sun

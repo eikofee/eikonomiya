@@ -1,0 +1,18 @@
+cards:
+- effects:
+  - r1value: 0.16
+    r5value: 0.32
+    stat: ca dmg%
+    target: self
+  name: Dodoventure! (1)
+  text: Hit opponents with NA (6s).
+  type: bool
+- effects:
+  - r1value: 0.08
+    r5value: 0.16
+    stat: atk%
+    target: self
+  name: Dodoventure! (2)
+  text: Hit opponents with CA (6s).
+  type: bool
+name: Dodoco Tales

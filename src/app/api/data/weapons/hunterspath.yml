@@ -1,0 +1,18 @@
+cards:
+- effects:
+  - r1value: 0.12
+    r5value: 0.24
+    stat: elem dmg%
+    target: self
+  name: At the End of the Beast-Paths
+  type: static
+- effects:
+  - r1ratio: 1.6
+    r5ratio: 3.2
+    source: em
+    stat: ca dmg
+    target: self
+  name: Tireless Hunt
+  text: 'Character hit with CA. Lasts 12 CAs or 10s. CD: 12s'
+  type: bool
+name: Hunter's Path

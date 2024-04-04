@@ -1,0 +1,9 @@
+cards:
+- effects:
+  - r1ratio: 2.4
+    r5ratio: 3.6
+    source: atk
+    text: 'Bolt of Perception (x1~4). CD: 12~8s.'
+  name: Echo
+  type: info
+name: Eye of Perception

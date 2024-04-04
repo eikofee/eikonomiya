@@ -1,0 +1,27 @@
+cards:
+- effects:
+  - r1value: 32
+    r5value: 64
+    stat: em
+    target: self
+  maxstack: 3
+  name: A Thousand Nights' Dawnson (1)
+  text: Characters in the party with the same element as weilder.
+  type: stack
+- effects:
+  - r1value: 0.1
+    r5value: 0.26
+    stat: elem dmg%
+    target: self
+  maxstack: 3
+  name: A Thousand Nights' Dawnson (2)
+  text: Characters in the party with an element different from the weilder.
+  type: stack
+- effects:
+  - r1value: 40
+    r5value: 48
+    stat: em
+    target: team-exclusive
+  name: A Thousand Nights' Dawnson (3)
+  type: static
+name: A Thousand Floating Dreams

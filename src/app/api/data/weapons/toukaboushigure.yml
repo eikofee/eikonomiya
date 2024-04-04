@@ -1,0 +1,10 @@
+cards:
+- effects:
+  - r1value: 0.16
+    r5value: 0.32
+    stat: smg%
+    target: self
+  name: 'Kaidan: Rainfall Earthbinder'
+  text: 'Opponent is cursed (10s). CD: 15s/Opponent is defeated while in duration.'
+  type: bool
+name: Toukabou Shigure

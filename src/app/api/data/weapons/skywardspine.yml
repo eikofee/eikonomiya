@@ -1,0 +1,12 @@
+cards:
+- effects:
+  - r1value: 0.08
+    r5value: 0.16
+    stat: cr%
+    target: self
+  - stat: na spd%
+    target: self
+    value: 0.12
+  name: Black Wing
+  type: static
+name: Skyward Spine

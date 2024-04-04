@@ -1,0 +1,9 @@
+cards:
+- effects:
+  - info: 'Pneuma/Ousia DMG (CD: 12s)'
+    r1ratio: 1.6
+    r5ratio: 3.2
+    source: atk
+  name: Hero's Blade
+  type: info
+name: Sword of Narzissenkreuz

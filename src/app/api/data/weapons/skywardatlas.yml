@@ -1,0 +1,16 @@
+cards:
+- effects:
+  - r1value: 0.12
+    r5value: 0.24
+    stat: elem dmg%
+    target: self
+  name: Wandering Clouds
+  type: static
+- effects:
+  - r1ratio: 1.6
+    r5ratio: 3.2
+    source: atk
+    text: 'Cloud damage per hit (15s). CD: 30s.'
+  name: Favor of the Clouds
+  type: info
+name: Skyward Atlas

@@ -1,0 +1,17 @@
+cards:
+- effects:
+  - info: 'Shield power (10s, CD: 45s)'
+    r1ratio: 0.2
+    r5ratio: 0.32
+    source: hp
+  name: Rebellious Guardian (1)
+  type: info
+- effects:
+  - r1value: 0.12
+    r5value: 0.24
+    stat: dmg%
+    target: self
+  name: Rebellious Guardian (2)
+  text: Character is protected by a shield.
+  type: bool
+name: The Bell

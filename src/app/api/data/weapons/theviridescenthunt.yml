@@ -1,0 +1,9 @@
+cards:
+- effects:
+  - info: 'Cyclone DMG (x8, CD: 14~10s)'
+    r1value: 0.4
+    r5value: 0.8
+    source: atk
+  name: Verdant Wind
+  type: info
+name: The Viridescent Hunt

@@ -1,0 +1,22 @@
+cards:
+- effects:
+  - r1value: 0.16
+    r5value: 0.32
+    stat: atk%
+    target: self
+  - r1value: 0.16
+    r5value: 0.32
+    stat: def%
+    target: self
+  name: Gladiator (1)
+  text: At least 2 opponents nearby.
+  type: bool
+- effects:
+  - r1value: 0.24
+    r5value: 0.48
+    stat: atk%
+    target: self
+  name: Gladiator (2)
+  text: Fewer than 2 opponents nearby.
+  type: bool
+name: Deathmatch

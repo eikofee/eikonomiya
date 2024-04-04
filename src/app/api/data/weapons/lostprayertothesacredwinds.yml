@@ -1,0 +1,17 @@
+cards:
+- effects:
+  - stat: mov spd%
+    target: self
+    value: 0.1
+  name: Boundless Blessing (1)
+  type: static
+- effects:
+  - r1value: 0.08
+    r5value: 0.16
+    stat: elem dmg%
+    target: self
+  maxstack: 4
+  name: Boundless Blessing (2)
+  text: Gain 1 stack every 4s in battle.
+  type: stack
+name: Lost Prayer to the Sacred Winds

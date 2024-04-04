@@ -1,0 +1,11 @@
+cards:
+- effects:
+  - r1value: 0.06
+    r5value: 0.1
+    stat: atk%
+    target: self
+  maxstack: 4
+  name: Courage
+  text: Hitting opponent (6s).
+  type: stack
+name: Skyrider Greatsword

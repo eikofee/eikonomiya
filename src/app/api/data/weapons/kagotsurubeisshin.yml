@@ -1,0 +1,15 @@
+cards:
+- effects:
+  - stat: atk%
+    target: self
+    value: 0.15
+  name: Isshin Art Clarity
+  text: 'Hitting opponent with NA, CA or PA (8s). CD: 8s'
+  type: bool
+- effects:
+  - info: Hewing Gale DMG
+    ratio: 1.8
+    source: atk
+  name: Hewing Gale
+  type: info
+name: Kagotsurube Isshin

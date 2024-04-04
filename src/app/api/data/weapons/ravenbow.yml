@@ -1,0 +1,10 @@
+cards:
+- effects:
+  - r1value: 0.12
+    r5value: 0.24
+    stat: dmg%
+    target: self
+  name: Bane of Flame and Water
+  text: Opponent is affected by Pyro or Hydro.
+  type: bool
+name: Raven Bow

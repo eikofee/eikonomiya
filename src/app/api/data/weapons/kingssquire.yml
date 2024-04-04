@@ -1,0 +1,17 @@
+cards:
+- effects:
+  - r1value: 60
+    r5value: 140
+    stat: em
+    target: self
+  name: Labyrinth Lord's Instruction
+  text: 'Elemental Skill or Burst is used (12s). CD: 20s.'
+  type: bool
+- effects:
+  - info: Teaching of the Forest DMG
+    r1ratio: 1
+    r5ratio: 1.8
+    source: atk
+  name: Teaching of the Forest end
+  type: info
+name: King's Squire

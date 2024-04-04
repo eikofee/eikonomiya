@@ -1,0 +1,9 @@
+cards:
+- effects:
+  - info: Additionnal DMG (/3s)
+    r1ratio: 0.6
+    r5ratio: 1.2
+    source: atk
+  name: Blunt Conclusion
+  type: info
+name: Debate Club

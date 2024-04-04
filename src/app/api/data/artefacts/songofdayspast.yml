@@ -1,0 +1,10 @@
+name: Song of Days Past
+cards:
+  - tag: 2pc
+    type: static
+    effects:
+      - target: self
+        stat: heal out%
+        value: 0.15
+  - tag: 4pc
+    type: none

@@ -1,0 +1,15 @@
+cards:
+- effects:
+  - r1value: 0.08
+    r5value: 0.16
+    stat: na dmg%
+    target: self
+  - r1value: 0.08
+    r5value: 0.16
+    stat: ca dmg%
+    target: self
+  maxstack: 2
+  name: Magic Affinity
+  text: Elemental Skill is used (12s).
+  type: stack
+name: Prototype Starglitter

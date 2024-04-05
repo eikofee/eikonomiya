@@ -1,9 +1,0 @@
-cards:
-- effects:
-  - r1value: 0.06
-    r5value: 0.12
-    stat: skill dmg%
-    target: self
-  name: Samurai Conduct
-  type: static
-name: Katsuragikiri Nagamasa

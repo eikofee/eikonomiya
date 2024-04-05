@@ -7,7 +7,7 @@ import { ERegion } from "./enums/ERegion"
 import { ICharacterCommonData } from "./ICharacterCommonData"
 import { IStatBag } from "./IStatBag"
 import { EStat, stringToEStat } from "./enums/EStat"
-import { ETarget } from "./enums/EEffectTarget"
+import { ETarget } from "./enums/ETarget"
 
 export interface ICharacterData {
     name: string

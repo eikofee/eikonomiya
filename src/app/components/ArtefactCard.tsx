@@ -9,6 +9,7 @@ import { ConfigContext } from "./ConfigContext";
 import { IArtefact } from "@/server/gamedata/IArtefact";
 import { EStat, eStatToReadable } from "@/server/gamedata/enums/EStat";
 import { IStatTuple } from "@/server/gamedata/IStatTuple";
+import { ImgApi } from "./ImgApi";
 
 export default function ArtefactCard({equip, rule, sortedStats, scoreState} : {equip: IArtefact, rule: ICharacterRule, sortedStats: IStatTuple[], scoreState: (a: number) => void}) {
 
@@ -146,7 +147,7 @@ export default function ArtefactCard({equip, rule, sortedStats, scoreState} : {e
 
     let content = <div className="flex flex-col">
     <div className="aspect-square grad-5star basis-1/5 flex items-center justify-center rounded-t-md">
-        <img alt="" src={equip.assets.icon} className="max-w-full max-h-full"/>
+        <ImgApi alt="" src={equip.assets.icon} className="max-w-full max-h-full"/>
     </div>
     <div className="basis-4/5 px-1 py-2">
         <ul>

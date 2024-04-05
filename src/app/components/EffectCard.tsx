@@ -6,10 +6,11 @@ import { ICharacterData } from "@/server/gamedata/ICharacterData";
 import Tooltip from "./Tooltip";
 import StatLineDraw from "./StatLineDrawer";
 import Icon from "./Icon";
+import { ImgApi } from "./ImgApi";
 
 export function buildImgOrIconForEffect(e : IEffect) {
     e = addSpecialIcon(e)
-    let icon = <img className="w-full h-full" src={e.icon} />
+    let icon = <ImgApi className="w-full h-full" src={e.icon} />
     if (e.icon.includes("icon")) {
         let item = e.icon.replace("icon-", "")
         icon = <div className="p-1">

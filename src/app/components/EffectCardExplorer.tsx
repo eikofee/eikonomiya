@@ -35,7 +35,7 @@ export default function EffectCardExplorer({allCards, addToCharacterCb} : {allCa
             }
         }
 
-        for (let i = 0; i < candidates.length; ++i) {
+        for (let i = 0; i < Math.min(5, candidates.length); ++i) {
             effectCards.push(<EffectCardSmall e={candidates[i]} addToCharacterCb={cb} />)
         }
     }

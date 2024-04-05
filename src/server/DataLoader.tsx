@@ -7,6 +7,7 @@ import { IPlayerInfoWithoutCharacters, readIPlayerInfoWithoutCharacters } from "
 import { parseAllEffects, parseCharacterData } from "./DataParser";
 import { IConfigDirector, ETheme } from "@/app/classes/ConfigDirector";
 import { IEffect } from "./gamedata/IEffect";
+import { ETarget } from "./gamedata/enums/ETarget";
 
 export async function checkDataFolderExistence(): Promise<boolean> {
     const p = path.resolve(process.cwd())
@@ -14,13 +15,35 @@ export async function checkDataFolderExistence(): Promise<boolean> {
     return fileList.includes("data")
 }
 
-export async function getPlayerInfoList(): Promise<IPlayerInfoWithoutCharacters[]> {
-    let res : IPlayerInfoWithoutCharacters[] = []
+export interface IBuildPathResult {
+    status: boolean,
+    path: string,
+}
+
+export async function buildPathToDataFolder(...p: string[]): Promise<IBuildPathResult> {
     const dataExists = await checkDataFolderExistence()
     if (dataExists) {
-        const p = path.resolve(process.cwd(), process.env.DATA_PATH!)
+        const arr = [process.cwd(), process.env.DATA_PATH!]
+        const pa = arr.concat(p)
+        const base = path.resolve(pa.join("/"))
+        return {
+            status: true,
+            path: base
+        }
+    } else {
+        return {
+            status: false,
+            path: ""
+        }
+    }
+}
+
+export async function getPlayerInfoList(): Promise<IPlayerInfoWithoutCharacters[]> {
+    let res : IPlayerInfoWithoutCharacters[] = []
+    const p = await buildPathToDataFolder()
+    if (p.status) {
         let scannedFiles = [];
-        const fileList = await fsPromises.readdir(p)
+        const fileList = await fsPromises.readdir(p.path)
         for (let i = 0; i < fileList.length; ++i) {
             scannedFiles.push(fileList[i])
             if (!fileList[i].includes(".")) {
@@ -45,10 +68,9 @@ export async function loadConfigFile(createIfDoesNotExist: boolean) : Promise<IC
     const iconfig : IConfigDirector = {
         theme: ETheme.LIGHT
     }
-    const dataExists = await checkDataFolderExistence()
-    if (dataExists) {
-        const p = path.resolve(process.cwd(), process.env.DATA_PATH!)
-        const fileList = await fsPromises.readdir(p)
+    const p = await buildPathToDataFolder()
+    if (p.status) {
+        const fileList = await fsPromises.readdir(p.path)
         if (!fileList.includes(process.env.CONFIG_FILENAME!) && createIfDoesNotExist) {
             const p3 = path.join(process.cwd(), process.env.DATA_PATH!, process.env.CONFIG_FILENAME!)
             await fsPromises.writeFile(p3, JSON.stringify({
@@ -69,15 +91,18 @@ export async function loadAllEffects() : Promise<IEffect[]> {
     return parseAllEffects(effectsRaw)
 }
 
+export async function loadEffects(...flags: ETarget[]) {
+
+}
+
 export async function loadCharacters(uid: string) : Promise<ICharacterData[]>{
     let res: ICharacterData[] = []
-    const dataExists = await checkDataFolderExistence()
-    if (dataExists) {
-        const p = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/characters")
-        const fileList = await fsPromises.readdir(p)
+    const p = await buildPathToDataFolder(uid, "characters")
+    if (p.status) {
+        const fileList = await fsPromises.readdir(p.path)
         for (let i = 0; i < fileList.length; ++i) {
             let f = fileList[i]
-            const jsonData = JSON.parse((await fsPromises.readFile(p.concat("/", f))).toString())
+            const jsonData = JSON.parse((await fsPromises.readFile(p.path.concat("/", f))).toString())
             res.push(parseCharacterData(jsonData))
         }
     }
@@ -87,13 +112,12 @@ export async function loadCharacters(uid: string) : Promise<ICharacterData[]>{
 
 export async function loadRules(uid: string) : Promise<ICharacterRule[]>{
     let res: ICharacterRule[] = []
-    const dataExists = await checkDataFolderExistence()
-    if (dataExists) {
-        const p = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/rules")
-        const fileList = await fsPromises.readdir(p)
+    const p = await buildPathToDataFolder(uid, "/rules")
+    if (p.status) {
+        const fileList = await fsPromises.readdir(p.path)
         for (let i = 0; i < fileList.length; ++i) {
             let f = fileList[i]
-            const jsonData = JSON.parse((await fsPromises.readFile(p.concat("/", f))).toString())
+            const jsonData = JSON.parse((await fsPromises.readFile(p.path.concat("/", f))).toString())
             let values : IStatTuple[] = []
             for (let j = 0; j < jsonData["stats"].length; ++j) {
                 values.push({

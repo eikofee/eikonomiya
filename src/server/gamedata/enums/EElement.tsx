@@ -7,6 +7,7 @@ export enum EElement {
     HYDRO = "hydro",
     PYRO = "pyro",
     CRYO = "cryo",
+    PHYSICAL = "physical",
     UNKNOWN = "unknown"
 }
 
@@ -20,6 +21,7 @@ export function stringToEElement(s: string) : EElement {
         case "hydro": return EElement.HYDRO;
         case "pyro": return EElement.PYRO;
         case "cryo": return EElement.CRYO;
+        case "phys": return EElement.PHYSICAL;
         default: return EElement.UNKNOWN;
     }
 }

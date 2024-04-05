@@ -52,7 +52,8 @@ export enum EStat {
     SUPERCONDUCT_DMG_P = "superconduct dmg%",
     
     MOVE_SPD_P = "mov spd%",
-    UNKNOWN = "unknown"
+    UNKNOWN = "unknown",
+    NONE = "none",
 
 }
 
@@ -106,6 +107,7 @@ export function eStatToReadable (s: EStat) : string {
         case EStat.SUPERCONDUCT_DMG_P: return "Superconduct DMG%";
 
         case EStat.UNKNOWN: return "Unknown";
+        case EStat.NONE: return "None";
     }
 }
 
@@ -160,6 +162,8 @@ export function stringToEStat (s: string): EStat {
 
 
         case "mov spd%": return EStat.MOVE_SPD_P;
+        
+        case "none": return EStat.NONE;
         default: return EStat.UNKNOWN
     }
 }

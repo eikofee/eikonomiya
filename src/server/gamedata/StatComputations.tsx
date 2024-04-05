@@ -3,7 +3,7 @@ import { IEffect } from "./IEffect"
 import { IStatBag } from "./IStatBag"
 import { IStatTuple, copyStatTuple } from "./IStatTuple"
 import { StatBag } from "./StatBag"
-import { ETarget } from "./enums/EEffectTarget"
+import { ETarget } from "./enums/ETarget"
 import { EEffectType } from "./enums/EEffectType"
 import { EStat, stringToEStat } from "./enums/EStat"
 

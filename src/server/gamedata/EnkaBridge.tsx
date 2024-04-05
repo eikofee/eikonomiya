@@ -8,7 +8,7 @@ import { IEnkaCharacterShowcaseEntry, IEnkaPlayerInfo } from "./enkaDataStructur
 import { IEnkaSkill } from "./enkaDataStructures/IEnkaSkill";
 import { IEnkaSkillEntry } from "./enkaDataStructures/IEnkaSkillEntry";
 import { IEnkaWeapon } from "./enkaDataStructures/IEnkaWeapon";
-import { ETarget } from "./enums/EEffectTarget";
+import { ETarget } from "./enums/ETarget";
 import { ERarity } from "./enums/ERarity";
 import { EStat } from "./enums/EStat";
 import { EWeaponType } from "./enums/EWeaponType";

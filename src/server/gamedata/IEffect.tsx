@@ -6,7 +6,6 @@ import { EEffectType } from "./enums/EEffectType";
 export interface IEffect {
     name: string,
     source: string,
-    source2: string,
     tag: string,
     icon: string,
     text: string,
@@ -68,7 +67,7 @@ export function copyEffect(x: IEffect): IEffect {
     const res: IEffect = {
         name: x.name,
         source: x.source,
-        source2: x.source2,
+        // source2: x.source2,
         tag: x.tag,
         keywords: x.keywords,
         icon: x.icon,

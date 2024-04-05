@@ -9,7 +9,7 @@ import { IStatTuple } from "./gamedata/IStatTuple";
 import { ISubStat } from "./gamedata/ISubStat";
 import { StatBag } from "./gamedata/StatBag";
 import { stringToEArtefact } from "./gamedata/enums/EArtefact";
-import { stringToETarget } from "./gamedata/enums/EEffectTarget";
+import { stringToETarget } from "./gamedata/enums/ETarget";
 import { stringToEEffectType, EEffectType } from "./gamedata/enums/EEffectType";
 import { stringToEElement } from "./gamedata/enums/EElement";
 import { stringToERarity } from "./gamedata/enums/ERarity";

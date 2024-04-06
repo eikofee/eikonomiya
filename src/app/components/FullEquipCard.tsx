@@ -38,8 +38,8 @@ export function FullEquipCard({character, rule}:{character : ICharacterData, rul
     mvs.sort((a, b) => b.value - a.value)
 
     return (
-        <div className="max-w-5xl basis-1/4 grid lg:grid-cols-7 md:grid-cols-3 sm:grid-cols-2 gap-2 p-1 bg-inherit h-full">
-                        <div className="flex flex-col gap-y-2">
+        <div className="max-w-5xl basis-1/4 grid lg:grid-cols-7 md:grid-cols-3 sm:grid-cols-2 gap-1 bg-inherit h-full">
+                        <div className="flex flex-col gap-1">
                             <AscensionCard char={character} />
                             <Card c={totalScoreContent} cname={"grow"} />
                         </div>

@@ -5,3 +5,13 @@ export interface ICharacterRule {
     character: string,
     stats: IStatTuple[]
 }
+
+export function buildDefaultICharacterRule() {
+    const res : ICharacterRule = {
+        character: "Default Character",
+        ruleName: "defaultRuleName",
+        stats: []
+    }
+
+    return res
+}

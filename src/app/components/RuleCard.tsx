@@ -27,14 +27,14 @@ export default function RuleCard({rule, ruleSetterCallback, saveRuleCallback}: {
             const iconDivClassName = badStats.includes(label) ? "text-slate-500/50 fill-slate-500/50" : ""
                 ls.push(
                     <li className={classname}>
-            <div key={Math.random()} className={"text-left basis-1/2 items-center m-1 flex flex-row ".concat(iconDivClassName)}>
+            <div className={"text-left basis-1/2 items-center m-1 flex flex-row ".concat(iconDivClassName)}>
                 <div className={"mr-1 h-4 w-4"}>
                     <Icon n={label} />
                 </div><p>
                     {eStatToReadable(label)}
                 </p>
             </div>
-            <div key={Math.random()} className="grid basis-1/2 grid-cols-7 items-center">
+            <div className="grid basis-1/2 grid-cols-7 items-center">
                 {<InteractiveGaugeComponent label={label} rule={rule} ruleSetterCallback={ruleSetterCallback} />}
             </div>
         </li>)

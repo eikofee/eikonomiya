@@ -50,7 +50,7 @@ export default function InteractiveGaugeComponent({label, rule, ruleSetterCallba
             bClassName = bClassName.concat(" ", colorDirector.bgAccent(6))
         }
         buttons.push(
-            <button key={label.concat(" ", j.toString())} className={bClassName} onClick={handleSliderChange(j)} />
+            <button className={bClassName} onClick={handleSliderChange(j)} />
             )
         }
 

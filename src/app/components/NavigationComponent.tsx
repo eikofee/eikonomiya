@@ -27,7 +27,7 @@ export default function NavigationComponent({currentCharacter, characterList, ui
     let charList = []
     for (let i = 0; i < characterList.length; ++i) {
         // charList.push(<Card c={buildCharacterCard(characterList[i], true, false) } cname="px-3 cursor-pointer z-10 h-full" />)
-        charList.push(<CharacterSmallCard uid={uid} character={characterList[i]} useHref={true} useLargeFont={false} useBackground={false} borderColor={colorDirector.borderAccent(3)} />)
+        charList.push(<CharacterSmallCard key={"nav-char-".concat(characterList[i].name)} uid={uid} character={characterList[i]} useHref={true} useLargeFont={false} useBackground={false} borderColor={colorDirector.borderAccent(3)} />)
     }
 
     const [hiddableClassname, setHiddableClassname] = useState("hidden")
@@ -46,9 +46,9 @@ export default function NavigationComponent({currentCharacter, characterList, ui
 
 
     return (
-        <div className={"pl-1 w-full flex flex-col h-14"}>
-            <div className="h-full flex flex-row mb-2">
-                <Card c={currentButton} cname="px-3 cursor-pointer w-full"/>
+        <div className={"w-full flex flex-col h-14"}>
+            <div className="h-full flex flex-row">
+                <Card key="current-char" c={currentButton} cname="px-3 cursor-pointer w-full"/>
             </div>
             <div className={hiddableClassname}>
                 <div className={"grid gap-2 grid-cols-1 xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-2 rounded-md border backdrop-blur-xl bg-white/25 p-2 w-3/4 z-10 border-slate-400"}>

@@ -3,11 +3,12 @@ import { IWeapon } from "./IWeapon"
 import { IEffect, copyEffect } from "./IEffect"
 import { StatBag } from "./StatBag"
 import { EElement } from "./enums/EElement"
-import { ERegion } from "./enums/ERegion"
 import { ICharacterCommonData } from "./ICharacterCommonData"
 import { IStatBag } from "./IStatBag"
 import { EStat, stringToEStat } from "./enums/EStat"
-import { ETarget } from "./enums/ETarget"
+import { ERarity } from "./enums/ERarity"
+import { ERegion } from "./enums/ERegion"
+import { EWeaponType } from "./enums/EWeaponType"
 
 export interface ICharacterData {
     name: string
@@ -35,6 +36,100 @@ export interface ICharacterData {
 
     staticEffects: IEffect[]
     dynamicEffects: IEffect[]
+}
+
+export function buildDefaultICharacterData() {
+    const res : ICharacterData = {
+        name: "Default Character",
+        element: EElement.NONE,
+        level: 0,
+        ascensionLevel: 0,
+        friendshipLevel: 0,
+        skills: {
+            levelAA: 0,
+            levelSkill: 0,
+            levelUlt: 0
+        },
+        commonData: {
+            name: "",
+            element: EElement.NONE,
+            rarity: ERarity.I,
+            weaponType: EWeaponType.SWORD,
+            ascensionStatName: EStat.UNKNOWN,
+            ascensionStatBaseValue: 0,
+            baseStats: {
+                hp: 0,
+                atk: 0,
+                def: 0,
+                atk_nw: 0
+            },
+            region: ERegion.UNKNOWN,
+            assets: {
+                characterPortrait: "",
+                characterCard: "",
+                aa: "",
+                skill: "",
+                burst: "",
+                a1: "",
+                a4: "",
+                c1: "",
+                c2: "",
+                c3: "",
+                c4: "",
+                c5: "",
+                c6: "",
+                characterNameCard: ""
+            },
+            constNames: {
+                c1: "",
+                c2: "",
+                c3: "",
+                c4: "",
+                c5: "",
+                c6: ""
+            },
+            constTexts: {
+                c1: "",
+                c2: "",
+                c3: "",
+                c4: "",
+                c5: "",
+                c6: ""
+            }
+        },
+        weapon: {
+            type: EWeaponType.SWORD,
+            name: "Default Weapon Name",
+            mainStat: {
+                name: EStat.UNKNOWN,
+                value: 0
+            },
+            level: 0,
+            refinement: 0,
+            rarity: ERarity.I,
+            assets: {
+                icon: ""
+            },
+            ascensionLevel: 0
+        },
+        artefacts: [],
+        totalStats: {
+            names: [],
+            values: []
+        },
+        lastUpdated: 0,
+        anormalStats: {
+            names: [],
+            values: []
+        },
+        staticEffects: [],
+        dynamicEffects: [],
+        ascensionStatName: EStat.UNKNOWN,
+        ascensionStatValue: 0,
+        constellation: 0
+    }
+
+    return res
 }
 
 export function copyCharacterData(ref: ICharacterData) : ICharacterData{

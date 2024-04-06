@@ -17,6 +17,6 @@ export const Card = (c: CardProps) => {
         cname = c.cname
     }
     return (
-        <div key={Math.random()} className={baseCname.concat(colorDirector.borderAccent(3), " ", cname)} >{c.c}</div>
+        <div className={baseCname.concat(colorDirector.borderAccent(3), " ", cname)} >{c.c}</div>
     )
 }

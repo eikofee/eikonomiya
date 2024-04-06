@@ -508,19 +508,7 @@ export class Updater {
                         break;
                 }
 
-                let p = path.join(process.cwd(), "/public/characterCards")
-                let fileList = await fsPromises.readdir(p)
-                const extensions = [".jpg", ".jpeg", ".png"]
-                let charCard = "";
-                for (let i = 0; i < extensions.length; ++i) {
-                    const fname = this.cleanNameForPath(name).concat(extensions[i])
-                    if (fileList.includes(fname)) {
-                        charCard = "/characterCards/".concat(fname)
-                    }
-                }
-
-                // p = path.join(process.cwd(), "/public/characters")
-                // fileList = await fsPromises.readdir(p)
+                let charCard = "characters_".concat(this.cleanNameForPath(name), "_card");
                 let characterPortrait = "characters_".concat(this.cleanNameForPath(name), "_face");
 
                 let r = ERegion.UNKNOWN

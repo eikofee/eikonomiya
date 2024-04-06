@@ -13,9 +13,9 @@ import * as yaml from 'yaml';
 export async function apiLogicLoadEffectData(category: string, artefactSetName: string) : Promise<IApiResult<IApiDataEffect>> {
     let subPath = artefactSetName.replaceAll("_", "/")
     const res : IApiResult<IApiDataEffect> = {success: false}
-    const p = await buildPathToDataFolder("gamedata", category, subPath)
+    const p = await buildPathToDataFolder("gamedata", category, subPath, ".yml")
     if (p.status) {
-        const a = yaml.parse((await fsPromises.readFile(p.path.concat(".yml"))).toString())
+        const a = yaml.parse((await fsPromises.readFile(p.path)).toString())
         const cards = []
         for (let i = 0; i < a["cards"].length; ++i) {
             const ca = a["cards"][i]

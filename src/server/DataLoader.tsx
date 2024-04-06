@@ -1,5 +1,6 @@
 import path from "path";
 import {promises as fsPromises} from 'fs';
+import fs from 'fs';
 import { ICharacterData } from "./gamedata/ICharacterData";
 import { ICharacterRule } from "@/app/interfaces/ICharacterRule";
 import { IStatTuple } from "./gamedata/IStatTuple";
@@ -22,19 +23,28 @@ export interface IBuildPathResult {
 
 export async function buildPathToDataFolder(...p: string[]): Promise<IBuildPathResult> {
     const dataExists = await checkDataFolderExistence()
+
     if (dataExists) {
         const arr = [process.cwd(), process.env.DATA_PATH!]
         const pa = arr.concat(p)
-        const base = path.resolve(pa.join("/"))
-        return {
-            status: true,
-            path: base
+        let ext = ""
+        if (pa[pa.length - 1].includes(".")) {
+            ext = pa[pa.length - 1]
+            pa.pop()
+
         }
-    } else {
-        return {
-            status: false,
-            path: ""
+        const base = path.resolve(pa.join("/").concat(ext))
+        if (fs.existsSync(base)) {
+            return {
+                status: true,
+                path: base
+            }
         }
+    }
+
+    return {
+        status: false,
+        path: ""
     }
 }
 

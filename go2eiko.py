@@ -23,14 +23,30 @@ FORCE = None
 
 
 def intex_dot_ts2name_converter(index_dot_ts: str, old_filename: str) -> str:
+    
+    # Convert the name using the index.ts file
+    new_filename = old_filename.split(".")[0]
+    ext = old_filename.split(".")[1]
     pattern = r"import ([A-Za-z0-9]+) from '.\/([A-Za-z0-9_]+)\.([a-z]+)'"
     for line in index_dot_ts.split("\n"):
         if re.match(pattern, line):
             new_filename = re.search(pattern, line).group(1)
             ext = re.search(pattern, line).group(3)
             if re.search(pattern, line).group(2) + "." + ext == old_filename:
-                return f"{new_filename}.{ext}"
-    return old_filename
+                break
+    
+    # Convert the resulting name to match eikonomiya's convention
+    d = {
+        "constellation1": "c1",
+        "constellation2": "c2",
+        "constellation3": "c3",
+        "constellation4": "c4",
+        "constellation5": "c5",
+        "constellation6": "c6",
+        "icon": "face",
+        "banner": "namecard",
+    }
+    return f"{d[new_filename]}.{ext}" if new_filename in d else old_filename
 
 
 def download_folder(

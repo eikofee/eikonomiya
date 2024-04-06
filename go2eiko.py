@@ -4,6 +4,7 @@ import re
 import logging
 from dotenv import load_dotenv
 import argparse
+from typing import Union
 
 
 # Constants
@@ -19,6 +20,50 @@ REPO = "genshin-optimizer"
 # User specific
 MASTER_OUTPUT_PATH = None
 FORCE = None
+
+
+def download_folder(
+    path: str,
+    output_path: Union[str, callable],
+    name_converter: callable,
+):
+
+    # Getting all images of the set
+    url = f"https://api.github.com/repos/{OWNER}/{REPO}/contents/{path}"
+    response = requests.get(url, auth=AUTH)  # TODO: lower the number of requests
+    if response.status_code == 200:
+        contents = response.json()
+        images = [
+            file['download_url']
+            for file in contents
+            if file['type'] == 'file'
+            and file['name'].lower().endswith(tuple(EXTENSIONS))
+        ]
+
+        # Downloading all the images
+        for image in images:
+            response = requests.get(image, auth=AUTH)  # TODO: lower the number of requests
+            old_filename = image.split("/")[-1]
+            filename = name_converter(old_filename)
+            
+            real_output_path = None
+            if callable(output_path):
+                real_output_path = output_path(old_filename)
+            else:
+                real_output_path = output_path
+            
+    
+            # Create a local folder (if needed)
+            logging.info(f"Trying to download {path}...")
+            folder_path = os.path.join(MASTER_OUTPUT_PATH, real_output_path)
+            os.makedirs(folder_path, exist_ok=True)
+            
+            # Save the file in the folder
+            with open(os.path.join(MASTER_OUTPUT_PATH, real_output_path, filename), 'wb') as f:
+                f.write(response.content)
+            logging.info(f"Downloaded {filename}!")
+
+    
 
 
 def download_recursively(
@@ -136,37 +181,56 @@ def download_artifacts():
 
 def download_characters():
     
-    def name_converter(old_filename: str) -> str:
+    # # Character's base assets
+    # def name_converter(old_filename: str) -> str:
         
-        # Get the extension
+    #     # Get the extension
+    #     ext = old_filename.split(".")[-1]
+
+    #     # Define the patterns
+    #     pattern_face = r"UI_AvatarIcon_[A-Za-z]+\.[a-z]+"
+    #     pattern_constellation = r"UI_Talent_S_[A-Za-z]+_0(\d)\.[a-z]+"
+    #     pattern_namecard = r"UI_NameCardPic_[A-Za-z]+_P\.[a-z]+"
+    #     pattern_skill = r"Skill_S_[A-Za-z]+01\.[a-z]+"
+
+    #     # Check to which pattern the filename corresponds
+    #     if re.match(pattern_face, old_filename):
+    #         return f"face.{ext}"
+    #     elif re.match(pattern_constellation, old_filename):
+    #         number = re.search(pattern_constellation, old_filename).group(1)
+    #         return f"c{number}.{ext}"
+    #     elif re.match(pattern_namecard, old_filename):
+    #         return f"namecard.{ext}"
+    #     elif re.match(pattern_skill, old_filename):
+    #         return f"skill.{ext}"
+    #     else:
+    #         return old_filename
+
+    # download_recursively(
+    #     path = "libs/gi/assets/src/gen/chars",
+    #     output_path="gamedata/assets/characters/",
+    #     name_converter=name_converter,
+    #     force_download=FORCE,
+    #     expected_files=15,
+    # )
+    
+    # Character namecards
+    def name_converter(old_filename: str) -> str:
         ext = old_filename.split(".")[-1]
-
-        # Define the patterns
-        pattern_face = r"UI_AvatarIcon_[A-Za-z]+\.[a-z]+"
-        pattern_constellation = r"UI_Talent_S_[A-Za-z]+_0(\d)\.[a-z]+"
-        pattern_namecard = r"UI_NameCardPic_[A-Za-z]+_P\.[a-z]+"
-        pattern_skill = r"Skill_S_[A-Za-z]+01\.[a-z]+"
-
-        # Check to which pattern the filename corresponds
-        if re.match(pattern_face, old_filename):
-            return f"face.{ext}"
-        elif re.match(pattern_constellation, old_filename):
-            number = re.search(pattern_constellation, old_filename).group(1)
-            return f"c{number}.{ext}"
-        elif re.match(pattern_namecard, old_filename):
-            return f"namecard.{ext}"
-        elif re.match(pattern_skill, old_filename):
-            return f"skill.{ext}"
-        else:
-            return old_filename
-
-    download_recursively(
-        path = "libs/gi/assets/src/gen/chars",
-        output_path="gamedata/assets/characters/",
+        return f"card.{ext}"
+    
+    def output_path(old_filename: str) -> str:
+        pattern = "Character_([A-Za-z_]+)_Card.[a-z]+"
+        character_name = re.search(pattern, old_filename).group(1).lower()
+        return os.path.join("gamedata/assets/characters", character_name)
+    
+    download_folder(
+        path="libs/gi/char-cards/src",
+        output_path=output_path,
         name_converter=name_converter,
-        force_download=FORCE,
-        expected_files=15,
     )
+    
+    
 
 
 def download_weapons():

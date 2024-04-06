@@ -22,11 +22,40 @@ MASTER_OUTPUT_PATH = None
 FORCE = None
 
 
+def intex_dot_ts2name_converter(index_dot_ts: str, old_filename: str) -> str:
+    pattern = r"import ([A-Za-z0-9]+) from '.\/([A-Za-z0-9_]+)\.([a-z]+)'"
+    for line in index_dot_ts.split("\n"):
+        if re.match(pattern, line):
+            new_filename = re.search(pattern, line).group(1)
+            ext = re.search(pattern, line).group(3)
+            if re.search(pattern, line).group(2) + "." + ext == old_filename:
+                return f"{new_filename}.{ext}"
+    return old_filename
+
+
 def download_folder(
     path: str,
     output_path: Union[str, callable],
     name_converter: callable,
 ):
+    """
+    Download all the files in a folder of a GitHub repository.
+    
+    Parameters
+    ----------
+    path : str
+        Path of the folder in the repository. Usually it is right after
+        "tree/master/" in the repository's URL.
+    output_path : Union[str, callable]
+        Path of the folder where the files will be saved. Can be a relative
+        path or an absolute path. If a callable, it should take a single
+        argument corresponding to the name of the file as stored in the
+        repository, and return the path of the file as it should be saved.
+    name_converter : callable
+        The function that converts the name of the file. It should take a
+        single argument corresponding to the name of the file as stored in the
+        repository, and return the name of the file as it should be saved.
+    """
 
     # Getting all images of the set
     url = f"https://api.github.com/repos/{OWNER}/{REPO}/contents/{path}"
@@ -69,7 +98,7 @@ def download_folder(
 def download_recursively(
     path: str,
     output_path: str,
-    name_converter: callable,
+    name_converter: Union[str, callable],
     force_download: bool = False,
     expected_files: int = 1,
 ):
@@ -86,10 +115,14 @@ def download_recursively(
     output_path : str
         Path of the folder where the files will be saved. Can be a relative
         path or an absolute path.
-    name_converter : callable
-        Function that converts the name of the file. It should take a single
-        argument corresponding to the name of the file as stored in the
-        repository, and return the name of the file as it should be saved.
+    name_converter : Union[str, callable]
+        If a callable, it is the function that converts the name of the file.
+        It should take a single argument corresponding to the name of the file
+        as stored in the repository, and return the name of the file as it
+        should be saved. If a string, it should be "index.ts", meaning that
+        the function will try to use the index.ts file to convert the names. If
+        the string is not "index.ts", the function will use the original name
+        of the file.
     force_download : bool, optional
         If True, the function will download all the files again, even if they
         already exist in the output folder. If False, the function will skip
@@ -102,7 +135,6 @@ def download_recursively(
 
     # Getting all folders
     url = f"https://api.github.com/repos/{OWNER}/{REPO}/contents/{path}"
-    print(url)
     response = requests.get(url, auth=AUTH)  # TODO: lower the number of requests
 
     # Check if there is a field "message"
@@ -114,6 +146,10 @@ def download_recursively(
         contents = response.json()
         folders = [file['name'] for file in contents if file['type'] == 'dir']
         for folder in folders:
+
+            # DEBUG
+            # if folder != "Furina":
+            #     continue
 
             # Create a local folder for each folder in the repo
             logging.info(f"Trying to download {folder}...")
@@ -136,12 +172,18 @@ def download_recursively(
                     if file['type'] == 'file'
                     and file['name'].lower().endswith(tuple(EXTENSIONS))
                 ]
+                if isinstance(name_converter, str) and name_converter == "index.ts":
+                    index_dot_ts = requests.get(f"https://raw.githubusercontent.com/{OWNER}/{REPO}/master/{path}/{folder}/index.ts").text
 
                 # Downloading all the images
                 for image in images:
                     response = requests.get(image, auth=AUTH)  # TODO: lower the number of requests
                     old_filename = image.split("/")[-1]
-                    filename = name_converter(old_filename)
+                    
+                    if callable(name_converter):
+                        filename = name_converter(old_filename)
+                    elif isinstance(name_converter, str) and name_converter == "index.ts":
+                        filename = intex_dot_ts2name_converter(index_dot_ts, old_filename)
                     with open(os.path.join(MASTER_OUTPUT_PATH, output_path, folder.lower(), filename), 'wb') as f:
                         f.write(response.content)
                     logging.info(f"Downloaded {filename}!")
@@ -181,38 +223,14 @@ def download_artifacts():
 
 def download_characters():
     
-    # # Character's base assets
-    # def name_converter(old_filename: str) -> str:
-        
-    #     # Get the extension
-    #     ext = old_filename.split(".")[-1]
-
-    #     # Define the patterns
-    #     pattern_face = r"UI_AvatarIcon_[A-Za-z]+\.[a-z]+"
-    #     pattern_constellation = r"UI_Talent_S_[A-Za-z]+_0(\d)\.[a-z]+"
-    #     pattern_namecard = r"UI_NameCardPic_[A-Za-z]+_P\.[a-z]+"
-    #     pattern_skill = r"Skill_S_[A-Za-z]+01\.[a-z]+"
-
-    #     # Check to which pattern the filename corresponds
-    #     if re.match(pattern_face, old_filename):
-    #         return f"face.{ext}"
-    #     elif re.match(pattern_constellation, old_filename):
-    #         number = re.search(pattern_constellation, old_filename).group(1)
-    #         return f"c{number}.{ext}"
-    #     elif re.match(pattern_namecard, old_filename):
-    #         return f"namecard.{ext}"
-    #     elif re.match(pattern_skill, old_filename):
-    #         return f"skill.{ext}"
-    #     else:
-    #         return old_filename
-
-    # download_recursively(
-    #     path = "libs/gi/assets/src/gen/chars",
-    #     output_path="gamedata/assets/characters/",
-    #     name_converter=name_converter,
-    #     force_download=FORCE,
-    #     expected_files=15,
-    # )
+    # Character's base assets
+    download_recursively(
+        path = "libs/gi/assets/src/gen/chars",
+        output_path="gamedata/assets/characters/",
+        name_converter="index.ts",
+        force_download=FORCE,
+        expected_files=15,
+    )
     
     # Character namecards
     def name_converter(old_filename: str) -> str:
@@ -220,7 +238,7 @@ def download_characters():
         return f"card.{ext}"
     
     def output_path(old_filename: str) -> str:
-        pattern = "Character_([A-Za-z_]+)_Card.[a-z]+"
+        pattern = "Character_([A-Za-z_]+)_Card\.[a-z]+"
         character_name = re.search(pattern, old_filename).group(1).lower()
         return os.path.join("gamedata/assets/characters", character_name)
     

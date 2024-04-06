@@ -508,9 +508,6 @@ export class Updater {
                         break;
                 }
 
-                let charCard = "characters_".concat(this.cleanNameForPath(name), "_card");
-                let characterPortrait = "characters_".concat(this.cleanNameForPath(name), "_face");
-
                 let r = ERegion.UNKNOWN
                 if (reg[name] != undefined) {
                     r = stringToERegion(reg[name])
@@ -529,6 +526,7 @@ export class Updater {
                     }
                 }
 
+                const cleanName = this.cleanNameForPath(name)
                 const common: ICharacterCommonData = {
                     name: name,
                     element: c.commonData.element,
@@ -538,20 +536,20 @@ export class Updater {
                     ascensionStatName: ascensionName,
                     ascensionStatBaseValue: ascensionValue,
                     assets: {
-                        characterCard: charCard,
-                        characterPortrait: characterPortrait,
-                        characterNameCard: "characters_".concat(this.cleanNameForPath(name), "_namecard"),
-                        aa: "/characterTalents/aa_".concat(c.commonData.weapon, ".png"),
-                        skill: "characters_".concat(this.cleanNameForPath(name), "_skill"),
-                        burst: "characters_".concat(this.cleanNameForPath(name), "_burst"),
-                        a1: "characters_".concat(this.cleanNameForPath(name), "_a1"),
-                        a4: "characters_".concat(this.cleanNameForPath(name), "_a4"),
-                        c1: "characters_".concat(this.cleanNameForPath(name), "_c1"),
-                        c2: "characters_".concat(this.cleanNameForPath(name), "_c2"),
-                        c3: "characters_".concat(this.cleanNameForPath(name), "_c3"),
-                        c4: "characters_".concat(this.cleanNameForPath(name), "_c4"),
-                        c5: "characters_".concat(this.cleanNameForPath(name), "_c5"),
-                        c6: "characters_".concat(this.cleanNameForPath(name), "_c6")
+                        characterCard: "characters_".concat(cleanName, "_card"),
+                        characterPortrait: "characters_".concat(cleanName, "_face"),
+                        characterNameCard: "characters_".concat(cleanName, "_namecard"),
+                        aa: "characters_generic_".concat(c.commonData.weapon),
+                        skill: "characters_".concat(cleanName, "_skill"),
+                        burst: "characters_".concat(cleanName, "_burst"),
+                        a1: "characters_".concat(cleanName, "_a1"),
+                        a4: "characters_".concat(cleanName, "_a4"),
+                        c1: "characters_".concat(cleanName, "_c1"),
+                        c2: "characters_".concat(cleanName, "_c2"),
+                        c3: "characters_".concat(cleanName, "_c3"),
+                        c4: "characters_".concat(cleanName, "_c4"),
+                        c5: "characters_".concat(cleanName, "_c5"),
+                        c6: "characters_".concat(cleanName, "_c6")
                     },
                     baseStats: {
                         hp: c.baseStats.get(EStat.HP)!.value,

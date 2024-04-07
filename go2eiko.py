@@ -5,11 +5,14 @@ import logging
 from dotenv import load_dotenv
 import argparse
 from typing import Union
+import glob
+import shutil
 
 
 # Constants
-EXTENSIONS = ['.png', '.jpg', '.jpeg']
+EXTENSIONS = ['png', 'jpg', 'jpeg']
 AUTH = None  # TODO: might not be the most secured way to store the credentials
+TEMP_FOLDER = "temp"
 
 
 # Informations about the repository
@@ -20,6 +23,26 @@ REPO = "genshin-optimizer"
 # User specific
 MASTER_OUTPUT_PATH = None
 FORCE = None
+METHOD = None
+
+
+def sparse_checkout(path_to_checkout: str, path_to_store: str = TEMP_FOLDER):
+
+    # Get current path
+    current_path = os.getcwd()
+
+    # Clone the repository
+    os.makedirs(path_to_store, exist_ok=True)
+    os.chdir(path_to_store)
+    os.system(f"git clone --filter=blob:none --no-checkout https://github.com/frzyc/genshin-optimizer.git")
+    os.chdir("genshin-optimizer")
+    os.system(f"git config core.sparseCheckout true")
+    os.system(f"echo {path_to_checkout} >> .git/info/sparse-checkout")
+    os.system("git checkout")
+    os.system("git pull")
+
+    # Go back to the original folder
+    os.chdir(current_path)
 
 
 def intex_dot_ts2name_converter(index_dot_ts: str, old_filename: str) -> str:
@@ -72,6 +95,35 @@ def download_folder(
         single argument corresponding to the name of the file as stored in the
         repository, and return the name of the file as it should be saved.
     """
+
+    if METHOD == "checkout":
+
+        # Getting all images of the checked out repo
+        images = glob.glob(os.path.join(TEMP_FOLDER, REPO, path, "*"), recursive=False)
+        logging.info(f"Found {len(images)} images in " + os.path.join(path, "*"))
+        for image in images:
+            ext = image.split(".")[-1]
+            if ext not in EXTENSIONS:
+                continue
+
+            # Getting the new filename
+            old_filename = os.path.basename(image)
+            filename = name_converter(old_filename)
+
+            # Getting the path for the current image
+            real_output_path = None
+            if callable(output_path):
+                real_output_path = output_path(old_filename)
+            else:
+                real_output_path = output_path
+            real_output_path = os.path.join(MASTER_OUTPUT_PATH, real_output_path)
+            os.makedirs(real_output_path, exist_ok=True)
+
+            # Copy the image to the output folder
+            shutil.copy(image, os.path.join(real_output_path, filename))
+            logging.info(f"Downloaded {filename}!")
+
+        return
 
     # Getting all images of the set
     url = f"https://api.github.com/repos/{OWNER}/{REPO}/contents/{path}"
@@ -147,7 +199,44 @@ def download_recursively(
     expected_files : int, optional
         When force_download is False, the function will skip folders which
         already have this number of files (or more), by default 1
+
+    Notes
+    -----
+    When using the method "checkout", it will always ignore "force_download"
+    and "expected_files", as it will download all the files in the given path.
+    Since doing a checkout does not use the GitHub API, this method might be
+    faster and can be used without rate limits.
     """
+
+    if METHOD == "checkout":
+
+        # Getting all images of the checked out repo
+        images = glob.glob(os.path.join(TEMP_FOLDER, REPO, path, "**", "*"), recursive=True)
+        logging.info(f"Found {len(images)} images in " + os.path.join(path, "**", "*"))
+        for image in images:
+            ext = image.split(".")[-1]
+            if ext not in EXTENSIONS:
+                continue
+
+            # Getting the new filename
+            old_filename = os.path.basename(image)
+            if callable(name_converter):
+                filename = name_converter(old_filename)
+            elif isinstance(name_converter, str) and name_converter == "index.ts":
+                image_folder = os.path.dirname(image)
+                index_dot_ts = open(os.path.join(image_folder, "index.ts")).read()
+                filename = intex_dot_ts2name_converter(index_dot_ts, old_filename)
+
+            # Getting the path for the current image
+            folder = os.path.basename(os.path.dirname(image))
+            real_output_path = os.path.join(MASTER_OUTPUT_PATH, output_path, folder.lower())
+            os.makedirs(real_output_path, exist_ok=True)
+
+            # Copy the image to the output folder
+            shutil.copy(image, os.path.join(real_output_path, filename))
+            logging.info(f"Downloaded {filename}!")
+
+        return
 
     # Getting all folders
     url = f"https://api.github.com/repos/{OWNER}/{REPO}/contents/{path}"
@@ -195,7 +284,6 @@ def download_recursively(
                 for image in images:
                     response = requests.get(image, auth=AUTH)  # TODO: lower the number of requests
                     old_filename = image.split("/")[-1]
-                    
                     if callable(name_converter):
                         filename = name_converter(old_filename)
                     elif isinstance(name_converter, str) and name_converter == "index.ts":
@@ -233,7 +321,7 @@ def download_artifacts():
         output_path="gamedata/assets/artifacts/",
         name_converter=name_converter,
         force_download=FORCE,
-        excepted_files=5,
+        expected_files=5,
     )
 
 
@@ -254,8 +342,16 @@ def download_characters():
         return f"card.{ext}"
     
     def output_path(old_filename: str) -> str:
-        pattern = "Character_([A-Za-z_]+)_Card\.[a-z]+"
-        character_name = re.search(pattern, old_filename).group(1).lower()
+        if "Character" in old_filename:
+            pattern = "Character_([A-Za-z_]+)_Card\.[a-z]+"
+            character_name = re.search(pattern, old_filename).group(1).lower()
+        elif "Traveler" in old_filename:
+            if "Traveler_Female" in old_filename:
+                character_name = "travelerf"
+            elif "Traveler_M" in old_filename:
+                character_name = "travelerm"
+        while "_" in character_name:
+            character_name = character_name.replace("_", "")
         return os.path.join("gamedata/assets/characters", character_name)
     
     download_folder(
@@ -293,6 +389,10 @@ def main(**kwargs):
 
     os.makedirs(MASTER_OUTPUT_PATH, exist_ok=True)
 
+    if METHOD == "checkout":
+        sparse_checkout(path_to_checkout="libs/gi/assets/src/gen")
+        sparse_checkout(path_to_checkout="libs/gi/char-cards/src")
+
     if kwargs["characters"]:
         download_characters()
 
@@ -316,6 +416,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Download the assets from Genshin Optimizer"
     )
+    parser.add_argument("--method", "-m", type=str, help="Method to use", choices=["api", "checkout"], required=True)
     parser.add_argument("--characters", "-c", action="store_true", help="Download the characters' assets")
     parser.add_argument("--weapons", "-w", action="store_true", help="Download the weapons' assets")
     parser.add_argument("--artifacts", "-a", action="store_true", help="Download the artifacts' assets")
@@ -324,6 +425,7 @@ if __name__ == "__main__":
     kwargs = vars(parser.parse_args())
     MASTER_OUTPUT_PATH = kwargs["output"]
     FORCE = kwargs["force"]
+    METHOD = kwargs["method"]
 
     # Logging to GitHub's API
     dotenv_path = os.path.join(os.path.dirname(__file__), '.env')

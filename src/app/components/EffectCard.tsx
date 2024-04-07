@@ -1,5 +1,4 @@
 import { IEffect, addSpecialIcon } from "@/server/gamedata/IEffect";
-import { Card } from "./Card";
 import { useContext, useState } from "react";
 import { ConfigContext } from "./ConfigContext";
 import { ICharacterData } from "@/server/gamedata/ICharacterData";
@@ -7,6 +6,7 @@ import Tooltip from "./Tooltip";
 import StatLineDraw from "./StatLineDrawer";
 import Icon from "./Icon";
 import { ImgApi } from "./ImgApi";
+import Card, { ECardSize } from "./Card";
 
 export function buildImgOrIconForEffect(e : IEffect) {
     e = addSpecialIcon(e)
@@ -55,5 +55,5 @@ export default function EffectCard({effect: effect, effectUpdateCallback: effect
         </ul>
     </div>;
 
-    return <Card c={content} />
+    return <Card content={content} minw={ECardSize.LARGE} />
 }

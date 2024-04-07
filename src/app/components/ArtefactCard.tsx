@@ -2,7 +2,6 @@
 
 import { useContext, useState } from "react";
 import { ICharacterRule } from "../interfaces/ICharacterRule";
-import { Card } from "./Card";
 import Icon from "./Icon";
 import Tooltip from "./Tooltip";
 import { ConfigContext } from "./ConfigContext";
@@ -10,6 +9,7 @@ import { IArtefact } from "@/server/gamedata/IArtefact";
 import { EStat, eStatToReadable } from "@/server/gamedata/enums/EStat";
 import { IStatTuple } from "@/server/gamedata/IStatTuple";
 import { ImgApi } from "./ImgApi";
+import Card, { ECardSize } from "./Card";
 
 export default function ArtefactCard({equip, rule, sortedStats, scoreState} : {equip: IArtefact, rule: ICharacterRule, sortedStats: IStatTuple[], scoreState: (a: number) => void}) {
 
@@ -128,6 +128,7 @@ export default function ArtefactCard({equip, rule, sortedStats, scoreState} : {e
         </li>
         )
     }
+    
     let score = 0
     for (let i = 0; i < equip.subStats.length; ++i) {
         score += equip.subStats[i].rollValue * getRuleValue(equip.subStats[i].name)
@@ -146,20 +147,20 @@ export default function ArtefactCard({equip, rule, sortedStats, scoreState} : {e
     </div>
 
     let content = <div className="flex flex-col">
-    <div className="aspect-square grad-5star basis-1/5 flex items-center justify-center rounded-t-md">
-        <ImgApi alt="" src={equip.assets.icon} className="max-w-full max-h-full"/>
-    </div>
-    <div className="basis-4/5 px-1 py-2">
-        <ul>
-            {statList}
-        </ul>
-        <div className="w-full flex flex-row">
-            <Tooltip child={scoreLine} info={infoLine} childClassname="w-full"/>
+        <div className="aspect-square grad-5star basis-1/5 flex items-center justify-center rounded-t-md">
+            <ImgApi alt="" src={equip.assets.icon} className="max-w-full max-h-full"/>
+        </div>
+        <div className="basis-4/5 px-1 py-2">
+            <ul>
+                {statList}
+            </ul>
+            <div className="w-full flex flex-row">
+                <Tooltip child={scoreLine} info={infoLine} childClassname="w-full"/>
+            </div>
         </div>
     </div>
-</div>
 
     return (
-        <Card c={content}/>
+        <Card content={content} minw={ECardSize.SMALL} maxw={ECardSize.SEMI}/>
     )
 }

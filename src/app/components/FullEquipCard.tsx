@@ -3,10 +3,10 @@ import { ICharacterRule } from "../interfaces/ICharacterRule";
 import ArtefactCard from "./ArtefactCard";
 import WeaponCard from "./WeaponCard";
 import { useState } from "react";
-import { Card } from "./Card";
 import { ICharacterData } from "@/server/gamedata/ICharacterData";
 import { EArtefact } from "@/server/gamedata/enums/EArtefact";
 import { IArtefact } from "@/server/gamedata/IArtefact";
+import Card, { ECardSize } from "./Card";
 
 export function FullEquipCard({character, rule}:{character : ICharacterData, rule: ICharacterRule}) {
 
@@ -38,10 +38,10 @@ export function FullEquipCard({character, rule}:{character : ICharacterData, rul
     mvs.sort((a, b) => b.value - a.value)
 
     return (
-        <div className="max-w-5xl basis-1/4 grid lg:grid-cols-7 md:grid-cols-3 sm:grid-cols-2 gap-1 bg-inherit h-full">
+        <div className="grid grow grid-cols-auto-fit-small gap-1 bg-inherit">
                         <div className="flex flex-col gap-1">
                             <AscensionCard char={character} />
-                            <Card c={totalScoreContent} cname={"grow"} />
+                            <Card content={totalScoreContent} grow={true} maxw={ECardSize.SEMI}/>
                         </div>
                         <WeaponCard equip={character.weapon} rule={rule}/>
                         { artes[0] != undefined ? <ArtefactCard equip={artes[0]} rule={rule} scoreState={setScoreFleur} sortedStats={mvs} /> : ""}

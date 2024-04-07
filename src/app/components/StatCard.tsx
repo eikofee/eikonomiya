@@ -1,10 +1,10 @@
 import { ReactNode, useContext, useState } from "react";
-import { Card } from "./Card";
 import { ConfigContext } from "./ConfigContext";
 import { ICharacterData } from "@/server/gamedata/ICharacterData";
 import { EStat, eStatToReadable, stringToEStat } from "@/server/gamedata/enums/EStat";
 import { IStatBag } from "@/server/gamedata/IStatBag";
 import StatLineDraw from "./StatLineDrawer";
+import Card, { ECardSize } from "./Card";
 
 export interface ILine {
     name: ReactNode
@@ -92,7 +92,7 @@ export default function StatCard({character, statbag} : {character: ICharacterDa
     }
 
     let content = <div className="bg-inherit">
-        <div className="flex flex-row w-full justify-between">
+        <div className="flex flex-row justify-between">
             <div className="pl-2 font-semibold">{"Basic Stats"}</div>
             <button onClick={toggleExpand} className={"pr-2 text-sm text-right cursor-pointer ".concat(colorDirector.textAccent(3))}>{expanded ? "Collapse" : "Expand"}</button>
         </div>
@@ -102,6 +102,6 @@ export default function StatCard({character, statbag} : {character: ICharacterDa
     </div>;
 
     return(
-        <Card c={content}/>
+        <Card content={content} minw={ECardSize.LARGE} maxw={ECardSize.VERY_LARGE}/>
     )
 }

@@ -32,7 +32,7 @@ async function home() {
 
     let piList = []
     for (let i = 0; i < playerInfoList.length; ++i) {
-        piList.push(<div className="group rounded-md border min-w-36 max-w-md backdrop-blur-xl bg-white/25 px-3 cursor-pointer z-10 gap-10 text-center" >{buildPlayerCard(playerInfoList[i])}</div>)
+        piList.push(<div className="group rounded-md border min-w-[144px] max-w-md backdrop-blur-xl bg-white/25 px-3 cursor-pointer z-10 gap-10 text-center" >{buildPlayerCard(playerInfoList[i])}</div>)
     }
         let infoElement = <div className="w-1/3">
         <div className={"w-full rounded-md border backdrop-blur-xl bg-white/25 p-2 gap-2 mb-2 z-10 border-slate-400"}>
@@ -103,7 +103,7 @@ export default async function Page({ params }: { params: { uid: string } }) {
 
     
     let content = <div className={"pl-1 w-full h-screen flex flex-col place-content-center items-center"}>
-                            <div className={"grid gap-2 grid-cols-1 xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-2 rounded-md border backdrop-blur-xl bg-white/25 p-2 w-3/4 z-10 border-slate-400"}>
+                            <div className="grid grid-cols-auto-fit-fr-medium max-w-[1600px] gap-2 rounded-md border backdrop-blur-xl bg-white/25 p-2 w-3/4 z-10 border-slate-400">
                                 {charList}
                             </div>
                     </div>

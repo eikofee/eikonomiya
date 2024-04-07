@@ -1,17 +1,20 @@
 import { useContext, useState } from "react";
-import { Card } from "./Card";
 import { ConfigContext } from "./ConfigContext";
 import { ICharacterData } from "@/server/gamedata/ICharacterData";
 import CharacterSmallCard from "./CharacterSmallCard";
 import { ImgApi } from "./ImgApi";
+import Card from "./Card";
+import { THiddableContentCb } from "./TopOverSpace";
 
-export default function NavigationComponent({currentCharacter, characterList, uid}:{currentCharacter: ICharacterData, characterList: ICharacterData[], uid: string}) {
+export default function NavigationComponent({currentCharacter, characterList, uid, setContentCallback}:{currentCharacter: ICharacterData, characterList: ICharacterData[], uid: string, setContentCallback: THiddableContentCb}) {
+
+
 
     const {colorDirector} = useContext(ConfigContext)
     const buildCharacterCard = (c: ICharacterData, useHref: boolean, useLargeFont: boolean) => {
-        let content = <div className="items-center h-12 w-full flex flex-row cursor-pointer">
-                        <div className="h-12 w-full max-w-16 overflow-hidden">
-                            <ImgApi className="h-12" src={c.commonData.assets.characterPortrait} alt={""} />
+        let content = <div className="items-center h-14 w-full flex flex-row cursor-pointer">
+                        <div className="h-14 w-full max-w-16 overflow-hidden">
+                            <ImgApi className="h-14" src={c.commonData.assets.characterPortrait} alt={""} />
                         </div>
                         <div className={"text-center w-full text-ellipsis rounded-md ".concat(useLargeFont ? colorDirector.bgAccent(5).concat(" font-bold text-xl") : "bg-slate-100/60 text-sm")}>
                             {c.name}
@@ -26,36 +29,38 @@ export default function NavigationComponent({currentCharacter, characterList, ui
 
     let charList = []
     for (let i = 0; i < characterList.length; ++i) {
-        // charList.push(<Card c={buildCharacterCard(characterList[i], true, false) } cname="px-3 cursor-pointer z-10 h-full" />)
         charList.push(<CharacterSmallCard key={"nav-char-".concat(characterList[i].name)} uid={uid} character={characterList[i]} useHref={true} useLargeFont={false} useBackground={false} borderColor={colorDirector.borderAccent(3)} />)
     }
 
-    const [hiddableClassname, setHiddableClassname] = useState("hidden")
-
     const toggleHiddable = () => {
-        if (hiddableClassname == "hidden") {
-            setHiddableClassname("z-10")
-        } else {
-            setHiddableClassname("hidden")
-        }
+        const contentClassName = `
+            grid
+            w-full
+            grid-cols-auto-fit-fr-semi
+            gap-2
+            rounded-md
+            border
+            backdrop-blur-xl
+            bg-white/25
+            p-2
+            z-10
+            border-slate-400
+            `
+        setContentCallback(
+            <div className={contentClassName}>
+            {charList}
+        </div>, 1, false)
     }
 
-    let currentButton = <div className="h-full" onClick={toggleHiddable}>
+    let currentButton = <div className="cursor-pointer h-full px-3 w-full" onClick={toggleHiddable}>
                             {buildCharacterCard(currentCharacter, false, true)}
                         </div>
 
 
     return (
-        <div className={"w-full flex flex-col h-14"}>
-            <div className="h-full flex flex-row">
-                <Card key="current-char" c={currentButton} cname="px-3 cursor-pointer w-full"/>
+            <div className="h-full flex w-full flex-row min-w-[64px] max-w-[384px]">
+                <Card key="current-char" content={currentButton} grow={true}/>
             </div>
-            <div className={hiddableClassname}>
-                <div className={"grid gap-2 grid-cols-1 xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-2 rounded-md border backdrop-blur-xl bg-white/25 p-2 w-3/4 z-10 border-slate-400"}>
-                                {charList}
-                </div>
-            </div>
-        </div>
             
     )
 }

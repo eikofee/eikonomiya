@@ -46,11 +46,11 @@ export default function CharacterSmallCard({uid, character, useHref, useLargeFon
     }
 
     if (useBackground) {
-        return <div className="transition ease-in-out group rounded-md border bg-white/25 px-3 cursor-pointer z-10 mb-2 hover:shadow-lg" style={{
+        return <div className="min-w-[200px] max-w-full transition ease-in-out group rounded-md border bg-white/25 px-3 cursor-pointer z-10 mb-2 hover:shadow-lg" style={{
             backgroundImage : "url(api/assets/".concat(character.commonData.assets.characterNameCard, ")"),
             backgroundSize : "cover"
         }} >{content}</div>
     } else {
-        return <div className={"transition ease-in-out group rounded-md border bg-white/25 px-3 cursor-pointer z-10 hover:shadow-lg ".concat(borderColor)}>{content}</div>
+        return <div className={"min-w-[200px] max-w-full transition ease-in-out group rounded-md border bg-white/25 px-3 cursor-pointer z-10 hover:shadow-lg ".concat(borderColor)}>{content}</div>
     }
 }

@@ -10,12 +10,7 @@ import BackgroundComponent from "./BackgroundComponent";
 import NavigationComponent from "./NavigationComponent";
 import { ICharacterData, buildDefaultICharacterData, copyCharacterData } from "@/server/gamedata/ICharacterData";
 import { ICharacterRule, buildDefaultICharacterRule } from "../interfaces/ICharacterRule";
-import { EElement } from "@/server/gamedata/enums/EElement";
-import { EWeaponType } from "@/server/gamedata/enums/EWeaponType";
-import { ERarity } from "@/server/gamedata/enums/ERarity";
-import { EStat, stringToEStat } from "@/server/gamedata/enums/EStat";
-import { ERegion } from "@/server/gamedata/enums/ERegion";
-import { Card } from "./Card";
+import { stringToEStat } from "@/server/gamedata/enums/EStat";
 import { IEffect } from "@/server/gamedata/IEffect";
 import { computeStats } from "@/server/gamedata/StatComputations";
 import { ConfigDirector, IConfigDirector } from "../classes/ConfigDirector";
@@ -23,6 +18,8 @@ import { IStatBag } from "@/server/gamedata/IStatBag";
 import EffectList, { EEffectListType } from "./EffectList";
 import EffectCardExplorer from "./EffectCardExplorer";
 import StatLineDraw from "./StatLineDrawer";
+import TopOverSpace, { IHiddableContent } from "./TopOverSpace";
+import Card from "./Card";
 
 
 export default function RootComponent({data: characters, currentCharacterName: currentCharacterName, rules, uid, iconfig, defaultEffectCards} : ({data: ICharacterData[], currentCharacterName: string, rules: ICharacterRule[], uid: string, iconfig: IConfigDirector, defaultEffectCards: IEffect[]})) {
@@ -41,10 +38,21 @@ export default function RootComponent({data: characters, currentCharacterName: c
     let colorDirector = new ColorDirector(char.element)
     let config = new ConfigDirector(iconfig)
 
+    async function saveRuleCallback(x: ICharacterRule) {
+        console.log(rule)
+        let url = "/api/rules?mode=edit&characterName=".concat(x.character,"&uid=", uid)
+        for (let i = 0; i < x.stats.length; ++i) {
+            url = url.concat("&", x.stats[i].name, "=", x.stats[i].value.toString())
+        }
+
+        await fetch(url)
+    }
+
     const [rule, setRule] = useState(defaultRule)
 
     function setRuleCallback(x: ICharacterRule) {
         setRule(x)
+        // saveRuleCallback(x)
     }
 
     const effectCb = (a: ICharacterData, b: IStatBag) => {
@@ -74,14 +82,7 @@ export default function RootComponent({data: characters, currentCharacterName: c
     const [statBag, setStatBag] = useState(defaultStatBag)
     const [effectCards, setEffectCards] = useState(defaultEffectCards)
 
-    async function saveRuleCallback(x: ICharacterRule) {
-        let url = "/api/rules?mode=edit&characterName=".concat(x.character,"&uid=", uid)
-        for (let i = 0; i < x.stats.length; ++i) {
-            url = url.concat("&", x.stats[i].name, "=", x.stats[i].value.toString())
-        }
 
-        await fetch(url)
-    }
 
     const addToCharacterCb = (x: IEffect) => {
         let newChar = copyCharacterData(characterData)
@@ -107,6 +108,26 @@ export default function RootComponent({data: characters, currentCharacterName: c
         setEffectCards(effectList)
     }
 
+    const defaultHiddableContent : IHiddableContent = {
+        state: false,
+        content: "",
+        currentToggleId: -1,
+        fit: false
+    }
+    const [hiddableContent, setHiddableContent] = useState(defaultHiddableContent)
+
+    function setTopOverSpaceContentCallback(x : React.ReactNode, toggleId: number, fit: boolean) {
+        const res : IHiddableContent = {
+            state : !(toggleId == hiddableContent.currentToggleId),
+            content : x,
+            currentToggleId: toggleId == hiddableContent.currentToggleId ? -1 : toggleId,
+            fit: fit
+
+        }
+
+        setHiddableContent(res)
+    }
+
     const anomalyStats = []
     const anomalyCards = []
     for (let e = 0; e < characterData.anormalStats.names.length; ++e) {
@@ -125,36 +146,39 @@ export default function RootComponent({data: characters, currentCharacterName: c
                     {anomalyStats}
                 </ul>
             </div>;
-        anomalyCards.push(<Card c={content}/>)
+        anomalyCards.push(<Card content={content}/>)
     }
 
     return <ConfigContext.Provider value={{colorDirector: colorDirector, config: config}}>
         <BackgroundComponent character={characterData}/>
-        <div className="flex flex-col p-1 gap-1">
-            <NavigationComponent currentCharacter={characterData} characterList={characters} uid={uid} />
-            <div className={"flex flex-row gap-1"}>
+        <div className="flex flex-col p-1 gap-1 h-screen w-full">
+            <div className="flex flex-col relative h-15">
+                <div className={"flex flex-row gap-1 h-full"}>
+                    <NavigationComponent currentCharacter={characterData} characterList={characters} uid={uid} setContentCallback={setTopOverSpaceContentCallback}/>
+                    <RuleCard rule={rule} ruleSetterCallback={setRuleCallback} saveRuleCallback={saveRuleCallback} setContentCallback={setTopOverSpaceContentCallback}/>
+                </div>
+                <TopOverSpace content={hiddableContent} />
+            </div>
+            <div className={"flex flex-row gap-1 h-full w-full"}>
+                <div className={"flex flex-col h-full gap-1"}>
                     <CharacterCard char={characterData} />
-                    <div className={"flex flex-col h-full gap-1"}>
-                        <FullEquipCard character={characterData} rule={rule}/>
-                        <div className="grid grid-cols-3 h-full gap-1">
-                            <div className="flex flex-col gap-1 max-h-full">
-                                <StatCard character={characterData} statbag={statBag}/>
-                                {anomalyCards}
-                            </div>
-                            <div className="flex flex-col gap-1">
-                                <EffectList char={characterData} effects={characterData.staticEffects} type={EEffectListType.STATIC} cb={effectCb}/>
-                            </div>
-                            <div className="flex flex-col gap-1">
-                                <EffectList char={characterData} effects={characterData.dynamicEffects} type={EEffectListType.DYNAMIC} cb={effectCb}/>
-                                <EffectCardExplorer allCards={effectCards} addToCharacterCb={addToCharacterCb} />
-                            </div>
+                </div>
+                <div className={"flex flex-col h-full w-full gap-1"}>
+                    <FullEquipCard character={characterData} rule={rule}/>
+                    <div className="flex flex-row flex-wrap h-full w-full gap-1">
+                        <div className="flex flex-col gap-1 max-h-full max-w-[500px] grow">
+                            <StatCard character={characterData} statbag={statBag}/>
+                            {anomalyCards}
+                        </div>
+                        <div className="flex flex-col gap-1 max-h-full max-w-[500px] grow">
+                            <EffectList char={characterData} effects={characterData.staticEffects} type={EEffectListType.STATIC} cb={effectCb}/>
+                        </div>
+                        <div className="flex flex-col gap-1 max-h-full">
+                            <EffectList char={characterData} effects={characterData.dynamicEffects} type={EEffectListType.DYNAMIC} cb={effectCb}/>
+                            <EffectCardExplorer allCards={effectCards} addToCharacterCb={addToCharacterCb} />
                         </div>
                     </div>
-                    <div className="flex flex-col">
-                        {/* to be changed to a overlapping toolbar soon^tm */}
-                        <RuleCard rule={rule} ruleSetterCallback={setRuleCallback} saveRuleCallback={saveRuleCallback}/>
-                    </div>
-
+                </div>
             </div>
         </div>
     </ConfigContext.Provider>

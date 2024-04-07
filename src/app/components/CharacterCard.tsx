@@ -1,8 +1,8 @@
 import { useContext, useState } from "react";
 import { ConfigContext } from "./ConfigContext";
-import { Card } from "./Card";
 import { ICharacterData } from "@/server/gamedata/ICharacterData";
 import { ImgApi } from "./ImgApi";
+import Card, { ECardSize } from "./Card";
 
 export default function CharacterCard({char} : {char: ICharacterData}) {
     const {colorDirector} = useContext(ConfigContext)
@@ -67,6 +67,6 @@ export default function CharacterCard({char} : {char: ICharacterData}) {
 
 </div>
     return (
-        <Card c={content} />
+        <Card content={content} minw={ECardSize.LARGE} />
     )
 }

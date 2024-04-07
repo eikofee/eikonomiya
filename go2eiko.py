@@ -428,11 +428,12 @@ if __name__ == "__main__":
     METHOD = kwargs["method"]
 
     # Logging to GitHub's API
-    dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
-    load_dotenv(dotenv_path)
-    username = os.environ.get('GITHUB_USERNAME')
-    token = os.environ.get('GITHUB_TOKEN')
-    AUTH = (username, token)
+    if METHOD == "api":
+        dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+        load_dotenv(dotenv_path)
+        username = os.environ.get('GITHUB_USERNAME')
+        token = os.environ.get('GITHUB_TOKEN')
+        AUTH = (username, token)
 
     # Run the main function
     main(**kwargs)

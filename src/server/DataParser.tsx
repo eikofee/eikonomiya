@@ -1,4 +1,4 @@
-import { IArtefact } from "./gamedata/IArtefact";
+import { IArtifact } from "./gamedata/IArtifact";
 import { ICharacterData } from "./gamedata/ICharacterData";
 import { IEffect } from "./gamedata/IEffect";
 import { IEffectImplication } from "./gamedata/IEffectImplication";
@@ -8,7 +8,7 @@ import { IStatRatio } from "./gamedata/IStatRatio";
 import { IStatTuple } from "./gamedata/IStatTuple";
 import { ISubStat } from "./gamedata/ISubStat";
 import { StatBag } from "./gamedata/StatBag";
-import { stringToEArtefact } from "./gamedata/enums/EArtefact";
+import { stringToEArtifact } from "./gamedata/enums/EArtifact";
 import { stringToETarget } from "./gamedata/enums/ETarget";
 import { stringToEEffectType, EEffectType } from "./gamedata/enums/EEffectType";
 import { stringToEElement } from "./gamedata/enums/EElement";
@@ -279,7 +279,7 @@ export function parseEffect(data: any[], defaultName: string, defaultIcon: strin
         const effect : IEffect = {
             name: effectName,
             source: effectSource,
-            source2: effectSource2,
+            // source2: effectSource2,
             tag: effectTag,
             keywords: keywords,
             icon: defaultIcon,
@@ -367,7 +367,7 @@ export function parseCharacterData(json: any): ICharacterData {
         const effect: IEffect = {
             name: item["name"],
             source: item["source"],
-            source2: item["source2"],
+            // source2: item["source2"],
             icon: item["icon"],
             text: item["text"],
             keywords: item["keywords"],
@@ -385,9 +385,9 @@ export function parseCharacterData(json: any): ICharacterData {
         staticEffects.push(effect)
     }
 
-    let artefacts : IArtefact[] = []
-    for (let i = 0; i < json["artefacts"].length; ++i) {
-        const a = json["artefacts"][i]
+    let artifacts : IArtifact[] = []
+    for (let i = 0; i < json["artifacts"].length; ++i) {
+        const a = json["artifacts"][i]
         let subs : ISubStat[] = []
         for (let j = 0; j < a["subStats"].length; ++j) {
             const s = a["subStats"][j]
@@ -398,8 +398,8 @@ export function parseCharacterData(json: any): ICharacterData {
             })
         }
 
-        artefacts.push({
-            type: stringToEArtefact(a["type"]),
+        artifacts.push({
+            type: stringToEArtifact(a["type"]),
             name: a["name"],
             set: a["set"],
             level: a["level"],
@@ -494,7 +494,7 @@ export function parseCharacterData(json: any): ICharacterData {
             },
             refinement: json["weapon"]["refinement"]
         },
-        artefacts: artefacts,
+        artifacts: artifacts,
         totalStats: totalStats.toIStatBag(),
         lastUpdated: json["lastUpdated"],
         anormalStats: anormalStats.toIStatBag(),

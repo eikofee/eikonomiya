@@ -96,7 +96,7 @@ export default function RuleCard({rule, setRuleCallback, saveRuleCallback, popup
             <div className="px-1 font-semibold cursor-pointer h-full" onClick={toggleHiddableContent}>
                 <div className={"flex flex-row gap-2 items-center h-full px-2 rounded-md "}>
                     {buttonIcon}
-                    Artefact Rating Rule
+                    Artifact Rating Rule
                 </div>
             </div>
 

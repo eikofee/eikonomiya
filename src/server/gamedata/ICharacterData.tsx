@@ -1,4 +1,4 @@
-import { IArtefact, copyArtefact } from "./IArtefact"
+import { IArtifact, copyArtifact } from "./IArtifact"
 import { IWeapon } from "./IWeapon"
 import { IEffect, copyEffect } from "./IEffect"
 import { StatBag } from "./StatBag"
@@ -28,7 +28,7 @@ export interface ICharacterData {
 
     commonData: ICharacterCommonData
     weapon: IWeapon
-    artefacts: IArtefact[]
+    artifacts: IArtifact[]
 
     totalStats: IStatBag
     lastUpdated: number
@@ -112,7 +112,7 @@ export function buildDefaultICharacterData() {
             },
             ascensionLevel: 0
         },
-        artefacts: [],
+        artifacts: [],
         totalStats: {
             names: [],
             values: []
@@ -202,9 +202,9 @@ export function copyCharacterData(ref: ICharacterData) : ICharacterData{
         })
     }
 
-    const artefacts = []
-    for (let i = 0; i < ref.artefacts.length; ++i) {
-        artefacts.push(copyArtefact(ref.artefacts[i]))
+    const artifacts = []
+    for (let i = 0; i < ref.artifacts.length; ++i) {
+        artifacts.push(copyArtifact(ref.artifacts[i]))
     }
 
     const staticEffects = []
@@ -250,7 +250,7 @@ export function copyCharacterData(ref: ICharacterData) : ICharacterData{
             rarity: ref.weapon.rarity,
             ascensionLevel: ref.weapon.ascensionLevel
         },
-        artefacts: artefacts,
+        artifacts: artifacts,
         totalStats: totalStats.toIStatBag(),
         lastUpdated: ref.lastUpdated,
         anormalStats: anomalies.toIStatBag(),

@@ -10,8 +10,8 @@ import {promises as fsPromises} from 'fs';
 import * as yaml from 'yaml';
 
 
-export async function apiLogicLoadEffectData(category: string, artefactSetName: string) : Promise<IApiResult<IApiDataEffect>> {
-    let subPath = artefactSetName.replaceAll("_", "/")
+export async function apiLogicLoadEffectData(category: string, artifactSetName: string) : Promise<IApiResult<IApiDataEffect>> {
+    let subPath = artifactSetName.replaceAll("_", "/")
     const res : IApiResult<IApiDataEffect> = {success: false}
     const p = await buildPathToDataFolder("gamedata", category, subPath, ".yml")
     if (p.status) {

@@ -1,10 +1,10 @@
 import { IStatTuple } from "../IStatTuple";
 import { ISubStat } from "../ISubStat";
-import { EArtefact } from "../enums/EArtefact";
+import { EArtifact } from "../enums/EArtifact";
 import { ERarity } from "../enums/ERarity";
 
-export interface IEnkaArtefact {
-    type: EArtefact;
+export interface IEnkaArtifact {
+    type: EArtifact;
     name: string;
     id: string;
     set: string;

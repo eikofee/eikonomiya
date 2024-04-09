@@ -62,17 +62,17 @@ While Eikonomiya aims to do a bit of this and that from other tools, the main pu
 Eikonomiya is heavily inspired by the functionalities offered by Genshin Optimizer and Schale.gg.
 
 ## Misc
-### Artefact rating rule
+### Artifact rating rule
 Each possible substat is being given an importance value.
-The strength of each roll is then computed on the artefact.
-For example, let's say an artefact has a Crit Rate% substat of 10.5%.
+The strength of each roll is then computed on the artifact.
+For example, let's say an artifact has a Crit Rate% substat of 10.5%.
 A Crit Rate% roll can go up to 3.9%, so the strength of this substat is 10.5/3.9=~2.69.
 The strength of each substat is then multiplied by their importance value and summed.
-This sum is then divided by the maximum value the artefact could get, to obtain its score in the form of a percentage.
+This sum is then divided by the maximum value the artifact could get, to obtain its score in the form of a percentage.
 
 The maximum value is the sum of the four highest importance values (if the higher stat is already on the main stat, then the next higher one is). However, the highest importance value from these four values is multiplied by 6 to simulate a perfectly rolled substat at levels +4,+8,+12,+16 and +20.
-This is the best possible value to be obtained on that artefact, and it's almost impossible to get it.
-From my tests and feels in-game, a score of 65% is generally already a good enough artefact.
+This is the best possible value to be obtained on that artifact, and it's almost impossible to get it.
+From my tests and feels in-game, a score of 65% is generally already a good enough artifact.
 
 ### Additional data
 Other in-game values not given by Enka.network are located in the [eikonomiya-data](https://github.com/eikofee/eikonomiya-data) repo.

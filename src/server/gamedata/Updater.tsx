@@ -4,7 +4,7 @@ import { ICharacterData } from "./ICharacterData"
 import { IPlayerInfo, copyIPlayerInfoWithoutCharacters, readIPlayerInfoWithoutCharacters } from "./IPlayerInfo"
 import * as yaml from 'yaml';
 import { IWeapon } from "./IWeapon";
-import { IArtefact } from "./IArtefact";
+import { IArtifact } from "./IArtifact";
 import { StatBag } from "./StatBag";
 import { IEffect } from "./IEffect";
 import { ETarget } from "./enums/ETarget";
@@ -74,7 +74,7 @@ export class Updater {
             return s.toLowerCase().replaceAll(" ", "").replaceAll("'", "")
         }
 
-    private buildBaseStats(characterBase : ICharacterCommonData, weapon: IWeapon, artefacts: IArtefact[], ascensionLevel: number) {
+    private buildBaseStats(characterBase : ICharacterCommonData, weapon: IWeapon, artifacts: IArtifact[], ascensionLevel: number) {
         let sb = new StatBag()
         sb.addStat({name: EStat.ER_P, value: 1})
         sb.addStat({name: EStat.CR_P, value: 0.05})
@@ -83,8 +83,8 @@ export class Updater {
             sb.addStat({name: weapon.subStat.name, value: weapon.subStat.value})
         }
 
-        for (let i = 0; i < artefacts.length; ++i) {
-            let a = artefacts[i]
+        for (let i = 0; i < artifacts.length; ++i) {
+            let a = artifacts[i]
             sb.addStat({name: a.mainStat.name, value: a.mainStat.value})
             for (let j = 0; j < a.subStats.length; ++j) {
                 sb.addStat({name: a.subStats[j].name, value: a.subStats[j].value})
@@ -418,7 +418,7 @@ export class Updater {
         return res;
     }
 
-    private async getArtefactEffects(arte : IArtefact[]): Promise<IEffect[]> {
+    private async getArtifactEffects(arte : IArtifact[]): Promise<IEffect[]> {
         const equipSets : Record<string, number> = {}
         const setNames = []
         const iconNames = []
@@ -438,9 +438,9 @@ export class Updater {
         let res : IEffect[] = []
         for (let i = 0; i < setNames.length; ++i) {
             const set = setNames[i]
-            const artefactSetData = await apiLogicLoadEffectData("artifacts", this.cleanNameForPath(set))
-            if (artefactSetData.success){
-                const effectsData = artefactSetData.content!.cards
+            const artifactSetData = await apiLogicLoadEffectData("artifacts", this.cleanNameForPath(set))
+            if (artifactSetData.success){
+                const effectsData = artifactSetData.content!.cards
                 const effects = this.parseEffect(effectsData, set, iconNames[i], 0)
                 for (let j = 0; j < effects.length; ++j) {
                     if ((effects[j].tag.includes("2pc") && equipSets[set] >= 2) ||
@@ -590,9 +590,9 @@ export class Updater {
                 }
 
                 let artes = []
-                for (let j = 0; j < c.artefacts.length; ++j) {
-                    const arte = c.artefacts[j]
-                    const a : IArtefact = {
+                for (let j = 0; j < c.artifacts.length; ++j) {
+                    const arte = c.artifacts[j]
+                    const a : IArtifact = {
                         type: arte.type,
                         name: this.enkaTranslator.translate(arte.name),
                         set: arte.set,
@@ -609,10 +609,10 @@ export class Updater {
                 }
 
                 let currentStats = this.buildBaseStats(common, weapon, artes, c.ascensionLevel)
-                const artefactEffects = await this.getArtefactEffects(artes)
+                const artifactEffects = await this.getArtifactEffects(artes)
                 const weaponEffects = await this.getWeaponEffects(weapon)
                 const inherentEffect = await this.getCharacterEffects(common)
-                const currentEffects = artefactEffects.concat(weaponEffects, inherentEffect)
+                const currentEffects = artifactEffects.concat(weaponEffects, inherentEffect)
 
 
                 for (let j = 0; j < currentEffects.length; ++j) {
@@ -692,7 +692,7 @@ export class Updater {
                     },
                     commonData: common,
                     weapon: weapon,
-                    artefacts: artes,
+                    artifacts: artes,
                     totalStats: currentStats.toIStatBag(),
                     dynamicEffects: [],
                     lastUpdated: Date.now(),

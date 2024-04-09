@@ -10,7 +10,7 @@ import { EStat, stringToEStat } from "./enums/EStat"
 function buildBaseStats(character: ICharacterData, additionalStats: IStatBag) {
     const characterBase = character.commonData
     const weapon = character.weapon
-    const artefacts = character.artefacts
+    const artifacts = character.artifacts
     const ascensionLevel = character.ascensionLevel
     let sb = new StatBag()
     sb.addStat({name: EStat.ER_P, value: 1})
@@ -25,8 +25,8 @@ function buildBaseStats(character: ICharacterData, additionalStats: IStatBag) {
         as.addStat({name: stringToEStat(additionalStats.names[i]), value: additionalStats.values[i]})
     }
 
-    for (let i = 0; i < artefacts.length; ++i) {
-        let a = artefacts[i]
+    for (let i = 0; i < artifacts.length; ++i) {
+        let a = artifacts[i]
         sb.addStat({name: a.mainStat.name, value: a.mainStat.value})
         for (let j = 0; j < a.subStats.length; ++j) {
             sb.addStat({name: a.subStats[j].name, value: a.subStats[j].value})

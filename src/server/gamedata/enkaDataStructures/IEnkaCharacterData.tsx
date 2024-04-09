@@ -1,5 +1,5 @@
 import { StatBag } from "../StatBag";
-import { IEnkaArtefact } from "./IEnkaArtefact";
+import { IEnkaArtifact } from "./IEnkaArtifact";
 import { IEnkaCharacterCommonData } from "./IEnkaCharacterCommonData";
 import { IEnkaSkill } from "./IEnkaSkill";
 import { IEnkaWeapon } from "./IEnkaWeapon";
@@ -12,7 +12,7 @@ export interface IEnkaCharacterData {
     finalStats: StatBag,
     baseStats: StatBag,
     skills: IEnkaSkill[],
-    artefacts: IEnkaArtefact[],
+    artifacts: IEnkaArtifact[],
     weapon: IEnkaWeapon,
     constellation: number,
     friendship: number

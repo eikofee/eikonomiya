@@ -5,13 +5,13 @@ import { ICharacterRule } from "../interfaces/ICharacterRule";
 import Icon from "./Icon";
 import Tooltip from "./Tooltip";
 import { ConfigContext } from "./ConfigContext";
-import { IArtefact } from "@/server/gamedata/IArtefact";
+import { IArtifact } from "@/server/gamedata/IArtifact";
 import { EStat, eStatToReadable } from "@/server/gamedata/enums/EStat";
 import { IStatTuple } from "@/server/gamedata/IStatTuple";
 import { ImgApi } from "./ImgApi";
 import Card, { ECardSize } from "./Card";
 
-export default function ArtefactCard({equip, rule, sortedStats, scoreState} : {equip: IArtefact, rule: ICharacterRule, sortedStats: IStatTuple[], scoreState: (a: number) => void}) {
+export default function ArtifactCard({equip, rule, sortedStats, scoreState} : {equip: IArtifact, rule: ICharacterRule, sortedStats: IStatTuple[], scoreState: (a: number) => void}) {
 
 
 

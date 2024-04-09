@@ -1,7 +1,7 @@
 import { EnkaTranslator } from "./EnkaTranslator";
 import { ISubStat } from "./ISubStat";
 import { StatBag } from "./StatBag";
-import { IEnkaArtefact } from "./enkaDataStructures/IEnkaArtefact";
+import { IEnkaArtifact } from "./enkaDataStructures/IEnkaArtifact";
 import { IEnkaCharacterCommonData } from "./enkaDataStructures/IEnkaCharacterCommonData";
 import { IEnkaCharacterData } from "./enkaDataStructures/IEnkaCharacterData";
 import { IEnkaCharacterShowcaseEntry, IEnkaPlayerInfo } from "./enkaDataStructures/IEnkaPlayerInfo";
@@ -25,7 +25,7 @@ export class EnkaBridge {
         this.headers = new Headers({"User-Agent":"eikonomiya-docker/".concat(process.env.EIKONOMIYA_VERSION!)})
     }
 
-    private transformArtefactStatValue(name: string, value: number) {
+    private transformArtifactStatValue(name: string, value: number) {
         let statMultiplier = 1
         switch (name) {
             case "FIGHT_PROP_HP": statMultiplier = 1; break;
@@ -96,7 +96,7 @@ export class EnkaBridge {
             skills.push(s)
         }
 
-        let artefacts: IEnkaArtefact[] = []
+        let artifacts: IEnkaArtifact[] = []
         let weapon = {}
         for (let i = 0; i < data["equipList"].length; ++i) {
             const e = data["equipList"][i]
@@ -107,8 +107,8 @@ export class EnkaBridge {
 
                     const nbSubstats = e["flat"]["reliquarySubstats"].length
                     for (let i = 0; i < nbSubstats; ++i) {
-                            const itemName = this.translator.translateArtefactStatName(e["flat"]["reliquarySubstats"][i]["appendPropId"])
-                            const itemValue = this.transformArtefactStatValue(e["flat"]["reliquarySubstats"][i]["appendPropId"], e["flat"]["reliquarySubstats"][i]["statValue"])
+                            const itemName = this.translator.translateArtifactStatName(e["flat"]["reliquarySubstats"][i]["appendPropId"])
+                            const itemValue = this.transformArtifactStatValue(e["flat"]["reliquarySubstats"][i]["appendPropId"], e["flat"]["reliquarySubstats"][i]["statValue"])
                         let factor = 0
                         switch (itemName) {
                             case EStat.HP: factor = 298.75; break;
@@ -128,13 +128,13 @@ export class EnkaBridge {
                     }
                 }
 
-                let res: IEnkaArtefact = {
+                let res: IEnkaArtifact = {
                     id: e["flat"]["icon"],
                     set: this.translator.translate(e["flat"]["setNameTextMapHash"]),
                     type: this.translator.translateEquipType(e["flat"]["equipType"]),
                     mainStat: {
-                        name: this.translator.translateArtefactStatName(e["flat"]["reliquaryMainstat"]["mainPropId"]),
-                        value: this.transformArtefactStatValue(e["flat"]["reliquaryMainstat"]["mainPropId"], e["flat"]["reliquaryMainstat"]["statValue"])
+                        name: this.translator.translateArtifactStatName(e["flat"]["reliquaryMainstat"]["mainPropId"]),
+                        value: this.transformArtifactStatValue(e["flat"]["reliquaryMainstat"]["mainPropId"], e["flat"]["reliquaryMainstat"]["statValue"])
                     },
                     subStats: subStats,
                     name: this.translator.translate(e["flat"]["nameTextMapHash"]),
@@ -142,7 +142,7 @@ export class EnkaBridge {
                     rarity: ERarity.V //TODO
                 }
 
-                artefacts.push(res)
+                artifacts.push(res)
             } else {
                 let res: IEnkaWeapon = {
                     name: this.translator.translate(e["flat"]["nameTextMapHash"]),
@@ -151,7 +151,7 @@ export class EnkaBridge {
 
                     type: characterCommonData.weapon, //TODO
                     mainStat: {
-                        name: this.translator.translateArtefactStatName(e["flat"]["weaponStats"][0]["appendPropId"]),
+                        name: this.translator.translateArtifactStatName(e["flat"]["weaponStats"][0]["appendPropId"]),
                         value: e["flat"]["weaponStats"][0]["statValue"]
                     },
                     subStat: undefined,
@@ -162,8 +162,8 @@ export class EnkaBridge {
                 if (e["weapon"]["affixMap"] != undefined) {
                     res.refinement = e["weapon"]["affixMap"][Object.keys(e["weapon"]["affixMap"])[0]] + 1
                     res.subStat = {
-                        name: this.translator.translateArtefactStatName(e["flat"]["weaponStats"][1]["appendPropId"]),
-                        value: this.transformArtefactStatValue(e["flat"]["weaponStats"][1]["appendPropId"], e["flat"]["weaponStats"][1]["statValue"])
+                        name: this.translator.translateArtifactStatName(e["flat"]["weaponStats"][1]["appendPropId"]),
+                        value: this.transformArtifactStatValue(e["flat"]["weaponStats"][1]["appendPropId"], e["flat"]["weaponStats"][1]["statValue"])
                     }
                 }
 
@@ -183,7 +183,7 @@ export class EnkaBridge {
             finalStats: sb,
 
             skills: skills,
-            artefacts: artefacts,
+            artifacts: artifacts,
             weapon: weapon as IEnkaWeapon,
 
             friendship: data["fetterInfo"]["expLevel"],

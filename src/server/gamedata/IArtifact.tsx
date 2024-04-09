@@ -1,10 +1,10 @@
 import { IStatTuple } from "./IStatTuple";
 import { ISubStat } from "./ISubStat";
-import { EArtefact } from "./enums/EArtefact";
+import { EArtifact } from "./enums/EArtifact";
 import { ERarity } from "./enums/ERarity";
 
-export interface IArtefact {
-    type: EArtefact;
+export interface IArtifact {
+    type: EArtifact;
     name: string;
     set: string;
     level: number;
@@ -16,7 +16,7 @@ export interface IArtefact {
     }
 }
 
-export function copyArtefact(x: IArtefact) : IArtefact {
+export function copyArtifact(x: IArtifact) : IArtifact {
     let subStats: ISubStat[] = []
     for (let i = 0; i < x.subStats.length; ++i) {
         subStats.push({
@@ -26,7 +26,7 @@ export function copyArtefact(x: IArtefact) : IArtefact {
         })
     }
     
-    const res : IArtefact = {
+    const res : IArtifact = {
         type: x.type,
         name: x.name,
         set: x.set,

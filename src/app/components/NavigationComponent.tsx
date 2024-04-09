@@ -5,7 +5,7 @@ import CharacterSmallCard from "./CharacterSmallCard";
 import { ImgApi } from "./ImgApi";
 import Card from "./Card";
 
-export default function NavigationComponent({currentCharacter, characterList, uid, popupId, setPopupId}:{currentCharacter: ICharacterData, characterList: ICharacterData[], uid: string, shouldHide: boolean, popupId: number, setPopupId: (x: number) => void}) {
+export default function NavigationComponent({currentCharacter, characterList, uid, popupId, setPopupId}:{currentCharacter: ICharacterData, characterList: ICharacterData[], uid: string, popupId: number, setPopupId: (x: number) => void}) {
 
 
 

@@ -49,11 +49,15 @@ export default function Card({
         minw,
         maxw,
         grow,
+        hfull,
+        wfull
     } : {
         content: React.ReactNode,
         minw?: ECardSize,
         maxw?: ECardSize,
-        grow?: boolean
+        grow?: boolean,
+        hfull?: boolean,
+        wfull?: boolean
     }) {
     const {colorDirector} = useContext(ConfigContext)
     const baseName = `
@@ -67,8 +71,10 @@ export default function Card({
     const growBase = grow ? "grow" : ""
     const minSize = minw != undefined ? eCardSizeToTailwindSize(minw, true) : ""
     const maxSize = maxw != undefined ? eCardSizeToTailwindSize(maxw, false) : ""
+    const hfullBase = hfull ? "h-full" : ""
+    const wfullBase = wfull ? "w-full" : ""
 
-    const finaleClassname = [baseName, colorBase, growBase, minSize, maxSize].join(" ")
+    const finaleClassname = [baseName, colorBase, growBase, minSize, maxSize, hfullBase, wfullBase].join(" ")
     return (
         <div className={finaleClassname}>{content}</div>
     )

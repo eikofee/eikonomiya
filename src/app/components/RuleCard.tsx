@@ -4,63 +4,49 @@ import { ICharacterRule } from "../interfaces/ICharacterRule";
 import Card from "./Card";
 import Icon from "./Icon";
 import InteractiveGaugeComponent from "./InteractiveGaugeComponent";
-import { EStat, eStatToReadable } from "@/server/gamedata/enums/EStat";
-import { THiddableContentCb } from "./TopOverSpace";
-import { ColorDirector } from "../classes/ColorDirector";
+import { EStat, eStatToReadable, stringToEStat } from "@/server/gamedata/enums/EStat";
 import { ConfigContext } from "./ConfigContext";
 import { useContext, useState } from "react";
 import { IStatTuple } from "@/server/gamedata/IStatTuple";
 
 
 
-export default function RuleCard({rule, ruleSetterCallback, saveRuleCallback, setContentCallback}: {rule: ICharacterRule, ruleSetterCallback: (_x : ICharacterRule) => void, saveRuleCallback: (_x : ICharacterRule) => void, setContentCallback: THiddableContentCb}) {
+export default function RuleCard({rule, setRuleCallback, saveRuleCallback, popupId, setPopupId}: {rule: ICharacterRule, setRuleCallback: (_x : ICharacterRule) => void, saveRuleCallback: () => void, popupId: number, setPopupId: (x: number) => void}) {
+    const thisId = 2
     let ls = []
     const {colorDirector} = useContext(ConfigContext)
     const badStats = [
         EStat.HP,EStat.ATK,EStat.DEF
     ]
 
-    const [rrule, setRrule] = useState(rule)
-    let saveRule = () => {
-        console.log("saving")
-        console.log(rrule.stats.map(x => "stat=".concat(x.name, "value=", x.value.toString())))
-        saveRuleCallback(rrule)
-    }
+    const [ruleValues, setRuleValues] = useState(rule.stats.map(x => x.value))
 
-
-    function setRuleCallbackLocal(x: number, id: number) {
-        console.log("called with")
-        console.log(x.toString().concat(", id=", id.toString()))
-        let newValue = x
+    function updateRuleFromGauge(e: any) {
+        let value = parseInt(e.target.value)
+        let label = parseInt(e.target.name)
+        const newValues = [...ruleValues]
+        newValues[label] = value
+        setRuleValues(newValues)
         let stats : IStatTuple[] = []
-        for (let i = 0; i < rrule.stats.length; ++i) {
-            if (i == id) {
+        for (let i = 0; i < rule.stats.length; ++i) {
                 stats.push({
-                    name: rrule.stats[i].name,
-                    value: newValue,
+                    name: rule.stats[i].name,
+                    value: newValues[i],
                 })
-            } else {
-                stats.push({
-                    name: rrule.stats[i].name,
-                    value: rrule.stats[i].value,
-                })
-            }
         }
         let newRule : ICharacterRule = {
-            character: rrule.character,
-            ruleName: rrule.ruleName,
+            character: rule.character,
+            ruleName: rule.ruleName,
             stats: stats
         }
-
-        setRrule(newRule)
-        ruleSetterCallback(newRule)
-        // saveRuleCallback(x)
+        
+        setRuleCallback(newRule)
     }
     
-    for (let i = 0; i < rrule.stats.length; ++i) {
-        let label = rrule.stats[i].name
+    for (let i = 0; i < rule.stats.length; ++i) {
+        let label = rule.stats[i].name
             let classname = "w-full flex flex-row justify-between items"
-            if (i == rrule.stats.length - 1) {
+            if (i == rule.stats.length - 1) {
                 classname += " rounded-md"
             }
             
@@ -71,28 +57,15 @@ export default function RuleCard({rule, ruleSetterCallback, saveRuleCallback, se
                 <div className={"mr-1 h-4 w-4"}>
                     <Icon n={label} />
                 </div><p>
-                    {eStatToReadable(label)}
+                    {eStatToReadable(label)} : {ruleValues[i]}
                 </p>
             </div>
             <div className="items-center">
-                {<InteractiveGaugeComponent label={label} rule={rrule} gaugeid={i} ruleSetterCallback={setRuleCallbackLocal} />}
+                {<InteractiveGaugeComponent type={2} label={i} value={ruleValues[i]} ruleSetterCallback={updateRuleFromGauge} />}
             </div>
         </li>)
     }
 
-
-
-    console.log("base log")
-    console.log(rrule.stats.map(x => "stat=".concat(x.name, "value=", x.value.toString())))
-
-    let hiddableContent = <div className=" w-full flex flex-col rounded-md border backdrop-blur-xl bg-white/25 p-2 z-10 border-slate-400">
-            <div className={"w-full items-center justify-around h-full px-2 rounded-md cursor-pointer ".concat(colorDirector.bgAccent(5))} onClick={saveRule}>
-                Save Rule
-            </div>
-                                <ul>
-                                    {ls}
-                                </ul>
-                        </div>
     const buttonIcon = <div>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="w-8 h-8 ">
             <path d="M2 1C1.44772 1 1 1.44772 1 2V21C1 22.1046 1.89543 23 3 23H22C22.5523 23 23 22.5523 23 22C23 21.4477 22.5523 21 22 21L4 21C3.44772 21 3 20.5523 3 20V2C3 1.44772 2.55228 1 2 1Z" fill="#0F0F0F"/>
@@ -103,17 +76,43 @@ export default function RuleCard({rule, ruleSetterCallback, saveRuleCallback, se
         </svg>
     </div>
 
+    const [textSaveButton, setTextSaveButton] = useState("Save Rule")
+
     let toggleHiddableContent = () => {
-            setContentCallback(hiddableContent, 2, true)
+        if (popupId == thisId) {
+            setTextSaveButton("Save Rule")
+        }
+
+        setPopupId(popupId == thisId ? 0 : thisId)
+    }
+
+    let saveRuleCb = () => {
+        saveRuleCallback()
+        // TODO: set proper callback answer (200 or else)
+        setTextSaveButton("Rule Saved")
     }
     
-    let content = <div className="h-full">
+    let content =
             <div className="px-1 font-semibold cursor-pointer h-full" onClick={toggleHiddableContent}>
                 <div className={"flex flex-row gap-2 items-center h-full px-2 rounded-md "}>
                     {buttonIcon}
                     Artefact Rating Rule
                 </div>
             </div>
-    </div>;
-    return <Card content={content} />
+
+    if (popupId != thisId) {
+        return <Card content={content} hfull={true} />
+    } else {
+        return <div className="relative h-full">
+                    <Card content={content} hfull={true} />
+                    <div className=" w-96 -translate-x-1/4 translate-y-1 absolute flex flex-col rounded-md border backdrop-blur-xl bg-white/25 p-2 z-10 border-slate-400">
+                    <ul>
+                        {ls}
+                    </ul>
+                        <div className={"w-full text-center justify-around h-full px-2 rounded-md cursor-pointer ".concat(colorDirector.bgAccent(5))} onClick={saveRuleCb}>
+                            {textSaveButton}
+                        </div>
+            </div>
+        </div>
+    }
 }

@@ -4,7 +4,6 @@ import { NextResponse } from 'next/server';
 
 export async function GET(request: Request, {params}: {params: {name: string}}) {
     const assetName = params.name
-    console.log(assetName)
     let content : any = {message: "Data folder not found."}
     if (assetName != undefined) {
         let subPath = assetName.replaceAll("_", "/")

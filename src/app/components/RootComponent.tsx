@@ -18,7 +18,6 @@ import { IStatBag } from "@/server/gamedata/IStatBag";
 import EffectList, { EEffectListType } from "./EffectList";
 import EffectCardExplorer from "./EffectCardExplorer";
 import StatLineDraw from "./StatLineDrawer";
-import TopOverSpace, { IHiddableContent } from "./TopOverSpace";
 import Card from "./Card";
 
 
@@ -38,22 +37,17 @@ export default function RootComponent({data: characters, currentCharacterName: c
     let colorDirector = new ColorDirector(char.element)
     let config = new ConfigDirector(iconfig)
 
-    async function saveRuleCallback(x: ICharacterRule) {
-        console.log(rule)
-        let url = "/api/rules?mode=edit&characterName=".concat(x.character,"&uid=", uid)
-        for (let i = 0; i < x.stats.length; ++i) {
-            url = url.concat("&", x.stats[i].name, "=", x.stats[i].value.toString())
+    const [rule, setRule] = useState(defaultRule)
+
+    async function saveRuleCallback() {
+        let url = "/api/rules?mode=edit&characterName=".concat(rule.character,"&uid=", uid)
+        for (let i = 0; i < rule.stats.length; ++i) {
+            url = url.concat("&", rule.stats[i].name, "=", rule.stats[i].value.toString())
         }
 
         await fetch(url)
     }
 
-    const [rule, setRule] = useState(defaultRule)
-
-    function setRuleCallback(x: ICharacterRule) {
-        setRule(x)
-        // saveRuleCallback(x)
-    }
 
     const effectCb = (a: ICharacterData, b: IStatBag) => {
         let effectList = []
@@ -108,25 +102,8 @@ export default function RootComponent({data: characters, currentCharacterName: c
         setEffectCards(effectList)
     }
 
-    const defaultHiddableContent : IHiddableContent = {
-        state: false,
-        content: "",
-        currentToggleId: -1,
-        fit: false
-    }
-    const [hiddableContent, setHiddableContent] = useState(defaultHiddableContent)
 
-    function setTopOverSpaceContentCallback(x : React.ReactNode, toggleId: number, fit: boolean) {
-        const res : IHiddableContent = {
-            state : !(toggleId == hiddableContent.currentToggleId),
-            content : x,
-            currentToggleId: toggleId == hiddableContent.currentToggleId ? -1 : toggleId,
-            fit: fit
-
-        }
-
-        setHiddableContent(res)
-    }
+    const [popupId, setPopupId] = useState(0)
 
     const anomalyStats = []
     const anomalyCards = []
@@ -154,10 +131,10 @@ export default function RootComponent({data: characters, currentCharacterName: c
         <div className="flex flex-col p-1 gap-1 h-screen w-full">
             <div className="flex flex-col relative h-15">
                 <div className={"flex flex-row gap-1 h-full"}>
-                    <NavigationComponent currentCharacter={characterData} characterList={characters} uid={uid} setContentCallback={setTopOverSpaceContentCallback}/>
-                    <RuleCard rule={rule} ruleSetterCallback={setRuleCallback} saveRuleCallback={saveRuleCallback} setContentCallback={setTopOverSpaceContentCallback}/>
+                    <NavigationComponent currentCharacter={characterData} characterList={characters} uid={uid} popupId={popupId} setPopupId={setPopupId}/>
+                    <RuleCard rule={rule} setRuleCallback={setRule} saveRuleCallback={saveRuleCallback} popupId={popupId} setPopupId={setPopupId}/>
                 </div>
-                <TopOverSpace content={hiddableContent} />
+                {/* <TopOverSpace content={hiddableContent} /> */}
             </div>
             <div className={"flex flex-row gap-1 h-full w-full"}>
                 <div className={"flex flex-col h-full gap-1"}>

@@ -32,6 +32,9 @@ const config: Config = {
         'auto-fit-fr-very-large': 'repeat(auto-fit,minmax(600px,1fr))',
       },
 
+      maxWidth: {
+        'large': '400px'
+      }
     },
   },
   plugins: [],

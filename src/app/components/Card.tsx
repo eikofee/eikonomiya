@@ -22,7 +22,7 @@ function eCardSizeToTailwindSize(size : ECardSize, min : boolean) {
             case ECardSize.MEDIUM:
                 return "min-w-[280px]"
             case ECardSize.LARGE:
-                return "min-w-[300px]"
+                return "min-w-[400px]"
             case ECardSize.VERY_LARGE:
                 return "min-w-[500px]"
         }
@@ -37,7 +37,7 @@ function eCardSizeToTailwindSize(size : ECardSize, min : boolean) {
             case ECardSize.MEDIUM:
                 return "max-w-[280px]"
             case ECardSize.LARGE:
-                return "max-w-[300px]"
+                return "max-w-[400px]"
             case ECardSize.VERY_LARGE:
                 return "max-w-[500px]"
         }

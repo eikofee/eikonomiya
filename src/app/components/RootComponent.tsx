@@ -166,14 +166,14 @@ export default function RootComponent({data: characters, currentCharacterName: c
                 <div className={"flex flex-col h-full w-full gap-1"}>
                     <FullEquipCard character={characterData} rule={rule}/>
                     <div className="flex flex-row flex-wrap h-full w-full gap-1">
-                        <div className="flex flex-col gap-1 max-h-full max-w-[500px] grow">
+                        <div className="flex flex-col gap-1 max-h-full max-w-large grow">
                             <StatCard character={characterData} statbag={statBag}/>
                             {anomalyCards}
                         </div>
-                        <div className="flex flex-col gap-1 max-h-full max-w-[500px] grow">
+                        <div className="flex flex-col gap-1 max-h-full max-w-large grow">
                             <EffectList char={characterData} effects={characterData.staticEffects} type={EEffectListType.STATIC} cb={effectCb}/>
                         </div>
-                        <div className="flex flex-col gap-1 max-h-full">
+                        <div className="flex flex-col gap-1 max-w-large max-h-full grow">
                             <EffectList char={characterData} effects={characterData.dynamicEffects} type={EEffectListType.DYNAMIC} cb={effectCb}/>
                             <EffectCardExplorer allCards={effectCards} addToCharacterCb={addToCharacterCb} />
                         </div>

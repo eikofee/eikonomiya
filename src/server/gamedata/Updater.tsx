@@ -71,7 +71,7 @@ export class Updater {
     }
 
     private cleanNameForPath(s: string) {
-            return s.toLowerCase().replaceAll(" ", "").replaceAll("'", "")
+            return s.toLowerCase().replaceAll(" ", "").replaceAll("'", "").replace("-","")
         }
 
     private buildBaseStats(characterBase : ICharacterCommonData, weapon: IWeapon, artifacts: IArtifact[], ascensionLevel: number) {

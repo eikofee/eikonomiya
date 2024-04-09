@@ -88,12 +88,12 @@ export default function ArtifactCard({equip, rule, sortedStats, scoreState} : {e
             }
 
             let rest = equip.subStats[i].rollValue - bar + 1;
-            rolls.push(<div className={"h-1 w-full col-span-1 flex flex-row ".concat(colorDirector.bgAccent(5))}>
+            rolls.push(<div className={"h-1 w-full col-span-1 flex flex-row ".concat(colorDirector.bgAccent(6))}>
                 <div className={"h-1 ".concat(colorDirector.bgAccent(3))} style={{width: (rest*100).toString().concat("%")}}/>
                 </div>)
 
             for (bar = bar + 1; bar <= 6; ++bar) {
-                rolls.push(<div className={"h-1 col-span-1 ".concat(colorDirector.bgAccent(5))} />)
+                rolls.push(<div className={"h-1 col-span-1 ".concat(colorDirector.bgAccent(6))} />)
             }
         }
 

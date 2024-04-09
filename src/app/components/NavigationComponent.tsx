@@ -35,7 +35,6 @@ export default function NavigationComponent({currentCharacter, characterList, ui
 
     const contentClassName = `
         grid
-        w-full
         grid-cols-auto-fit-fr-semi
         gap-2
         rounded-md

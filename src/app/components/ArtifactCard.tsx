@@ -10,6 +10,7 @@ import { EStat, eStatToReadable } from "@/server/gamedata/enums/EStat";
 import { IStatTuple } from "@/server/gamedata/IStatTuple";
 import { ImgApi } from "./ImgApi";
 import Card, { ECardSize } from "./Card";
+import { EAccentType } from "../classes/ColorDirector";
 
 export default function ArtifactCard({equip, rule, sortedStats, scoreState} : {equip: IArtifact, rule: ICharacterRule, sortedStats: IStatTuple[], scoreState: (a: number) => void}) {
 
@@ -84,16 +85,16 @@ export default function ArtifactCard({equip, rule, sortedStats, scoreState} : {e
         let bar = 0
         if (equip.subStats[i].rollValue > 0) {
             for (bar = 1; bar < equip.subStats[i].rollValue; ++bar) {
-                rolls.push(<div className={"h-1 col-span-1 ".concat(colorDirector.bgAccent(3))} />)
+                rolls.push(<div className={"h-1 col-span-1 ".concat(colorDirector.bgAccent(EAccentType.STRONG))} />)
             }
 
             let rest = equip.subStats[i].rollValue - bar + 1;
-            rolls.push(<div className={"h-1 w-full col-span-1 flex flex-row ".concat(colorDirector.bgAccent(6))}>
-                <div className={"h-1 ".concat(colorDirector.bgAccent(3))} style={{width: (rest*100).toString().concat("%")}}/>
+            rolls.push(<div className={"h-1 w-full col-span-1 flex flex-row ".concat(colorDirector.bgAccent(EAccentType.LIGHT))}>
+                <div className={"h-1 ".concat(colorDirector.bgAccent(EAccentType.STRONG))} style={{width: (rest*100).toString().concat("%")}}/>
                 </div>)
 
             for (bar = bar + 1; bar <= 6; ++bar) {
-                rolls.push(<div className={"h-1 col-span-1 ".concat(colorDirector.bgAccent(6))} />)
+                rolls.push(<div className={"h-1 col-span-1 ".concat(colorDirector.bgAccent(EAccentType.LIGHT))} />)
             }
         }
 

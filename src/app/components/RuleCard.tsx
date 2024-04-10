@@ -61,7 +61,7 @@ export default function RuleCard({rule, setRuleCallback, saveRuleCallback, popup
                 </p>
             </div>
             <div className="items-center">
-                {<InteractiveGaugeComponent type={2} label={i} value={ruleValues[i]} ruleSetterCallback={updateRuleFromGauge} />}
+                {<InteractiveGaugeComponent type={3} label={i} value={ruleValues[i]} ruleSetterCallback={updateRuleFromGauge} />}
             </div>
         </li>)
     }

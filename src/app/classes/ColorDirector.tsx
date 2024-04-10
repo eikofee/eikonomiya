@@ -1,5 +1,10 @@
 import { EElement } from "@/server/gamedata/enums/EElement"
 
+export enum EAccentType {
+    STRONG = 3,
+    LIGHT = 6
+}
+
 const bgHydro = [
     "bg-blue-50",
     "bg-blue-100",

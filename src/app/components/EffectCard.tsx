@@ -7,6 +7,7 @@ import StatLineDraw from "./StatLineDrawer";
 import Icon from "./Icon";
 import { ImgApi } from "./ImgApi";
 import Card, { ECardSize } from "./Card";
+import { EAccentType } from "../classes/ColorDirector";
 
 export function buildImgOrIconForEffect(e : IEffect) {
     e = addSpecialIcon(e)
@@ -43,7 +44,7 @@ export default function EffectCard({effect: effect, effectUpdateCallback: effect
                     </div>
                     <div className="pl-2 text-sm font-semibold place-self-center grow">{effect.name}</div>
                     {removable != undefined ? <button onClick={removable} className={"pr-2 text-sm text-right cursor-pointer ".concat(colorDirector.textAccent(3))}>Remove</button> : ""}
-                    {effect.tag != "" ? <div className={"text-right place-self-end self-center h-1/2 rounded-md text-xs mr-2 p-1 text-white ".concat(colorDirector.bgAccent(3))}>{effect.tag}</div> : ""}
+                    {effect.tag != "" ? <div className={"text-right place-self-end self-center h-1/2 rounded-md text-xs mr-2 p-1 text-white ".concat(colorDirector.bgAccent(EAccentType.STRONG))}>{effect.tag}</div> : ""}
                 </div>
     let title = effect.text == "" ? child : <Tooltip child={child} info={effect.text} />
 

@@ -6,6 +6,7 @@ import argparse
 from typing import Union
 import glob
 import shutil
+import stat
 
 
 # Constants
@@ -45,6 +46,17 @@ def sparse_checkout(path_to_checkout: str):
     os.chdir(current_path)
 
 
+def del_temp_folder():
+
+    # Set all files to writeable
+    files = glob.glob(os.path.join(TEMP_FOLDER, REPO, ".git", "**", "*"), recursive=True)
+    for file in files:
+        os.chmod(file, stat.S_IWRITE)
+
+    # Delete the folder
+    shutil.rmtree(TEMP_FOLDER, REPO)
+
+
 def intex_dot_ts2name_converter(index_dot_ts: str, old_filename: str) -> str:
     
     # Convert the name using the index.ts file
@@ -57,7 +69,7 @@ def intex_dot_ts2name_converter(index_dot_ts: str, old_filename: str) -> str:
             ext = re.search(pattern, line).group(3)
             if re.search(pattern, line).group(2) + "." + ext == old_filename:
                 break
-    
+
     # Convert the resulting name to match eikonomiya's convention
     d = {
         "constellation1": "c1",
@@ -163,8 +175,6 @@ def download_folder(
             with open(os.path.join(MASTER_OUTPUT_PATH, real_output_path, filename), 'wb') as f:
                 f.write(response.content)
             logging.info(f"Downloaded {filename}!")
-
-    
 
 
 def download_recursively(
@@ -363,8 +373,6 @@ def download_characters():
         output_path=output_path,
         name_converter=name_converter,
     )
-    
-    
 
 
 def download_weapons():
@@ -406,6 +414,9 @@ def main(**kwargs):
     if kwargs["weapons"]:
         download_weapons()
 
+    if METHOD == "checkout" and not kwargs["keep"]:
+       del_temp_folder()
+
 
 if __name__ == "__main__":
 
@@ -426,6 +437,7 @@ if __name__ == "__main__":
     parser.add_argument("--artifacts", "-a", action="store_true", help="Download the artifacts' assets")
     parser.add_argument("--force", "-f", action="store_true", help="Force the redownload of all the assets")
     parser.add_argument("--output", "-o", type=str, help="Path of the 'data' folder", default=DEFAULT_MASTER_OUTPUT_PATH)
+    parser.add_argument("--keep", "-k", action="store_true", help="If using 'checkout' method, keep the temp folder")
     kwargs = vars(parser.parse_args())
     MASTER_OUTPUT_PATH = kwargs["output"]
     TEMP_FOLDER = os.path.join(MASTER_OUTPUT_PATH, "temp")

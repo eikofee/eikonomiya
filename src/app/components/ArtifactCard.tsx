@@ -142,11 +142,13 @@ export default function ArtifactCard({equip, rule, sortedStats, scoreState} : {e
     }
 
     let scoreValue = score/div*100
+    let scaledScoreValue = score / (totalRolls/9*div)
     scoreState(scoreValue)
     let infoLine = [
         <p>Total Rolls : {totalRolls.toFixed(1)}/9</p>,
         <p>Potential (all): {(totalRolls/9*100).toFixed(1)}%</p>,
         <p>Potential (%): {(totalRollsOnlyPercent/9*100).toFixed(1)}%</p>,
+        <p>Scaled Score : {(scaledScoreValue * 100).toFixed(1)}%</p>,
         <p>Total Score : {score.toFixed(1)}/{div}</p>
     ]
     let scoreLine = <div className="w-full flex flex-row items-center align-baseline font-semibold">
@@ -158,9 +160,26 @@ export default function ArtifactCard({equip, rule, sortedStats, scoreState} : {e
         </div>
     </div>
 
+    let stars = []
+    let starCount = Math.floor(totalRollsOnlyPercent - 3)
+    for (let i = 1; i <= starCount; ++i) {
+        let scaledScoreIncr = (0.9 / starCount) * i
+        console.log(scaledScoreIncr)
+            stars.push(<div>
+                <Icon n="star" useTooltip={false} customColor={scaledScoreValue > scaledScoreIncr ? colorDirector.element : "none"}/>
+            </div>
+            )
+    }
+
     let content = <div className="flex flex-col">
         <div className="aspect-square grad-5star basis-1/5 flex items-center justify-center rounded-t-md">
+            <div className="relative">
+
             <ImgApi alt="" src={equip.assets.icon} className="max-w-full max-h-full"/>
+            <div className="absolute h-3 flex flex-row bottom-1 w-full justify-center">
+                {stars}
+            </div>
+            </div>
         </div>
         <div className="basis-4/5 px-1 py-2">
             <ul>

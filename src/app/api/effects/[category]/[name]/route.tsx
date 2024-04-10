@@ -42,14 +42,9 @@ export async function apiLogicLoadEffectData(category: string, artifactSetName: 
                     })
                 }
             } else if (ca["effects"] != undefined && !Array.isArray(ca["effects"])) {
-                console.log("we're here ! ")
-                console.log(a)
                 const keys = Object.keys(ca["effects"])
-                console.log(keys)
-                console.log(ca["effects"])
                 for (let j = 0; j < keys.length; ++j) {
                     const cee = ca["effects"][keys[j]]
-                    console.log(cee)
                     effPrecise[parseInt(keys[j])] = []
                     for (let jj = 0; jj < cee.length; ++jj) {
                         const ce = cee[jj]

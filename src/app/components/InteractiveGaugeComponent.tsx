@@ -48,7 +48,7 @@ export default function InteractiveGaugeComponent({type, label, value, ruleSette
 
         for (let i = 0; i < 7; ++i) {
             stars.push(
-                <div className="h-4 w-4" onClick={customCb(label.toString(), i.toString())}>
+                <div className="cursor-pointer h-4 w-4" onClick={customCb(label.toString(), i.toString())}>
                     <Icon n={i == 0 ? "cross" : "star"} useTooltip={false} customColor={colorDirector.element} customColorType={(value >= i && i > 0) || (value == i && i == 0) ? EIconColorType.ACTIVE : EIconColorType.INACTIVE}/>
                 </div>
         )

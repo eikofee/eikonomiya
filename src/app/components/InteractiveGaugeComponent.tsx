@@ -1,58 +1,63 @@
 import { useContext, useState } from "react"
-import { ICharacterRule } from "../interfaces/ICharacterRule"
 import { ConfigContext } from "./ConfigContext"
-import { EStat } from "@/server/gamedata/enums/EStat";
-import { IStatTuple } from "@/server/gamedata/IStatTuple";
+import Icon, { EIconColorType } from "./Icon"
+import { EAccentType } from "../classes/ColorDirector"
 
-export default function InteractiveGaugeComponent({label, rule, ruleSetterCallback}: {label: EStat, rule: ICharacterRule, ruleSetterCallback: (_x : ICharacterRule) => void}) {
+export default function InteractiveGaugeComponent({type, label, value, ruleSetterCallback}: {type: number, label: number, value: number, ruleSetterCallback: (e:any) => void}) {
     const {colorDirector} = useContext(ConfigContext)
-    let baseValue = 3;
-    let baseIndex = 0;
-    for (let i = 0; i < rule.stats.length; ++i){
-        if (rule.stats[i].name == label) {
-            baseValue = rule.stats[i].value
-            baseIndex = i
-        }
-    }
 
-    const [currentSliderValue, setCurrentSliderValue] = useState(baseValue)
-    const handleSliderChange = (n:number) => (e: any) => {
-        let newValue = n
-        setCurrentSliderValue(newValue)
-        let stats : IStatTuple[] = []
-        for (let i = 0; i < rule.stats.length; ++i) {
-            if (i == baseIndex) {
-                stats.push({
-                    name: label,
-                    value: newValue,
-                })
-            } else {
-                stats.push(rule.stats[i])
-            }
-        }
-        let newRule : ICharacterRule = {
-            character: rule.character,
-            ruleName: rule.ruleName,
-            stats: stats
-        }
+    const sliderClassName = "".concat(
+        "w-full appearance-none bg-transparent [&::-webkit-slider-thumb]:opacity-0 [&::-webkit-slider-thumb]:bg-none ",
+    )
 
-        ruleSetterCallback(newRule)
-    }
 
-    let buttons = []
-    for (let j = 0; j < 7; ++j) {
-        let bClassName = "h-3 w-3 rounded-full"
-        if (j <= currentSliderValue) {
-            bClassName = bClassName.concat(" ", colorDirector.bgAccent(3))
-            // bClassName = bClassName.concat(" ", colors[currentSliderValue])
-        } else {
-            // bClassName = bClassName.concat(" ", colorsDown[currentSliderValue])
-            bClassName = bClassName.concat(" ", colorDirector.bgAccent(6))
-        }
-        buttons.push(
-            <button key={label.concat(" ", j.toString())} className={bClassName} onClick={handleSliderChange(j)} />
+
+    let slider = <div className="flex flex-col gap-1 p-2 w-full h-full items-center">
+        <div className="relative w-full h-full">
+            <input type="range" className={sliderClassName} name={label.toString()} min="0" max="6" step="1" onChange={ruleSetterCallback} value={value} />
+            <span className={"pointer-events-none absolute h-3 left-0 translate-y-1 ".concat(colorDirector.bgAccent(EAccentType.STRONG))} style={{width: (value/7*100).toString().concat("%")}}></span>
+            <span className={"pointer-events-none absolute h-3 right-0 translate-y-1 ".concat(colorDirector.bgAccent(EAccentType.LIGHT))} style={{width: ((6-value)/6*100).toString().concat("%")}}></span>
+            <span className={"pointer-events-none absolute h-4 w-4 translate-y-0.5 ".concat(colorDirector.bgAccent(1))} style={{left: (value/7*100).toString().concat("%")}}></span>
+
+        </div>
+    </div>
+
+    if (type == 2) {
+        let squares = []
+        for (let i = 1; i < 7; ++i) {
+            squares.push(
+                <span className={"translate-y-1 pointer-events-none w-full ".concat(colorDirector.bgAccent(value >= i ? EAccentType.STRONG : EAccentType.LIGHT))}></span>
             )
         }
 
-    return buttons
+        slider = <div className="flex flex-col gap-1 p-2 w-full h-full items-center">
+            <div className="relative w-full h-full">
+                <input type="range" className={sliderClassName} name={label.toString()} min="0" max="6" step="1" onChange={ruleSetterCallback} value={value} />
+                <div className="absolute pointer-events-none h-1 left-1 w-[108px] flex flex-row gap-1 -translate-y-5">
+                    {squares}
+                </div>
+                <span className={"pointer-events-none absolute h-4 w-2 translate-y-0.5 ".concat(colorDirector.bgAccent(1))} style={{left: (value*18).toString().concat("px")}}></span>
+            </div>
+        </div>
+    } else if (type == 3) {
+        let customCb = (name: string, value: string) => {
+            return () => ruleSetterCallback({target: {name: name, value: value}})
+        }
+
+        let stars = []
+
+        for (let i = 0; i < 7; ++i) {
+            stars.push(
+                <div className="cursor-pointer h-4 w-4" onClick={customCb(label.toString(), i.toString())}>
+                    <Icon n={i == 0 ? "cross" : "star"} useTooltip={false} customColor={colorDirector.element} customColorType={(value >= i && i > 0) || (value == i && i == 0) ? EIconColorType.ACTIVE : EIconColorType.INACTIVE}/>
+                </div>
+        )
+
+        slider = <div className="flex flex-row gap-1 p-2 w-full h-full items-center">
+                    {stars}
+            </div>
+        }
+    }
+
+    return slider
 }

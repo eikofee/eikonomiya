@@ -4,23 +4,25 @@ import { ICharacterData } from "./ICharacterData"
 import { IPlayerInfo, copyIPlayerInfoWithoutCharacters, readIPlayerInfoWithoutCharacters } from "./IPlayerInfo"
 import * as yaml from 'yaml';
 import { IWeapon } from "./IWeapon";
-import { IArtefact } from "./IArtefact";
+import { IArtifact } from "./IArtifact";
 import { StatBag } from "./StatBag";
 import { IEffect } from "./IEffect";
-import { ETarget, stringToETarget } from "./enums/EEffectTarget";
+import { ETarget } from "./enums/ETarget";
 import { ICharacterCommonData } from "./ICharacterCommonData";
 import { ERarity } from "./enums/ERarity";
 import { EStat, stringToEStat } from "./enums/EStat";
 import { promises as fsPromises, stat } from 'fs';
 import path from "path";
 import { ICharacterRule } from "@/app/interfaces/ICharacterRule";
-import { EEffectType, stringToEEffectType } from "./enums/EEffectType";
+import { EEffectType } from "./enums/EEffectType";
 import { IStatTuple } from "./IStatTuple";
 import { addOptions } from "./IEffectOptions";
 import { IEffectImplication } from "./IEffectImplication";
 import { IStatRatio } from "./IStatRatio";
 import { ERegion, stringToERegion } from "./enums/ERegion";
 import { EElement } from "./enums/EElement";
+import { IApiEffectCard } from "./IApiEffectCard";
+import { apiLogicLoadEffectData } from "@/app/api/effects/[category]/[name]/route";
 
 export enum ELoadStatus {
     SUCCESS,
@@ -69,11 +71,10 @@ export class Updater {
     }
 
     private cleanNameForPath(s: string) {
-        s = s.replaceAll(" of ", " Of ").replaceAll(" the ", " The ").replaceAll('"', "").replaceAll(" for ", " For ")
-        return s.replaceAll(" ", "").replaceAll("'", "").replaceAll("-", "")
-    }
+            return s.toLowerCase().replaceAll(" ", "").replaceAll("'", "").replace("-","")
+        }
 
-    private buildBaseStats(characterBase : ICharacterCommonData, weapon: IWeapon, artefacts: IArtefact[], ascensionLevel: number) {
+    private buildBaseStats(characterBase : ICharacterCommonData, weapon: IWeapon, artifacts: IArtifact[], ascensionLevel: number) {
         let sb = new StatBag()
         sb.addStat({name: EStat.ER_P, value: 1})
         sb.addStat({name: EStat.CR_P, value: 0.05})
@@ -82,8 +83,8 @@ export class Updater {
             sb.addStat({name: weapon.subStat.name, value: weapon.subStat.value})
         }
 
-        for (let i = 0; i < artefacts.length; ++i) {
-            let a = artefacts[i]
+        for (let i = 0; i < artifacts.length; ++i) {
+            let a = artifacts[i]
             sb.addStat({name: a.mainStat.name, value: a.mainStat.value})
             for (let j = 0; j < a.subStats.length; ++j) {
                 sb.addStat({name: a.subStats[j].name, value: a.subStats[j].value})
@@ -115,77 +116,77 @@ export class Updater {
         return sb
     }
 
-    private parseEffect(data: any[], defaultName: string, defaultIcon: string, refinement: number) : IEffect[] {
+    private parseEffect(data: IApiEffectCard[], defaultName: string, defaultIcon: string, refinement: number) : IEffect[] {
         let res = []
         for (let i = 0; i < data.length; ++i) {
             let effectName = defaultName
-            const rawEffect = data[i];
-            if (rawEffect["name"] != undefined) {
-                effectName = rawEffect["name"]
+            const apiEffect = data[i];
+            if (apiEffect.name != undefined) {
+                effectName = apiEffect.name
             }
 
             let effectTag = ""
-            if (rawEffect["tag"] != undefined) {
-                effectTag = rawEffect["tag"]
+            if (apiEffect.tag != undefined) {
+                effectTag = apiEffect.tag
             }
 
             let effectSource = ""
-            if (rawEffect["source"] != undefined) {
-                effectSource = rawEffect["source"]
+            if (apiEffect.source != undefined) {
+                effectSource = apiEffect.source
             }
 
-            let effectSource2 = ""
-            if (rawEffect["source2"] != undefined) {
-                effectSource2 = rawEffect["source2"]
+            // let effectSource2 = ""
+            // if (apiEffect["source2"] != undefined) {
+            //     effectSource2 = apiEffect["source2"]
+            // }
+
+            let keywords : string[] = []
+            if (apiEffect.keywords != undefined) {
+                keywords = apiEffect.keywords.split(" ")
             }
 
-            let keywords = []
-            if (rawEffect["keywords"] != undefined) {
-                keywords = rawEffect["keywords"]
-            }
-
-            const effectType = stringToEEffectType(rawEffect["type"])
-            const text = rawEffect["text"] != undefined ? rawEffect["text"] : ""
-            const maxstack = rawEffect["maxstack"] != undefined ? rawEffect["maxstack"] : 0
+            const effectType = apiEffect.type
+            const text = apiEffect.text != undefined ? apiEffect.text : ""
+            const maxstack = apiEffect.maxstack != undefined ? apiEffect.maxstack : 0
             let implicationsSet : IEffectImplication[][] = []
             let implications : IEffectImplication[] = []
             let statChanges : IStatTuple[] = []
-            if (effectType != undefined) {
+            if (effectType != undefined && apiEffect.effects != undefined) {
                 switch (effectType) {
                     case EEffectType.STATIC:
                     case EEffectType.BOOLEAN:
                         implications = []
-                        for (let k = 0; k < rawEffect["effects"].length; ++k) {
-                            const e = rawEffect["effects"][k]
-                            const target = e["target"]
+                        for (let k = 0; k < apiEffect.effects.length; ++k) {
+                            const e = apiEffect.effects[k]
+                            const target = e.target
                             let flatValue : IStatTuple | undefined = undefined
                             let ratioValue : IStatRatio | undefined = undefined
-                            if (e["source"] != undefined) {
-                                const sourceStat = stringToEStat(e["source"])
-                                const targetStat = stringToEStat(e["stat"])
+                            if (e.source != undefined) {
+                                const sourceStat = e.source
+                                const targetStat = e.stat
                                 let ratio = 1
-                                if (e["ratio"] != undefined) {
-                                    ratio = parseFloat(e["ratio"])
+                                if (e.ratio != undefined) {
+                                    ratio = e.ratio
                                 } else {
-                                    const minratio = parseFloat(e["minratio"])
-                                    const maxratio = parseFloat(e["maxratio"])
+                                    const minratio = e.r1ratio!
+                                    const maxratio = e.r5ratio!
                                     const interval = maxratio - minratio
                                     const step = interval / 4
                                     ratio = minratio + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
                                 }
 
-                                const base = (e["base"] != undefined ? parseFloat(e["base"]) : 0)
-                                const step = (e["step"] != undefined ? parseFloat(e["step"]) : 0)
+                                const base = (e.base != undefined ? e.base : 0)
+                                const step = (e.step != undefined ? e.step : 0)
 
                                 let maxvalue = 0
-                                if (e["minmaxvalue"] != undefined) {
-                                    const minmaxvalue = parseFloat(e["minmaxvalue"])
-                                    const maxmaxvalue = parseFloat(e["maxmaxvalue"])
+                                if (e.r1maxvalue != undefined) {
+                                    const minmaxvalue = e.r1maxvalue!
+                                    const maxmaxvalue = e.r5maxvalue!
                                     const interval = maxmaxvalue - minmaxvalue
                                     const step = interval / 4
                                     maxvalue = minmaxvalue + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
                                 } else {
-                                    maxvalue = parseFloat(e["maxvalue"])
+                                    maxvalue = e.maxvalue!
                                 }
 
                                 ratioValue = {
@@ -198,13 +199,13 @@ export class Updater {
                                 }
 
                             } else {
-                                const stat = stringToEStat(e["stat"])
+                                const stat = e.stat
                                 let value = 0;
-                                if (e["value"] != undefined) {
-                                    value = parseFloat(e["value"])
+                                if (e.value != undefined) {
+                                    value = e.value
                                 } else {
-                                    const minvalue = parseFloat(e["minvalue"])
-                                    const maxvalue = parseFloat(e["maxvalue"])
+                                    const minvalue = e.r1value!
+                                    const maxvalue = e.r5value!
                                     const interval = maxvalue - minvalue
                                     const step = interval / 4
                                     value = minvalue + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
@@ -229,33 +230,33 @@ export class Updater {
                     
                     case EEffectType.STACK:
                         implications = []
-                        for (let k = 0; k < rawEffect["effects"].length; ++k) {
+                        for (let k = 0; k < apiEffect.effects.length; ++k) {
                             let flatValue : IStatTuple | undefined = undefined
                             let ratioValue : IStatRatio | undefined = undefined
-                            const e = rawEffect["effects"][k]
-                            const target = e["target"]
-                            const stat = stringToEStat(e["stat"])
-                            if (e["source"] != undefined) {
-                                const sourceStat = stringToEStat(e["source"])
-                                const targetStat = stringToEStat(e["stat"])
+                            const e = apiEffect.effects[k]
+                            const target = e.target
+                            const stat = e.stat
+                            if (e.source != undefined) {
+                                const sourceStat = e.source
+                                const targetStat = e.stat
                                 let ratio = 1
-                                if (e["ratio"] != undefined) {
-                                    ratio = parseFloat(e["ratio"])
+                                if (e.ratio != undefined) {
+                                    ratio = e.ratio
                                 } else {
-                                    const minratio = parseFloat(e["minratio"])
-                                    const maxratio = parseFloat(e["maxratio"])
+                                    const minratio = e.r1ratio!
+                                    const maxratio = e.r5ratio!
                                     const interval = maxratio - minratio
                                     const step = interval / 4
                                     ratio = minratio + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
                                 }
 
-                                const base = (e["base"] != undefined ? parseFloat(e["base"]) : 0)
-                                const step = (e["step"] != undefined ? parseFloat(e["step"]) : 0)
+                                const base = (e.base != undefined ? e.base : 0)
+                                const step = (e.step != undefined ? e.step : 0)
 
                                 let maxvalue = 0
-                                if (e["minmaxvalue"] != undefined) {
-                                    const minmaxvalue = parseFloat(e["minmaxvalue"])
-                                    const maxmaxvalue = parseFloat(e["maxmaxvalue"])
+                                if (e.r1maxvalue != undefined) {
+                                    const minmaxvalue = e.r1maxvalue!
+                                    const maxmaxvalue = e.r5maxvalue!
                                     const interval = maxmaxvalue - minmaxvalue
                                     const step = interval / 4
                                     maxvalue = minmaxvalue + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
@@ -272,11 +273,11 @@ export class Updater {
 
                             } else {
                                 let value = 0;
-                                if (e["value"] != undefined) {
-                                    value = parseFloat(e["value"])
+                                if (e.value != undefined) {
+                                    value = e.value
                                 } else {
-                                    const minvalue = parseFloat(e["minvalue"])
-                                    const maxvalue = parseFloat(e["maxvalue"])
+                                    const minvalue = e.r1value!
+                                    const maxvalue = e.r5value!
                                     const interval = maxvalue - minvalue
                                     const step = interval / 4
                                     value = minvalue + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
@@ -302,33 +303,33 @@ export class Updater {
                     case EEffectType.STACK_PRECISE:
                         for (let kk = 1; kk < maxstack + 1; ++kk) {
                             implications = []
-                            for (let k = 0; k < rawEffect["effects"][kk].length; ++k) {
+                            for (let k = 0; k < apiEffect.effectsPrecise![kk].length; ++k) {
                                 let flatValue : IStatTuple | undefined = undefined
                                 let ratioValue : IStatRatio | undefined = undefined
-                                const e = rawEffect["effects"][kk][k]
-                                const target = e["target"]
-                                const stat = stringToEStat(e["stat"])
-                                if (e["source"] != undefined) {
-                                    const sourceStat = stringToEStat(e["source"])
-                                    const targetStat = stringToEStat(e["stat"])
+                                const e = apiEffect.effectsPrecise![kk][k]
+                                const target = e.target
+                                const stat = e.stat
+                                if (e.source != undefined) {
+                                    const sourceStat = e.source
+                                    const targetStat = e.stat
                                     let ratio = 1
-                                    if (e["ratio"] != undefined) {
-                                        ratio = parseFloat(e["ratio"])
+                                    if (e.ratio != undefined) {
+                                        ratio = e.ratio
                                     } else {
-                                        const minratio = parseFloat(e["minratio"])
-                                        const maxratio = parseFloat(e["maxratio"])
+                                        const minratio = e.r1ratio!
+                                        const maxratio = e.r5ratio!
                                         const interval = maxratio - minratio
                                         const step = interval / 4
                                         ratio = minratio + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
                                     }
 
-                                    const base = (e["base"] != undefined ? parseFloat(e["base"]) : 0)
-                                    const step = (e["step"] != undefined ? parseFloat(e["step"]) : 0)
+                                    const base = (e.base != undefined ? e.base : 0)
+                                    const step = (e.step != undefined ? e.step : 0)
 
                                     let maxvalue = 0
-                                    if (e["minmaxvalue"] != undefined) {
-                                        const minmaxvalue = parseFloat(e["minmaxvalue"])
-                                        const maxmaxvalue = parseFloat(e["maxmaxvalue"])
+                                    if (e.r1maxvalue != undefined) {
+                                        const minmaxvalue = e.r1maxvalue!
+                                        const maxmaxvalue = e.r5maxvalue!
                                         const interval = maxmaxvalue - minmaxvalue
                                         const step = interval / 4
                                         maxvalue = minmaxvalue + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
@@ -345,11 +346,11 @@ export class Updater {
                                     
                                 } else {
                                     let value = 0;
-                                    if (e["value"] != undefined) {
-                                        value = parseFloat(e["value"])
+                                    if (e.value != undefined) {
+                                        value = e.value
                                     } else {
-                                        const minvalue = parseFloat(e["minvalue"])
-                                        const maxvalue = parseFloat(e["maxvalue"])
+                                        const minvalue = e.r1value!
+                                        const maxvalue = e.r5value!
                                         const interval = maxvalue - minvalue
                                         const step = interval / 4
                                         value = minvalue + step * (refinement == 0 ? 0 : Math.max(0, refinement - 1))
@@ -377,7 +378,7 @@ export class Updater {
             const effect : IEffect = {
                 name: effectName,
                 source: effectSource,
-                source2: effectSource2,
+                // source2: effectSource2,
                 tag: effectTag,
                 keywords: keywords,
                 icon: defaultIcon,
@@ -396,11 +397,11 @@ export class Updater {
 
 
     private async getWeaponEffects(weapon : IWeapon): Promise<IEffect[]> {
-        const weaponEffectsRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/weapons.yml", { cache: 'no-store' })).text()
+        // const weaponEffectsRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/weapons.yml", { cache: 'no-store' })).text()
+        const weaponEffectData = await apiLogicLoadEffectData("weapons", this.cleanNameForPath(weapon.name))
         let res : IEffect[] = []
-        const weaponEffects = yaml.parse(weaponEffectsRawData)[weapon.name]
-        if (weaponEffects != undefined) {
-            return this.parseEffect(weaponEffects, weapon.name, weapon.assets.icon, weapon.refinement)
+        if (weaponEffectData.success) {
+            return this.parseEffect(weaponEffectData.content!.cards, weapon.name, weapon.assets.icon, weapon.refinement)
         }
 
         return res;
@@ -417,8 +418,7 @@ export class Updater {
         return res;
     }
 
-    private async getArtefactEffects(arte : IArtefact[]): Promise<IEffect[]> {
-        const artefactSetRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/artefacts.yml")).text()
+    private async getArtifactEffects(arte : IArtifact[]): Promise<IEffect[]> {
         const equipSets : Record<string, number> = {}
         const setNames = []
         const iconNames = []
@@ -428,7 +428,7 @@ export class Updater {
                 equipSets[set] = 1
                 setNames.push(set)
                 const iconNameSplit = arte[i].assets.icon.split("/")
-                iconNameSplit[iconNameSplit.length - 1] = "fleur.png"
+                iconNameSplit[iconNameSplit.length - 1] = "artifacts_".concat(this.cleanNameForPath(set), "_fleur")
                 iconNames.push(iconNameSplit.join("/"))
             } else {
                 equipSets[set] = equipSets[set] + 1
@@ -436,13 +436,12 @@ export class Updater {
         }
 
         let res : IEffect[] = []
-        const sets = yaml.parse(artefactSetRawData)
-        // TODO: Change for better effect parsing
         for (let i = 0; i < setNames.length; ++i) {
             const set = setNames[i]
-            const rawEffects = sets[set]
-            if (rawEffects != undefined){
-                const effects = this.parseEffect(rawEffects, set, iconNames[i], 0)
+            const artifactSetData = await apiLogicLoadEffectData("artifacts", this.cleanNameForPath(set))
+            if (artifactSetData.success){
+                const effectsData = artifactSetData.content!.cards
+                const effects = this.parseEffect(effectsData, set, iconNames[i], 0)
                 for (let j = 0; j < effects.length; ++j) {
                     if ((effects[j].tag.includes("2pc") && equipSets[set] >= 2) ||
                     (effects[j].tag.includes("4pc") && equipSets[set] >= 4)) {
@@ -509,21 +508,6 @@ export class Updater {
                         break;
                 }
 
-                let p = path.join(process.cwd(), "/public/characterCards")
-                let fileList = await fsPromises.readdir(p)
-                const extensions = [".jpg", ".jpeg", ".png"]
-                let charCard = "";
-                for (let i = 0; i < extensions.length; ++i) {
-                    const fname = name.toLowerCase().concat(extensions[i])
-                    if (fileList.includes(fname)) {
-                        charCard = "/characterCards/".concat(fname)
-                    }
-                }
-
-                p = path.join(process.cwd(), "/public/characters")
-                fileList = await fsPromises.readdir(p)
-                let characterPortrait = "/characters/".concat(name.toLowerCase(), "/face.png");
-
                 let r = ERegion.UNKNOWN
                 if (reg[name] != undefined) {
                     r = stringToERegion(reg[name])
@@ -542,6 +526,7 @@ export class Updater {
                     }
                 }
 
+                const cleanName = this.cleanNameForPath(name)
                 const common: ICharacterCommonData = {
                     name: name,
                     element: c.commonData.element,
@@ -551,20 +536,20 @@ export class Updater {
                     ascensionStatName: ascensionName,
                     ascensionStatBaseValue: ascensionValue,
                     assets: {
-                        characterCard: charCard,
-                        characterPortrait: characterPortrait,
-                        characterNameCard: "/characters/".concat(name.toLowerCase(), "namecard.png"),
-                        aa: "/characterTalents/aa_".concat(c.commonData.weapon, ".png"),
-                        skill: "/characters/".concat(name.toLowerCase(), "skill.png"),
-                        burst: "/characters/".concat(name.toLowerCase(), "burst.png"),
-                        a1: "/characters/".concat(name.toLowerCase(), "a1.png"),
-                        a4: "/characters/".concat(name.toLowerCase(), "a4.png"),
-                        c1: "/characters/".concat(name.toLowerCase(), "c1.png"),
-                        c2: "/characters/".concat(name.toLowerCase(), "c2.png"),
-                        c3: "/characters/".concat(name.toLowerCase(), "c3.png"),
-                        c4: "/characters/".concat(name.toLowerCase(), "c4.png"),
-                        c5: "/characters/".concat(name.toLowerCase(), "c5.png"),
-                        c6: "/characters/".concat(name.toLowerCase(), "c6.png")
+                        characterCard: "characters_".concat(cleanName, "_card"),
+                        characterPortrait: "characters_".concat(cleanName, "_face"),
+                        characterNameCard: "characters_".concat(cleanName, "_namecard"),
+                        aa: "characters_generic_".concat(c.commonData.weapon),
+                        skill: "characters_".concat(cleanName, "_skill"),
+                        burst: "characters_".concat(cleanName, "_burst"),
+                        a1: "characters_".concat(cleanName, "_a1"),
+                        a4: "characters_".concat(cleanName, "_a4"),
+                        c1: "characters_".concat(cleanName, "_c1"),
+                        c2: "characters_".concat(cleanName, "_c2"),
+                        c3: "characters_".concat(cleanName, "_c3"),
+                        c4: "characters_".concat(cleanName, "_c4"),
+                        c5: "characters_".concat(cleanName, "_c5"),
+                        c6: "characters_".concat(cleanName, "_c6")
                     },
                     baseStats: {
                         hp: c.baseStats.get(EStat.HP)!.value,
@@ -600,14 +585,14 @@ export class Updater {
                     refinement: c.weapon.refinement == undefined ? 1 : c.weapon.refinement,
                     ascensionLevel: c.weapon.ascensionLevel,
                     assets: {
-                        icon: "/weaponIcons/".concat(this.cleanNameForPath(c.weapon.name), "/weapon", c.weapon.ascensionLevel > 1 ? "-awake.png":".png")
+                        icon: "weapons_".concat(this.cleanNameForPath(c.weapon.name),"_weapon", c.weapon.ascensionLevel > 1 ? "-awake":"")
                     }
                 }
 
                 let artes = []
-                for (let j = 0; j < c.artefacts.length; ++j) {
-                    const arte = c.artefacts[j]
-                    const a : IArtefact = {
+                for (let j = 0; j < c.artifacts.length; ++j) {
+                    const arte = c.artifacts[j]
+                    const a : IArtifact = {
                         type: arte.type,
                         name: this.enkaTranslator.translate(arte.name),
                         set: arte.set,
@@ -616,7 +601,7 @@ export class Updater {
                         mainStat: arte.mainStat,
                         subStats: arte.subStats,
                         assets: {
-                            icon: "/artefactIcons/".concat(this.cleanNameForPath(arte.set), "/", arte.type, ".png")
+                            icon: "artifacts_".concat(this.cleanNameForPath(arte.set), "_", arte.type)
                         }
                     }
 
@@ -624,10 +609,10 @@ export class Updater {
                 }
 
                 let currentStats = this.buildBaseStats(common, weapon, artes, c.ascensionLevel)
-                const artefactEffects = await this.getArtefactEffects(artes)
+                const artifactEffects = await this.getArtifactEffects(artes)
                 const weaponEffects = await this.getWeaponEffects(weapon)
                 const inherentEffect = await this.getCharacterEffects(common)
-                const currentEffects = artefactEffects.concat(weaponEffects, inherentEffect)
+                const currentEffects = artifactEffects.concat(weaponEffects, inherentEffect)
 
 
                 for (let j = 0; j < currentEffects.length; ++j) {
@@ -707,7 +692,7 @@ export class Updater {
                     },
                     commonData: common,
                     weapon: weapon,
-                    artefacts: artes,
+                    artifacts: artes,
                     totalStats: currentStats.toIStatBag(),
                     dynamicEffects: [],
                     lastUpdated: Date.now(),
@@ -717,6 +702,7 @@ export class Updater {
 
                 characters.push(char)
             }
+
 
             const pi : IPlayerInfo = {
                 name: enkaData.name,
@@ -730,12 +716,13 @@ export class Updater {
                     chamber: enkaData.abysses.chamber
                 },
                 characters: characters,
-                profilePictureCharacterName: "/characters/".concat(enkaData.profilePicture.toLowerCase(), "face.png")
+                profilePictureCharacterName: "characters_".concat(enkaData.profilePicture.toLowerCase(), "_face")
             }
 
             await this.writeData(this.uid, pi)
             res.playerInfo = pi
             res.status = ELoadStatus.SUCCESS
+
             return res
         } catch(e: any) {
             try {

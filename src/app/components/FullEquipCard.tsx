@@ -1,12 +1,12 @@
 import AscensionCard from "./AscensionCard";
 import { ICharacterRule } from "../interfaces/ICharacterRule";
-import ArtefactCard from "./ArtefactCard";
+import ArtifactCard from "./ArtifactCard";
 import WeaponCard from "./WeaponCard";
 import { useState } from "react";
-import { Card } from "./Card";
 import { ICharacterData } from "@/server/gamedata/ICharacterData";
-import { EArtefact } from "@/server/gamedata/enums/EArtefact";
-import { IArtefact } from "@/server/gamedata/IArtefact";
+import { EArtifact } from "@/server/gamedata/enums/EArtifact";
+import { IArtifact } from "@/server/gamedata/IArtifact";
+import Card, { ECardSize } from "./Card";
 
 export function FullEquipCard({character, rule}:{character : ICharacterData, rule: ICharacterRule}) {
 
@@ -22,12 +22,12 @@ export function FullEquipCard({character, rule}:{character : ICharacterData, rul
         <div>{totalScore.toFixed(0).concat("%")}</div>
     </div>
 
-    const arteTypes = [EArtefact.FLEUR, EArtefact.PLUME, EArtefact.SABLIER, EArtefact.COUPE, EArtefact.COURONNE]
-    let artes : IArtefact[] = []
+    const arteTypes = [EArtifact.FLEUR, EArtifact.PLUME, EArtifact.SABLIER, EArtifact.COUPE, EArtifact.COURONNE]
+    let artes : IArtifact[] = []
     for (let i = 0; i < arteTypes.length; ++i) {
-        for (let j = 0; j < character.artefacts.length; ++j) {
-            if (character.artefacts[j].type == arteTypes[i]) {
-                artes.push(character.artefacts[j])
+        for (let j = 0; j < character.artifacts.length; ++j) {
+            if (character.artifacts[j].type == arteTypes[i]) {
+                artes.push(character.artifacts[j])
             }
         }
     }
@@ -38,17 +38,17 @@ export function FullEquipCard({character, rule}:{character : ICharacterData, rul
     mvs.sort((a, b) => b.value - a.value)
 
     return (
-        <div className="max-w-5xl basis-1/4 grid lg:grid-cols-7 md:grid-cols-3 sm:grid-cols-2 gap-2 p-1 bg-inherit h-full">
-                        <div className="flex flex-col gap-y-2">
+        <div className="grid grow grid-cols-auto-fit-small gap-1 bg-inherit">
+                        <div className="flex flex-col gap-1">
                             <AscensionCard char={character} />
-                            <Card c={totalScoreContent} cname={"grow"} />
+                            <Card content={totalScoreContent} grow={true} maxw={ECardSize.SEMI}/>
                         </div>
                         <WeaponCard equip={character.weapon} rule={rule}/>
-                        { artes[0] != undefined ? <ArtefactCard equip={artes[0]} rule={rule} scoreState={setScoreFleur} sortedStats={mvs} /> : ""}
-                        { artes[1] != undefined ? <ArtefactCard equip={artes[1]} rule={rule} scoreState={setScorePlume} sortedStats={mvs} /> : ""}
-                        { artes[2] != undefined ? <ArtefactCard equip={artes[2]} rule={rule} scoreState={setScoreSablier} sortedStats={mvs} /> : ""}
-                        { artes[3] != undefined ? <ArtefactCard equip={artes[3]} rule={rule} scoreState={setScoreCoupe} sortedStats={mvs} /> : ""}
-                        { artes[4] != undefined ? <ArtefactCard equip={artes[4]} rule={rule} scoreState={setScoreCouronne} sortedStats={mvs} /> : ""}
+                        { artes[0] != undefined ? <ArtifactCard equip={artes[0]} rule={rule} scoreState={setScoreFleur} sortedStats={mvs} /> : ""}
+                        { artes[1] != undefined ? <ArtifactCard equip={artes[1]} rule={rule} scoreState={setScorePlume} sortedStats={mvs} /> : ""}
+                        { artes[2] != undefined ? <ArtifactCard equip={artes[2]} rule={rule} scoreState={setScoreSablier} sortedStats={mvs} /> : ""}
+                        { artes[3] != undefined ? <ArtifactCard equip={artes[3]} rule={rule} scoreState={setScoreCoupe} sortedStats={mvs} /> : ""}
+                        { artes[4] != undefined ? <ArtifactCard equip={artes[4]} rule={rule} scoreState={setScoreCouronne} sortedStats={mvs} /> : ""}
         </div>
     )
 }

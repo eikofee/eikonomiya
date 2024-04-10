@@ -2,10 +2,8 @@ import { IEffect } from "@/server/gamedata/IEffect";
 import { eStatToReadable } from "@/server/gamedata/enums/EStat";
 import { useContext, useState } from "react";
 import { ICharacterData } from "@/server/gamedata/ICharacterData";
-import { Card } from "../Card";
 import Icon from "../Icon";
 import { ConfigContext } from "../ConfigContext";
-import Tooltip from "../Tooltip";
 import EffectCard from "../EffectCard";
 
 export default function EffectCardBoolean({effect: effect, effectUpdateCallback: effectUpdateCallback, character: character, removable} : ({effect: IEffect, effectUpdateCallback: (x: IEffect) => void, character: ICharacterData, removable: undefined | (() => void) })) {

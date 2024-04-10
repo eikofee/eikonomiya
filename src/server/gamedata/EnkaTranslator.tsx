@@ -1,4 +1,4 @@
-import { EArtefact } from "./enums/EArtefact"
+import { EArtifact } from "./enums/EArtifact"
 import { EElement } from "./enums/EElement"
 import { EStat } from "./enums/EStat"
 
@@ -39,18 +39,18 @@ export class EnkaTranslator {
         }
     }
     
-    public translateEquipType (id: string) : EArtefact {
+    public translateEquipType (id: string) : EArtifact {
         switch (id) {
-            case "EQUIP_BRACER": return EArtefact.FLEUR;
-            case "EQUIP_NECKLACE": return EArtefact.PLUME;
-            case "EQUIP_SHOES": return EArtefact.SABLIER;
-            case "EQUIP_RING": return EArtefact.COUPE;
-            case "EQUIP_DRESS": return EArtefact.COURONNE;
-            default: return EArtefact.UNKNOWN
+            case "EQUIP_BRACER": return EArtifact.FLEUR;
+            case "EQUIP_NECKLACE": return EArtifact.PLUME;
+            case "EQUIP_SHOES": return EArtifact.SABLIER;
+            case "EQUIP_RING": return EArtifact.COUPE;
+            case "EQUIP_DRESS": return EArtifact.COURONNE;
+            default: return EArtifact.UNKNOWN
         }
     }
     
-    public translateArtefactStatName (id: string) : EStat{
+    public translateArtifactStatName (id: string) : EStat{
         switch (id) {
             case "FIGHT_PROP_HP": return EStat.HP;
             case "FIGHT_PROP_ATTACK": return EStat.ATK;

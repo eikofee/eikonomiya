@@ -120,9 +120,119 @@ const defaultDotIcon = () => {
     return [<circle key="1" cx="12" cy="12" r="5" stroke="black"stroke-width="3" />]
 }
 
+const starIcon = () => {
+    return [<path fill-rule="evenodd" clip-rule="evenodd" d="M10.1507 2.3649C10.8306 0.713558 13.1694 0.713567 13.8494 2.3649L16.1856 8.0386L21.4255 8.34683C23.2632 8.45493 23.9912 10.7786 22.5437 11.916L18.1816 15.3433L19.9202 20.2694C20.5648 22.0955 18.497 23.6802 16.9012 22.5831L12 19.2135L7.09881 22.5831C5.50303 23.6802 3.43525 22.0955 4.07977 20.2694L5.81838 15.3433L1.45635 11.916C0.0087955 10.7787 0.736801 8.45493 2.57454 8.34683L7.81442 8.0386L10.1507 2.3649Z"/>]
+}
 
-// export default function Icon({n}: {n: string}) {
-export default function Icon({n, useTooltip = true}: {n: string, useTooltip?: boolean}) {
+const crossIcon = () => {
+    return [
+        <g>
+
+    <path xmlns="http://www.w3.org/2000/svg" stroke-width="40" d="M20.7457 3.32851C20.3552 2.93798 19.722 2.93798 19.3315 3.32851L12.0371 10.6229L4.74275 3.32851C4.35223 2.93798 3.71906 2.93798 3.32854 3.32851C2.93801 3.71903 2.93801 4.3522 3.32854 4.74272L10.6229 12.0371L3.32856 19.3314C2.93803 19.722 2.93803 20.3551 3.32856 20.7457C3.71908 21.1362 4.35225 21.1362 4.74277 20.7457L12.0371 13.4513L19.3315 20.7457C19.722 21.1362 20.3552 21.1362 20.7457 20.7457C21.1362 20.3551 21.1362 19.722 20.7457 19.3315L13.4513 12.0371L20.7457 4.74272C21.1362 4.3522 21.1362 3.71903 20.7457 3.32851Z" />
+        </g>
+]
+}
+
+export enum EIconColorType {
+    ELEMENT,
+    ACTIVE,
+    INACTIVE
+}
+
+export function fillIconColor(c: string, active = EIconColorType.ELEMENT) {
+    switch(active) {
+        case EIconColorType.ELEMENT:
+            switch (c) {
+                case "teal":
+                case "anemo":
+                    return " fill-teal-500"
+                case "yellow":
+                case "geo":
+                    return " fill-yellow-500"
+                case "violet":
+                case "electro":
+                    return " fill-violet-500"
+                case "lime":
+                case "dendro":
+                    return " fill-lime-500"
+                case "blue":
+                case "hydro":
+                    return " fill-blue-500"
+                case "red":
+                case "pyro":
+                    return " fill-red-500"
+                case "cyan":
+                case "cryo":
+                    return " fill-cyan-500"
+                case "slate":
+                case "phys":
+                    return " fill-slate-500"
+                default:
+                    return ""
+            }
+        case EIconColorType.ACTIVE:
+            switch (c) {
+                case "teal":
+                case "anemo":
+                    return " fill-teal-700"
+                case "yellow":
+                case "geo":
+                    return " fill-yellow-700"
+                case "violet":
+                case "electro":
+                    return " fill-violet-700"
+                case "lime":
+                case "dendro":
+                    return " fill-lime-700"
+                case "blue":
+                case "hydro":
+                    return " fill-blue-700"
+                case "red":
+                case "pyro":
+                    return " fill-red-700"
+                case "cyan":
+                case "cryo":
+                    return " fill-cyan-700"
+                case "slate":
+                case "phys":
+                    return " fill-slate-700"
+                default:
+                    return ""
+            }
+        case EIconColorType.INACTIVE:
+            switch (c) {
+                case "teal":
+                case "anemo":
+                    return " fill-teal-400"
+                case "yellow":
+                case "geo":
+                    return " fill-yellow-400"
+                case "violet":
+                case "electro":
+                    return " fill-violet-400"
+                case "lime":
+                case "dendro":
+                    return " fill-lime-400"
+                case "blue":
+                case "hydro":
+                    return " fill-blue-400"
+                case "red":
+                case "pyro":
+                    return " fill-red-400"
+                case "cyan":
+                case "cryo":
+                    return " fill-cyan-400"
+                case "slate":
+                case "phys":
+                    return " fill-slate-400"
+                default:
+                    return ""
+            }
+    } 
+}
+
+        // export default function Icon({n}: {n: string}) {
+export default function Icon({n, useTooltip = true, customColor = "", customColorType = EIconColorType.ELEMENT}: {n: string, useTooltip?: boolean, customColor?: string, customColorType? : EIconColorType}) {
     let content : ReactElement[] = []
     // let svgClassname = "h-4 w-4"
     let svgClassname = "h-full w-full"
@@ -170,49 +280,49 @@ export default function Icon({n, useTooltip = true}: {n: string, useTooltip?: bo
         case "anemo dmg":
         case "anemo":
             content = anemoIcon()
-            svgClassname = svgClassname.concat(" fill-teal-500")
+            svgClassname = svgClassname.concat(fillIconColor("anemo"))
             break;
         case "geo dmg%":
         case "geo dmg":
         case "geo":
             content = geoIcon()
-            svgClassname = svgClassname.concat(" fill-yellow-500")
+            svgClassname = svgClassname.concat(fillIconColor("geo"))
             break;
         case "electro dmg%":
         case "electro dmg":
         case "electro":
             content = electroIcon()
-            svgClassname = svgClassname.concat(" fill-violet-500")
+            svgClassname = svgClassname.concat(fillIconColor("electro"))
             break;
         case "dendro dmg%":
         case "dendro dmg":
         case "dendro":
             content = dendroIcon()
-            svgClassname = svgClassname.concat(" fill-lime-500")
+            svgClassname = svgClassname.concat(fillIconColor("dendro"))
             break;
         case "hydro dmg%":
         case "hydro dmg":
         case "hydro":
             content = hydroIcon()
-            svgClassname = svgClassname.concat(" fill-blue-500")
+            svgClassname = svgClassname.concat(fillIconColor("hydro"))
             break;
         case "pyro dmg%":
         case "pyro dmg":
         case "pyro":
             content = pyroIcon()
-            svgClassname = svgClassname.concat(" fill-red-500")
+            svgClassname = svgClassname.concat(fillIconColor("pyro"))
             break;
         case "cryo dmg%":
         case "cryo dmg":
         case "cryo":
             content = cryoIcon()
-            svgClassname = svgClassname.concat(" fill-cyan-500")
+            svgClassname = svgClassname.concat(fillIconColor("cryo"))
             break;
         case "phys dmg%":
         case "phys dmg":
         case "phys":
             content = physIcon()
-            svgClassname = svgClassname.concat(" fill-slate-500")
+            svgClassname = svgClassname.concat(fillIconColor("phys"))
             break;
         case "fleur":
             content = fleurIcon()
@@ -229,11 +339,22 @@ export default function Icon({n, useTooltip = true}: {n: string, useTooltip?: bo
         case "couronne":
             content = couronneIcon()
             break;
+        case "star":
+            content = starIcon()
+            break;
+        case "cross":
+            content = crossIcon()
+            break;
         default:
             content = defaultDotIcon()
             break;
 
     }
+
+    if (customColor != undefined && customColor != "") {
+        svgClassname = svgClassname.concat(fillIconColor(customColor, customColorType))
+    }
+
     let svg = <svg viewBox="0 0 24 24" className={svgClassname}>
                     {content}
                 </svg>

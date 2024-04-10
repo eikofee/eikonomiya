@@ -5,12 +5,13 @@ import { IPlayerInfoWithoutCharacters } from "@/server/gamedata/IPlayerInfo";
 import { IConfigDirector, ETheme, ConfigDirector } from "../classes/ConfigDirector";
 import AddUidWidget from "../components/AddUidWidget";
 import CharacterSmallCard from "../components/CharacterSmallCard";
+import { ImgApi } from "../components/ImgApi";
 
 async function home() {
     const buildPlayerCard = (pi: IPlayerInfoWithoutCharacters) => {
         let content = <div className="items-center h-full flex flex-row cursor-pointer">
                         <div className="h-12 basis-1/2 overflow-hidden">
-                            <img className="w-12" src={pi.profilePictureCharacterName} alt={""} />
+                            <ImgApi className="w-12" src={pi.profilePictureCharacterName} alt={""} />
                         </div>
                         <div className="text-center text-ellipsis items-center w-full font-bold text-xl">
                             {pi.name}
@@ -31,7 +32,7 @@ async function home() {
 
     let piList = []
     for (let i = 0; i < playerInfoList.length; ++i) {
-        piList.push(<div className="group rounded-md border min-w-36 max-w-md backdrop-blur-xl bg-white/25 px-3 cursor-pointer z-10 gap-10 text-center" >{buildPlayerCard(playerInfoList[i])}</div>)
+        piList.push(<div className="group rounded-md border min-w-[144px] max-w-md backdrop-blur-xl bg-white/25 px-3 cursor-pointer z-10 gap-10 text-center" >{buildPlayerCard(playerInfoList[i])}</div>)
     }
         let infoElement = <div className="w-1/3">
         <div className={"w-full rounded-md border backdrop-blur-xl bg-white/25 p-2 gap-2 mb-2 z-10 border-slate-400"}>
@@ -61,11 +62,13 @@ export default async function Page({ params }: { params: { uid: string } }) {
         status: ELoadStatus.FAILED,
         message: ""
     }
+
     if (uid == "home") {
         return await home()
     } else if (!isNaN(parseInt(uid))) {
         const u = new Updater(uid)
         await u.initialize()
+        
         loadStatus = await u.loadPlayerData()
         if (loadStatus.status != ELoadStatus.FAILED) {
             playerInfo = loadStatus.playerInfo!
@@ -92,13 +95,15 @@ export default async function Page({ params }: { params: { uid: string } }) {
     const characters = playerInfo.characters
 
     let charList = []
+
     for (let i = 0; i < characters.length; ++i) {
         // charList.push(<Card c={buildCharacterCard(characterList[i], true, false) } cname="px-3 cursor-pointer z-10" />)
         charList.push(<CharacterSmallCard uid={uid} character={characters[i]} useHref={true} useLargeFont={false} useBackground={true} borderColor="" />)
     }
+
     
     let content = <div className={"pl-1 w-full h-screen flex flex-col place-content-center items-center"}>
-                            <div className={"grid gap-2 grid-cols-1 xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-2 rounded-md border backdrop-blur-xl bg-white/25 p-2 w-3/4 z-10 border-slate-400"}>
+                            <div className="grid grid-cols-auto-fit-fr-medium max-w-[1600px] gap-2 rounded-md border backdrop-blur-xl bg-white/25 p-2 w-3/4 z-10 border-slate-400">
                                 {charList}
                             </div>
                     </div>

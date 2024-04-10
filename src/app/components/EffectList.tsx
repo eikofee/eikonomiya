@@ -46,14 +46,14 @@ export default function EffectList({char, effects, type, cb}: {char: ICharacterD
         const effect = effects[e]
         switch (effect.type) {
             case EEffectType.BOOLEAN:
-                effectCards.push(<EffectCardBoolean effect={effect} character={char} effectUpdateCallback={updateEffect(e)} removable={type == EEffectListType.DYNAMIC ? removeCb(e) : undefined}/>)
+                effectCards.push(<EffectCardBoolean key={"effect-card-".concat(e.toString())} effect={effect} character={char} effectUpdateCallback={updateEffect(e)} removable={type == EEffectListType.DYNAMIC ? removeCb(e) : undefined}/>)
                 break;
             case EEffectType.STACK:
             case EEffectType.STACK_PRECISE:
-                effectCards.push(<EffectCardStack effect={effect} character={char} effectUpdateCallback={updateEffect(e)} removable={type == EEffectListType.DYNAMIC ? removeCb(e) : undefined}/>)
+                effectCards.push(<EffectCardStack key={"effect-card-".concat(e.toString())} effect={effect} character={char} effectUpdateCallback={updateEffect(e)} removable={type == EEffectListType.DYNAMIC ? removeCb(e) : undefined}/>)
                 break;
             default:
-                effectCards.push(<EffectCardBasic effect={effect} character={char} effectUpdateCallback={updateEffect(e)} removable={type == EEffectListType.DYNAMIC ? removeCb(e) : undefined}/>)
+                effectCards.push(<EffectCardBasic key={"effect-card-".concat(e.toString())} effect={effect} character={char} effectUpdateCallback={updateEffect(e)} removable={type == EEffectListType.DYNAMIC ? removeCb(e) : undefined}/>)
                 break;
         }
     }

@@ -131,13 +131,24 @@ export default function ArtifactCard({equip, rule, sortedStats, scoreState} : {e
     }
     
     let score = 0
+    let totalRolls = 0
+    let totalRollsOnlyPercent = 0
     for (let i = 0; i < equip.subStats.length; ++i) {
         score += equip.subStats[i].rollValue * getRuleValue(equip.subStats[i].name)
+        totalRolls += equip.subStats[i].rollValue
+        if (equip.subStats[i].name == EStat.EM || equip.subStats[i].name.toString().includes("%")) {
+            totalRollsOnlyPercent += equip.subStats[i].rollValue
+        }
     }
 
     let scoreValue = score/div*100
     scoreState(scoreValue)
-    let infoLine = <p>{score.toFixed(1)}/{div}</p>
+    let infoLine = [
+        <p>Total Rolls : {totalRolls.toFixed(1)}/9</p>,
+        <p>Potential (all): {(totalRolls/9*100).toFixed(1)}%</p>,
+        <p>Potential (%): {(totalRollsOnlyPercent/9*100).toFixed(1)}%</p>,
+        <p>Total Score : {score.toFixed(1)}/{div}</p>
+    ]
     let scoreLine = <div className="w-full flex flex-row items-center align-baseline font-semibold">
         <div className="text-left basis-3/5 truncate">
             Score :

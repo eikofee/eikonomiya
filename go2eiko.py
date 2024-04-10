@@ -2,7 +2,6 @@ import requests
 import os
 import re
 import logging
-from dotenv import load_dotenv
 import argparse
 from typing import Union
 import glob
@@ -12,8 +11,7 @@ import shutil
 # Constants
 EXTENSIONS = ['png', 'jpg', 'jpeg']
 AUTH = None  # TODO: might not be the most secured way to store the credentials
-TEMP_FOLDER = "temp"
-
+DEFAULT_MASTER_OUTPUT_PATH = "./data/"
 
 # Informations about the repository
 OWNER = "frzyc"
@@ -21,19 +19,21 @@ REPO = "genshin-optimizer"
 
 
 # User specific
-MASTER_OUTPUT_PATH = None
-FORCE = None
 METHOD = None
+MASTER_OUTPUT_PATH = DEFAULT_MASTER_OUTPUT_PATH
+TEMP_FOLDER = os.path.join(MASTER_OUTPUT_PATH, "temp")
+FORCE = None
 
 
-def sparse_checkout(path_to_checkout: str, path_to_store: str = TEMP_FOLDER):
+def sparse_checkout(path_to_checkout: str):
 
     # Get current path
     current_path = os.getcwd()
 
     # Clone the repository
-    os.makedirs(path_to_store, exist_ok=True)
-    os.chdir(path_to_store)
+    temp_folder_path = os.path.join(current_path, TEMP_FOLDER)
+    os.makedirs(temp_folder_path, exist_ok=True)
+    os.chdir(temp_folder_path)
     os.system(f"git clone --filter=blob:none --no-checkout https://github.com/frzyc/genshin-optimizer.git")
     os.chdir("genshin-optimizer")
     os.system(f"git config core.sparseCheckout true")
@@ -68,6 +68,10 @@ def intex_dot_ts2name_converter(index_dot_ts: str, old_filename: str) -> str:
         "constellation6": "c6",
         "icon": "face",
         "banner": "namecard",
+        "skill": "skill",
+        "burst": "burst",
+        "passive1": "a1",
+        "passive2": "a4",
     }
     return f"{d[new_filename]}.{ext}" if new_filename in d else old_filename
 
@@ -372,7 +376,7 @@ def download_weapons():
 
         # Check in which case we are
         if "Awaken" in old_filename:
-            return f"weapon-awaken.{ext}"
+            return f"weapon-awake.{ext}"
         else:
             return f"weapon.{ext}"
     
@@ -421,18 +425,24 @@ if __name__ == "__main__":
     parser.add_argument("--weapons", "-w", action="store_true", help="Download the weapons' assets")
     parser.add_argument("--artifacts", "-a", action="store_true", help="Download the artifacts' assets")
     parser.add_argument("--force", "-f", action="store_true", help="Force the redownload of all the assets")
-    parser.add_argument("--output", "-o", type=str, help="Path of the 'data' folder", default="./data/")
+    parser.add_argument("--output", "-o", type=str, help="Path of the 'data' folder", default=DEFAULT_MASTER_OUTPUT_PATH)
     kwargs = vars(parser.parse_args())
     MASTER_OUTPUT_PATH = kwargs["output"]
+    TEMP_FOLDER = os.path.join(MASTER_OUTPUT_PATH, "temp")
     FORCE = kwargs["force"]
     METHOD = kwargs["method"]
 
     # Logging to GitHub's API
     if METHOD == "api":
-        dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
-        load_dotenv(dotenv_path)
-        username = os.environ.get('GITHUB_USERNAME')
-        token = os.environ.get('GITHUB_TOKEN')
+        env_vars = [
+            "EIKONOMIYA_GITHUB_USERNAME",
+            "EIKONOMIYA_GITHUB_TOKEN",
+        ]
+        if not all(env_var in os.environ for env_var in env_vars):
+            logging.error("Please define the following environment variables: " + ", ".join(env_vars) + ".")
+            exit(1)
+        username = os.environ[env_vars[0]]
+        token = os.environ[env_vars[1]]
         AUTH = (username, token)
 
     # Run the main function

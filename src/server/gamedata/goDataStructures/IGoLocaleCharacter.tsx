@@ -41,7 +41,6 @@ export interface IGoLocaleCharacter {
 function convertToArray(data: any) {
     let keys = Object.keys(data)
     let res = []
-    console.log(data)
     for (let ki = 0; ki < keys.length; ++ki) {
         const k = keys[ki]
         if (data[k].length > 0 && data[k][0].length > 1) {
@@ -59,9 +58,7 @@ function convertToArray(data: any) {
 export function jsonToIGoLocaleCharacter(data: any) : IGoLocaleCharacter {
 
     const passiveKeys = Object.keys(data).filter(f => f.includes("passive"))
-    console.log(passiveKeys)
     const constellationKeys = Object.keys(data).filter(f => f.includes("constellation") && f != "constellationName")
-    console.log(constellationKeys)
     const passives = []
     const constellations = []
     for (let pki = 0; pki < passiveKeys.length; ++pki) {
@@ -76,7 +73,6 @@ export function jsonToIGoLocaleCharacter(data: any) : IGoLocaleCharacter {
     for (let cki = 0; cki < constellationKeys.length; ++cki) {
         const ck = constellationKeys[cki]
         const d = data[ck]
-        console.log(d)
         constellations.push({
             name: d["name"],
             description: convertToArray(d["description"])

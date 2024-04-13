@@ -164,7 +164,6 @@ export default function ArtifactCard({equip, rule, sortedStats, scoreState} : {e
     let starCount = Math.floor(totalRollsOnlyPercent - 3)
     for (let i = 1; i <= starCount; ++i) {
         let scaledScoreIncr = (0.9 / starCount) * i
-        console.log(scaledScoreIncr)
             stars.push(<div>
                 <Icon n="star" useTooltip={false} customColor={scaledScoreValue > scaledScoreIncr ? colorDirector.element : "none"}/>
             </div>

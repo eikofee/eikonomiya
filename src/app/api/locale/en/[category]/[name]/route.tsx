@@ -11,7 +11,6 @@ export async function apiLoadLocaleLogic(category: string, name: string) : Promi
     const res : IApiResult<IApiLocale> = {success: false}
     const p = await buildPathToDataFolder("gamedata", "locale", category, subPath, ".json")
     if (p.status) {
-        console.log(p)
         const a = JSON.parse((await fsPromises.readFile(p.path)).toString())
         if (category == "characters") {
             const item = jsonToIGoLocaleCharacter(a)

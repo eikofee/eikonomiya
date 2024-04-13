@@ -10,7 +10,8 @@ import stat
 
 
 # Constants
-GO_EXTENSIONS = ['png', 'jpg', 'jpeg']
+GO_EXTENSIONS_IMAGES = ['png', 'jpg', 'jpeg']
+GO_EXTENSIONS_DATA = ['json']
 AUTH = None  # TODO: might not be the most secured way to store the credentials
 DEFAULT_MASTER_OUTPUT_PATH = "./data/"
 
@@ -95,6 +96,7 @@ def download_folder(
     path: str,
     output_path: Union[str, callable],
     name_converter: callable,
+    extensions: list[str]
 ):
     """
     Download all the files in a folder of a GitHub repository.
@@ -122,7 +124,7 @@ def download_folder(
         logging.info(f"Found {len(images)} images in " + os.path.join(path, "*"))
         for image in images:
             ext = image.split(".")[-1]
-            if ext not in GO_EXTENSIONS:
+            if ext not in extensions:
                 continue
 
             # Getting the new filename
@@ -153,7 +155,7 @@ def download_folder(
             file['download_url']
             for file in contents
             if file['type'] == 'file'
-            and file['name'].lower().endswith(tuple(GO_EXTENSIONS))
+            and file['name'].lower().endswith(tuple(extensions))
         ]
 
         # Downloading all the images
@@ -216,6 +218,7 @@ def download_recursively(
     path: str,
     output_path: str,
     name_converter: Union[str, callable],
+    extensions: list[str],
     force_download: bool = False,
     expected_files: int = 1,
 ):
@@ -264,7 +267,7 @@ def download_recursively(
         logging.info(f"Found {len(images)} images in " + os.path.join(path, "**", "*"))
         for image in images:
             ext = image.split(".")[-1]
-            if ext not in GO_EXTENSIONS:
+            if ext not in extensions:
                 continue
 
             # Getting the new filename
@@ -324,7 +327,7 @@ def download_recursively(
                     file['download_url']
                     for file in contents
                     if file['type'] == 'file'
-                    and file['name'].lower().endswith(tuple(GO_EXTENSIONS))
+                    and file['name'].lower().endswith(tuple(extensions))
                 ]
                 if isinstance(name_converter, str) and name_converter == "index.ts":
                     index_dot_ts = requests.get(f"https://raw.githubusercontent.com/{GO_OWNER}/{GO_REPO}/master/{path}/{folder}/index.ts").text
@@ -369,6 +372,7 @@ def download_artifacts():
         path="libs/gi/assets/src/gen/artifacts",
         output_path="gamedata/assets/artifacts/",
         name_converter=name_converter,
+        extensions=GO_EXTENSIONS_IMAGES,
         force_download=FORCE,
         expected_files=5,
     )
@@ -381,6 +385,7 @@ def download_characters():
         path = "libs/gi/assets/src/gen/chars",
         output_path="gamedata/assets/characters/",
         name_converter="index.ts",
+        extensions=GO_EXTENSIONS_IMAGES,
         force_download=FORCE,
         expected_files=15,
     )
@@ -407,6 +412,7 @@ def download_characters():
         path="libs/gi/char-cards/src",
         output_path=output_path,
         name_converter=name_converter,
+        extensions=GO_EXTENSIONS_IMAGES
     )
 
 
@@ -427,8 +433,37 @@ def download_weapons():
         path = "libs/gi/assets/src/gen/weapons",
         output_path="gamedata/assets/weapons/",
         name_converter=name_converter,
+        extensions=GO_EXTENSIONS_IMAGES,
         force_download=FORCE,
         expected_files=15,
+    )
+
+def download_locale():
+
+        def name_converter(old_filename: str) -> str:
+            splits = old_filename.split("_")
+            if len(splits) > 2 :
+                return f"{splits[1].lower()}.json"
+            return old_filename
+    
+        def output_path(old_filename: str) -> str:
+            prefix = old_filename.split("_")[0]
+            base_output = "gamedata/locale/"
+            suffix = "default"
+            if "char" in prefix:
+                suffix = "characters"
+            elif "weapon" in prefix:
+                suffix = "weapons"
+            elif "artifact" in prefix:
+                suffix = "artifacts"
+
+            return f"{base_output}{suffix}"
+
+        download_folder(
+        path="libs/gi/dm-localization/assets/locales/en",
+        output_path=output_path,
+        name_converter=name_converter,
+        extensions=GO_EXTENSIONS_DATA
     )
 
 
@@ -439,6 +474,7 @@ def main(**kwargs):
     if METHOD == "checkout":
         sparse_checkout(path_to_checkout="libs/gi/assets/src/gen")
         sparse_checkout(path_to_checkout="libs/gi/char-cards/src")
+        sparse_checkout(path_to_checkout="libs/gi/dm-localization/assets/locales/en")
 
     if kwargs["characters"]:
         download_characters()
@@ -451,6 +487,9 @@ def main(**kwargs):
 
     if kwargs["data"]:
         update_eikonomiya_data()
+
+    if kwargs["locale"]:
+        download_locale()
 
     if METHOD == "checkout" and not kwargs["keep"]:
        del_temp_folder()
@@ -474,6 +513,7 @@ if __name__ == "__main__":
     parser.add_argument("--weapons", "-w", action="store_true", help="Download the weapons' assets")
     parser.add_argument("--artifacts", "-a", action="store_true", help="Download the artifacts' assets")
     parser.add_argument("--data", "-d", action="store_true", help="Download eikonomiya data")
+    parser.add_argument("--locale", "-l", action="store_true", help="Download locales (EN)")
     parser.add_argument("--force", "-f", action="store_true", help="Force the redownload of all the assets")
     parser.add_argument("--output", "-o", type=str, help="Path of the 'data' folder", default=DEFAULT_MASTER_OUTPUT_PATH)
     parser.add_argument("--keep", "-k", action="store_true", help="If using 'checkout' method, keep the temp folder")

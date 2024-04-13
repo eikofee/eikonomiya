@@ -12,6 +12,7 @@ import stat
 # Constants
 GO_EXTENSIONS_IMAGES = ['png', 'jpg', 'jpeg']
 GO_EXTENSIONS_DATA = ['json']
+ED_DATA_EXTENSIONS = ['yml', 'png']
 AUTH = None  # TODO: might not be the most secured way to store the credentials
 DEFAULT_MASTER_OUTPUT_PATH = "./data/"
 
@@ -28,7 +29,7 @@ TEMP_FOLDER = os.path.join(MASTER_OUTPUT_PATH, "temp")
 FORCE = None
 
 # Eikonomiya-data specific
-ED_DATA_FOLDERS = ["artifacts", "weapons", "resonances"]
+ED_DATA_FOLDERS = ["artifacts", "weapons", "resonances", "assets/generic"]
 
 def sparse_checkout(path_to_checkout: str):
 
@@ -191,12 +192,12 @@ def update_eikonomiya_data():
             [file['download_url'], file["path"]]
             for file in contents
             if file['type'] == 'file'
-            and file['name'].lower().endswith(".yml")
+            and file['name'].lower().endswith(tuple(ED_DATA_EXTENSIONS))
         ]
             
             for file in files:
                 download_url = file[0]
-                file_path = file[1].split("/")[0]
+                file_path = "/".join(file[1].split("/")[:-1])
                 response = requests.get(download_url, auth=AUTH)  # TODO: lower the number of requests
                 old_filename = download_url.split("/")[-1]
                 filename = old_filename

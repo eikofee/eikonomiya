@@ -102,7 +102,7 @@ export function FullEquipCard({character, rule}:{character : ICharacterData, rul
 
     let arteCards = []
     for (let i = 0; i < artes.length; ++i) {
-        arteCards.push(<ArtifactCard equip={artes[i]} score={arteScores[i]} />)
+        arteCards.push(<ArtifactCard key={"artifact-".concat(i.toString())} equip={artes[i]} score={arteScores[i]} />)
     }
 
     return (

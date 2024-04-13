@@ -66,14 +66,14 @@ export default function StatCard({character, statbag} : {character: ICharacterDa
                 break;
         }
 
-        ls.push(<StatLineDraw name={baseStat[i]} value={baseValues[i]} rounded={false} /> )
+        ls.push(<StatLineDraw key={"stat-line-draw-".concat(i.toString())} name={baseStat[i]} value={baseValues[i]} rounded={false} /> )
         if (expanded) {
-            ls.push(<StatLineDraw name="Base" value={subBase} rounded={false} sub={true}/>)
+            ls.push(<StatLineDraw key={"stat-line-draw-".concat(i.toString(), "-expanded-base")} name="Base" value={subBase} rounded={false} sub={true}/>)
             if (subBonus > 0) {
-                ls.push(<StatLineDraw name="Stat% bonus" value={subBonus} secondaryValue={subBonus * subBase} rounded={false} sub={true}/>)
+                ls.push(<StatLineDraw key={"stat-line-draw-".concat(i.toString(), "-expanded-stat-p-bonus")} name="Stat% bonus" value={subBonus} secondaryValue={subBonus * subBase} rounded={false} sub={true}/>)
             }
             if (subFlat > 0) {
-                ls.push(<StatLineDraw name="Flat bonus" value={subFlat} prefix="+" rounded={false} sub={true}/>)
+                ls.push(<StatLineDraw key={"stat-line-draw-".concat(i.toString(), "-expanded-flat")} name="Flat bonus" value={subFlat} prefix="+" rounded={false} sub={true}/>)
             }
         }
 
@@ -87,7 +87,7 @@ export default function StatCard({character, statbag} : {character: ICharacterDa
     for (let i = 0; i < statNames.length; ++i) {
         let s = statNames[i]
         if (statValues[i] > 0) {
-            ls.push(<StatLineDraw name={s} value={statValues[i]} rounded={i == statNames.length - 1} />)
+            ls.push(<StatLineDraw key={"stat-line-draw-".concat(i.toString())} name={s} value={statValues[i]} rounded={i == statNames.length - 1} />)
         }
     }
 

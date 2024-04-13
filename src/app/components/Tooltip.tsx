@@ -36,7 +36,7 @@ export default function Tooltip(c: InfoDivProps) {
 
     return(<div className={cn?.concat(" relative")} onMouseEnter={displayTT} onMouseLeave={hideTT}>
         {c.child}
-        <div className={ttClassName} onMouseEnter={hideTT}>
+        <div key="tooltip" className={ttClassName} onMouseEnter={hideTT}>
             {c.info}
         </div>
     </div>

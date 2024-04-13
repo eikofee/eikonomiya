@@ -35,7 +35,7 @@ export default function EffectCardBoolean({effect: effect, effectUpdateCallback:
     }
 
     const boolClassname = "text-sm cursor-pointer h-full self-start text-center w-full ".concat(effect.options.enabled ? "bg-green-300" : "bg-red-300 rounded-b-md" )
-    const controller = <div className={boolClassname} onClick={enableCallback}>{effect.options.enabled ? "Enabled" : "Disabled"}</div>
+    const controller = <div key="effect-bool-controller" className={boolClassname} onClick={enableCallback}>{effect.options.enabled ? "Enabled" : "Disabled"}</div>
 
     return <EffectCard effect={effect} effectUpdateCallback={effectUpdateCallback} character={character} controller={[controller]} removable={removable}/>
 }

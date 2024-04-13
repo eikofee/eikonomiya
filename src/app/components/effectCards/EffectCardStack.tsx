@@ -41,16 +41,17 @@ export default function EffectCardStack({effect: effect, effectUpdateCallback: e
     const stackButtons = []
     if (effect.options.maxstack < 10) {
         for (let i = 0; i < effect.options.maxstack + 1; ++i) {
-            stackButtons.push(<button onClick={switchCallback(i)} className={"h-1/2 w-full min-w-6 rounded-md text-sm mr-1 border ".concat(colorDirector.borderAccent(5), effect.options.stack == i ? i == 0 ? " bg-red-300" : " bg-green-300" : "")}>{i}</button>)
+            stackButtons.push(<button key={"stack-button-".concat(i.toString())} onClick={switchCallback(i)} className={"h-1/2 w-full min-w-6 rounded-md text-sm mr-1 border ".concat(colorDirector.borderAccent(5), effect.options.stack == i ? i == 0 ? " bg-red-300" : " bg-green-300" : "")}>{i}</button>)
         }
     } else {
         for (let i = 0; i < effect.options.maxstack + 1; i += 50) {
-            stackButtons.push(<button onClick={switchCallback(i)} className={"h-1/2 w-full rounded-md text-sm mr-1 border ".concat(colorDirector.borderAccent(5), effect.options.stack == i ? i == 0 ? " bg-red-300" : " bg-green-300" : "")}>{i}</button>)
+            stackButtons.push(<button key={"stack-button-".concat(i.toString())} onClick={switchCallback(i)} className={"h-1/2 w-full rounded-md text-sm mr-1 border ".concat(colorDirector.borderAccent(5), effect.options.stack == i ? i == 0 ? " bg-red-300" : " bg-green-300" : "")}>{i}</button>)
         }
-        stackButtons.push(<button onClick={switchCallback(effect.options.maxstack)} className={"h-1/2 w-full rounded-md text-sm mr-1 border ".concat(colorDirector.borderAccent(5), effect.options.stack == effect.options.maxstack ? effect.options.maxstack == 0 ? " bg-red-300" : " bg-green-300" : "")}>{effect.options.maxstack}</button>)
+
+        stackButtons.push(<button key={"stack-button-max"} onClick={switchCallback(effect.options.maxstack)} className={"h-1/2 w-full rounded-md text-sm mr-1 border ".concat(colorDirector.borderAccent(5), effect.options.stack == effect.options.maxstack ? effect.options.maxstack == 0 ? " bg-red-300" : " bg-green-300" : "")}>{effect.options.maxstack}</button>)
     }
 
-    const controller = <div className={stackClassname}>
+    const controller = <div key="effect-stack-controller" className={stackClassname}>
         <p className="self-center text-xs">Stacks : </p>
         <div className="flex flex-row w-full justify-center">
             {stackButtons}

@@ -30,14 +30,14 @@ export default function EffectCard({effect: effect, effectUpdateCallback: effect
         for (let i = 0; i < effect.statChanges.length; ++i) {
             let statChange = effect.statChanges[i]
             let s = statChange.name
-            ls.push(<StatLineDraw name={s} value={statChange.value} rounded={i == effect.statChanges.length - 1} />)
+            ls.push(<StatLineDraw key={"stat-line-draw-".concat(i.toString())} name={s} value={statChange.value} rounded={i == effect.statChanges.length - 1} />)
         }
     }
 
     let icon = buildImgOrIconForEffect(effect)
 
 
-    let child = <div className={"flex flex-row flex-grow w-full rounded-t-md ".concat(colorDirector.bgAccent(7))}>
+    let child = <div key="effect-child" className={"flex flex-row flex-grow w-full rounded-t-md ".concat(colorDirector.bgAccent(7))}>
                     {/* <img alt="" src={effect.icon} className="aspect-square w-8 place-self-start"/> */}
                     <div className="aspect-square w-8 place-self-start">
                         {icon}
@@ -51,7 +51,7 @@ export default function EffectCard({effect: effect, effectUpdateCallback: effect
     let content = <div className="bg-inherit">
         {title}
         {controller}
-        <ul>
+        <ul key="effect-list">
             {ls}
         </ul>
     </div>;

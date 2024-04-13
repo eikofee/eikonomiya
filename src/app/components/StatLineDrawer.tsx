@@ -36,7 +36,7 @@ export default function StatLineDraw({name, value, secondaryValue, prefix, round
         valueClassname = valueClassname.concat(" pr-2")
 
     }
-    return <li className={liClassname}>
+    return <li key={"line-".concat(name)} className={liClassname}>
             <div className={nameClassname}>{n}</div>
             <div className={valueClassname}>{prefix != undefined ? prefix : ""}{v}</div>
         </li>

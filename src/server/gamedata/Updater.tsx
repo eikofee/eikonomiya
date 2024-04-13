@@ -544,7 +544,7 @@ export class Updater {
                         characterCard: "characters_".concat(cleanName, "_card"),
                         characterPortrait: "characters_".concat(cleanName, "_face"),
                         characterNameCard: "characters_".concat(cleanName, "_namecard"),
-                        aa: "characters_generic_".concat(c.commonData.weapon),
+                        aa: "generic_".concat(c.commonData.weapon),
                         skill: "characters_".concat(cleanName, "_skill"),
                         burst: "characters_".concat(cleanName, "_burst"),
                         a1: "characters_".concat(cleanName, "_a1"),

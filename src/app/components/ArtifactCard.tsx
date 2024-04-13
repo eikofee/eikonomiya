@@ -1,25 +1,38 @@
 "use client";
 
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { ICharacterRule } from "../interfaces/ICharacterRule";
 import Icon from "./Icon";
 import Tooltip from "./Tooltip";
 import { ConfigContext } from "./ConfigContext";
 import { IArtifact } from "@/server/gamedata/IArtifact";
-import { EStat, eStatToReadable } from "@/server/gamedata/enums/EStat";
-import { IStatTuple } from "@/server/gamedata/IStatTuple";
+import { EStat } from "@/server/gamedata/enums/EStat";
 import { ImgApi } from "./ImgApi";
 import Card, { ECardSize } from "./Card";
 import { EAccentType } from "../classes/ColorDirector";
 
-export default function ArtifactCard({equip, rule, sortedStats, scoreState} : {equip: IArtifact, rule: ICharacterRule, sortedStats: IStatTuple[], scoreState: (a: number) => void}) {
+export interface IArtifactCardInfo {
+    rule: ICharacterRule,
 
+    totalRolls: number,
+    potentialAll: number,
+    potentialAllPercent: number,
+    potentialP: number,
+    potentialPPercent: number,
+    scaledScore: number,
+    scaledScorePercent: number,
+    totalScore: number,
+    totalScorePercent: number,
+    div: number
 
+}
+
+export default function ArtifactCard({equip, score} : {equip: IArtifact, score: IArtifactCardInfo}) {
 
     const getRuleValue = (e: EStat) => {
-        for (let i = 0; i < rule.stats.length; ++i) {
-            if (rule.stats[i].name == e) {
-                return rule.stats[i].value
+        for (let i = 0; i < score.rule.stats.length; ++i) {
+            if (score.rule.stats[i].name == e) {
+                return score.rule.stats[i].value
             }
         }
 
@@ -27,37 +40,10 @@ export default function ArtifactCard({equip, rule, sortedStats, scoreState} : {e
     }
     const isPercentage = (s: string) => s.includes("%")
     const {colorDirector} = useContext(ConfigContext)
-    const fontWeight = [
-        // "font-light", //0-1
-        "font-normal", //1-2
-        "font-normal", //1-2
-        // "font-normal", //1-2
-        "font-medium", // 2-3
-        "font-medium", //3-4
-        "font-bold", //4-5
-        "font-bold"
-    ]
 
     const badStats = [
         EStat.HP,EStat.ATK,EStat.DEF
     ]
-
-    let mainIndex = 0
-    let div = 1;
-    let mvs = sortedStats
-    if (mvs[mainIndex].name == equip.mainStat.name) {
-        mainIndex += 1
-    }
-
-    div = 6 * mvs[mainIndex].value
-    for (let i = mainIndex + 1; i < mainIndex + 4; ++i) {
-        if (mvs[i].name != equip.mainStat.name) {
-            div += mvs[i].value
-        } else {
-            mainIndex += 1
-        }
-    }
-    div = Math.max(1, div)
 
     let statList = []
     let statLine = <div className="w-full flex flex-row items-center">
@@ -98,7 +84,7 @@ export default function ArtifactCard({equip, rule, sortedStats, scoreState} : {e
             }
         }
 
-        let statLineClassname = "w-full flex flex-row items-center ".concat(fontWeight[Math.floor(equip.subStats[i].rollValue)], " ", badStats.includes(equip.subStats[i].name) ? "text-slate-500/50 fill-slate-500/50 " : "text-current")
+        let statLineClassname = "w-full flex flex-row items-center font-normal ".concat(badStats.includes(equip.subStats[i].name) ? "text-slate-500/50 fill-slate-500/50 " : "text-current")
         let statLine = <div className={statLineClassname}>
                             <div className={"text-left"}>
                                 <div className="w-4 h-4">
@@ -129,43 +115,29 @@ export default function ArtifactCard({equip, rule, sortedStats, scoreState} : {e
         </li>
         )
     }
-    
-    let score = 0
-    let totalRolls = 0
-    let totalRollsOnlyPercent = 0
-    for (let i = 0; i < equip.subStats.length; ++i) {
-        score += equip.subStats[i].rollValue * getRuleValue(equip.subStats[i].name)
-        totalRolls += equip.subStats[i].rollValue
-        if (equip.subStats[i].name == EStat.EM || equip.subStats[i].name.toString().includes("%")) {
-            totalRollsOnlyPercent += equip.subStats[i].rollValue
-        }
-    }
 
-    let scoreValue = score/div*100
-    let scaledScoreValue = score / (totalRolls/9*div)
-    scoreState(scoreValue)
     let infoLine = [
-        <p>Total Rolls : {totalRolls.toFixed(1)}/9</p>,
-        <p>Potential (all): {(totalRolls/9*100).toFixed(1)}%</p>,
-        <p>Potential (%): {(totalRollsOnlyPercent/9*100).toFixed(1)}%</p>,
-        <p>Scaled Score : {(scaledScoreValue * 100).toFixed(1)}%</p>,
-        <p>Total Score : {score.toFixed(1)}/{div}</p>
+        <p>Total Rolls : {score.totalRolls.toFixed(1)}/9</p>,
+        <p>Potential (all): {(score.potentialAllPercent).toFixed(1)}%</p>,
+        <p>Potential (%): {(score.potentialPPercent).toFixed(1)}%</p>,
+        <p>Scaled Score : {(score.scaledScorePercent).toFixed(1)}%</p>,
+        <p>Total Score : {(score.totalScore * score.div).toFixed(1)}/{score.div}</p>
     ]
     let scoreLine = <div className="w-full flex flex-row items-center align-baseline font-semibold">
         <div className="text-left basis-3/5 truncate">
             Score :
         </div>
         <div className={"text-right basis-2/5"}>
-            {scoreValue.toFixed(0).concat("%")}
+            {(score.totalScorePercent).toFixed(0).concat("%")}
         </div>
     </div>
 
     let stars = []
-    let starCount = Math.floor(totalRollsOnlyPercent - 3)
+    let starCount = Math.floor(score.potentialP * 9 - 3)
     for (let i = 1; i <= starCount; ++i) {
         let scaledScoreIncr = (0.9 / starCount) * i
             stars.push(<div>
-                <Icon n="star" useTooltip={false} customColor={scaledScoreValue > scaledScoreIncr ? colorDirector.element : "none"}/>
+                <Icon n="star" useTooltip={false} customColor={score.scaledScore > scaledScoreIncr ? colorDirector.element : "none"}/>
             </div>
             )
     }

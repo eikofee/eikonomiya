@@ -10,14 +10,15 @@ import stat
 
 
 # Constants
-EXTENSIONS = ['png', 'jpg', 'jpeg']
+GO_EXTENSIONS = ['png', 'jpg', 'jpeg']
 AUTH = None  # TODO: might not be the most secured way to store the credentials
 DEFAULT_MASTER_OUTPUT_PATH = "./data/"
 
 # Informations about the repository
-OWNER = "frzyc"
-REPO = "genshin-optimizer"
-
+GO_OWNER = "frzyc"
+GO_REPO = "genshin-optimizer"
+ED_OWNER = "eikofee"
+ED_REPO = "eikonomiya-data"
 
 # User specific
 METHOD = None
@@ -25,6 +26,8 @@ MASTER_OUTPUT_PATH = DEFAULT_MASTER_OUTPUT_PATH
 TEMP_FOLDER = os.path.join(MASTER_OUTPUT_PATH, "temp")
 FORCE = None
 
+# Eikonomiya-data specific
+ED_DATA_FOLDERS = ["artifacts", "weapons", "resonances"]
 
 def sparse_checkout(path_to_checkout: str):
 
@@ -49,12 +52,12 @@ def sparse_checkout(path_to_checkout: str):
 def del_temp_folder():
 
     # Set all files to writeable
-    files = glob.glob(os.path.join(TEMP_FOLDER, REPO, ".git", "**", "*"), recursive=True)
+    files = glob.glob(os.path.join(TEMP_FOLDER, GO_REPO, ".git", "**", "*"), recursive=True)
     for file in files:
         os.chmod(file, stat.S_IWRITE)
 
     # Delete the folder
-    shutil.rmtree(TEMP_FOLDER, REPO)
+    shutil.rmtree(TEMP_FOLDER, GO_REPO)
 
 
 def intex_dot_ts2name_converter(index_dot_ts: str, old_filename: str) -> str:
@@ -115,11 +118,11 @@ def download_folder(
     if METHOD == "checkout":
 
         # Getting all images of the checked out repo
-        images = glob.glob(os.path.join(TEMP_FOLDER, REPO, path, "*"), recursive=False)
+        images = glob.glob(os.path.join(TEMP_FOLDER, GO_REPO, path, "*"), recursive=False)
         logging.info(f"Found {len(images)} images in " + os.path.join(path, "*"))
         for image in images:
             ext = image.split(".")[-1]
-            if ext not in EXTENSIONS:
+            if ext not in GO_EXTENSIONS:
                 continue
 
             # Getting the new filename
@@ -142,7 +145,7 @@ def download_folder(
         return
 
     # Getting all images of the set
-    url = f"https://api.github.com/repos/{OWNER}/{REPO}/contents/{path}"
+    url = f"https://api.github.com/repos/{GO_OWNER}/{GO_REPO}/contents/{path}"
     response = requests.get(url, auth=AUTH)  # TODO: lower the number of requests
     if response.status_code == 200:
         contents = response.json()
@@ -150,7 +153,7 @@ def download_folder(
             file['download_url']
             for file in contents
             if file['type'] == 'file'
-            and file['name'].lower().endswith(tuple(EXTENSIONS))
+            and file['name'].lower().endswith(tuple(GO_EXTENSIONS))
         ]
 
         # Downloading all the images
@@ -175,6 +178,38 @@ def download_folder(
             with open(os.path.join(MASTER_OUTPUT_PATH, real_output_path, filename), 'wb') as f:
                 f.write(response.content)
             logging.info(f"Downloaded {filename}!")
+
+def update_eikonomiya_data():
+    for path in ED_DATA_FOLDERS:
+        url = f"https://api.github.com/repos/{ED_OWNER}/{ED_REPO}/contents/{path}"
+        response = requests.get(url, auth=AUTH)  # TODO: lower the number of requests
+        if response.status_code == 200:
+            contents = response.json()
+            files = [
+            [file['download_url'], file["path"]]
+            for file in contents
+            if file['type'] == 'file'
+            and file['name'].lower().endswith(".yml")
+        ]
+            
+            for file in files:
+                download_url = file[0]
+                file_path = file[1].split("/")[0]
+                response = requests.get(download_url, auth=AUTH)  # TODO: lower the number of requests
+                old_filename = download_url.split("/")[-1]
+                filename = old_filename
+                
+                real_output_path = f"gamedata/{file_path}"
+                
+                # Create a local folder (if needed)
+                logging.info(f"Trying to download {path}...")
+                folder_path = os.path.join(MASTER_OUTPUT_PATH, real_output_path)
+                os.makedirs(folder_path, exist_ok=True)
+                
+                # Save the file in the folder
+                with open(os.path.join(MASTER_OUTPUT_PATH, real_output_path, filename), 'wb') as f:
+                    f.write(response.content)
+                logging.info(f"Downloaded {filename}!")
 
 
 def download_recursively(
@@ -225,11 +260,11 @@ def download_recursively(
     if METHOD == "checkout":
 
         # Getting all images of the checked out repo
-        images = glob.glob(os.path.join(TEMP_FOLDER, REPO, path, "**", "*"), recursive=True)
+        images = glob.glob(os.path.join(TEMP_FOLDER, GO_REPO, path, "**", "*"), recursive=True)
         logging.info(f"Found {len(images)} images in " + os.path.join(path, "**", "*"))
         for image in images:
             ext = image.split(".")[-1]
-            if ext not in EXTENSIONS:
+            if ext not in GO_EXTENSIONS:
                 continue
 
             # Getting the new filename
@@ -253,7 +288,7 @@ def download_recursively(
         return
 
     # Getting all folders
-    url = f"https://api.github.com/repos/{OWNER}/{REPO}/contents/{path}"
+    url = f"https://api.github.com/repos/{GO_OWNER}/{GO_REPO}/contents/{path}"
     response = requests.get(url, auth=AUTH)  # TODO: lower the number of requests
 
     # Check if there is a field "message"
@@ -281,7 +316,7 @@ def download_recursively(
                 continue
 
             # Getting all images of the set
-            url = f"https://api.github.com/repos/{OWNER}/{REPO}/contents/{path}/{folder}"
+            url = f"https://api.github.com/repos/{GO_OWNER}/{GO_REPO}/contents/{path}/{folder}"
             response = requests.get(url, auth=AUTH)  # TODO: lower the number of requests
             if response.status_code == 200:
                 contents = response.json()
@@ -289,10 +324,10 @@ def download_recursively(
                     file['download_url']
                     for file in contents
                     if file['type'] == 'file'
-                    and file['name'].lower().endswith(tuple(EXTENSIONS))
+                    and file['name'].lower().endswith(tuple(GO_EXTENSIONS))
                 ]
                 if isinstance(name_converter, str) and name_converter == "index.ts":
-                    index_dot_ts = requests.get(f"https://raw.githubusercontent.com/{OWNER}/{REPO}/master/{path}/{folder}/index.ts").text
+                    index_dot_ts = requests.get(f"https://raw.githubusercontent.com/{GO_OWNER}/{GO_REPO}/master/{path}/{folder}/index.ts").text
 
                 # Downloading all the images
                 for image in images:
@@ -414,6 +449,9 @@ def main(**kwargs):
     if kwargs["weapons"]:
         download_weapons()
 
+    if kwargs["data"]:
+        update_eikonomiya_data()
+
     if METHOD == "checkout" and not kwargs["keep"]:
        del_temp_folder()
 
@@ -435,6 +473,7 @@ if __name__ == "__main__":
     parser.add_argument("--characters", "-c", action="store_true", help="Download the characters' assets")
     parser.add_argument("--weapons", "-w", action="store_true", help="Download the weapons' assets")
     parser.add_argument("--artifacts", "-a", action="store_true", help="Download the artifacts' assets")
+    parser.add_argument("--data", "-d", action="store_true", help="Download eikonomiya data")
     parser.add_argument("--force", "-f", action="store_true", help="Force the redownload of all the assets")
     parser.add_argument("--output", "-o", type=str, help="Path of the 'data' folder", default=DEFAULT_MASTER_OUTPUT_PATH)
     parser.add_argument("--keep", "-k", action="store_true", help="If using 'checkout' method, keep the temp folder")

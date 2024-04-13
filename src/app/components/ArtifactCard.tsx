@@ -117,11 +117,11 @@ export default function ArtifactCard({equip, score} : {equip: IArtifact, score: 
     }
 
     let infoLine = [
-        <p>Total Rolls : {score.totalRolls.toFixed(1)}/9</p>,
-        <p>Potential (all): {(score.potentialAllPercent).toFixed(1)}%</p>,
-        <p>Potential (%): {(score.potentialPPercent).toFixed(1)}%</p>,
-        <p>Scaled Score : {(score.scaledScorePercent).toFixed(1)}%</p>,
-        <p>Total Score : {(score.totalScore * score.div).toFixed(1)}/{score.div}</p>
+        <p key="total-rolls">Total Rolls : {score.totalRolls.toFixed(1)}/9</p>,
+        <p key="potential-all">Potential (all): {(score.potentialAllPercent).toFixed(1)}%</p>,
+        <p key="potential-percent">Potential (%): {(score.potentialPPercent).toFixed(1)}%</p>,
+        <p key="scaled-score">Scaled Score : {(score.scaledScorePercent).toFixed(1)}%</p>,
+        <p key="total-score">Total Score : {(score.totalScore * score.div).toFixed(1)}/{score.div}</p>
     ]
     let scoreLine = <div className="w-full flex flex-row items-center align-baseline font-semibold">
         <div className="text-left basis-3/5 truncate">

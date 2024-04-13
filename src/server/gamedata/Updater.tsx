@@ -22,8 +22,8 @@ import { IStatRatio } from "./IStatRatio";
 import { ERegion, stringToERegion } from "./enums/ERegion";
 import { EElement } from "./enums/EElement";
 import { IApiEffectCard } from "./IApiEffectCard";
-import { apiLogicLoadEffectData } from "@/app/api/effects/[category]/[name]/route";
-import { apiLoadLocaleLogic } from "@/app/api/locale/en/[category]/[name]/route";
+import { apiLogicLoadEffectData } from "../api/ApiLogicLoadEffectData";
+import { apiLogicLoadLocale } from "../api/ApiLogicLoadLocale";
 
 export enum ELoadStatus {
     SUCCESS,
@@ -517,7 +517,7 @@ export class Updater {
                 let constNames = []
                 let constTexts = []
                 let cname = this.getCName(name, c.commonData.element)
-                const constInfoRequest = await apiLoadLocaleLogic("characters", cname)
+                const constInfoRequest = await apiLogicLoadLocale("characters", cname)
                 if (constInfoRequest.success) {
                     const constInfo = constInfoRequest.content!.constellations
                     for (let ii = 0; ii < 6; ++ii) {
@@ -803,4 +803,8 @@ export class Updater {
         const pr = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/rules")
         await fsPromises.writeFile(pr.concat("/", rule.character), JSON.stringify(rule))
     }
+}
+
+function apiLoadLocaleLogic(arg0: string, cname: string) {
+    throw new Error("Function not implemented.");
 }

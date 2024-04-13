@@ -23,6 +23,7 @@ import { ERegion, stringToERegion } from "./enums/ERegion";
 import { EElement } from "./enums/EElement";
 import { IApiEffectCard } from "./IApiEffectCard";
 import { apiLogicLoadEffectData } from "@/app/api/effects/[category]/[name]/route";
+import { apiLoadLocaleLogic } from "@/app/api/locale/en/[category]/[name]/route";
 
 export enum ELoadStatus {
     SUCCESS,
@@ -480,8 +481,8 @@ export class Updater {
             let characters : ICharacterData[] = []
             const regionRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/regions.yml")).text()
             const reg = yaml.parse(regionRawData)
-            const constInfoRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/character-const-text.yml")).text()
-            const constInfo = yaml.parse(constInfoRawData)
+            // const constInfoRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/character-const-text.yml")).text()
+            // const constInfo = yaml.parse(constInfoRawData)
             for (let i = 0; i < enkaData.charShowcase.length; ++i) {
                 const c = enkaData.charShowcase[i].info
                 const name = this.enkaTranslator.translate(c.commonData.nameId)
@@ -516,13 +517,17 @@ export class Updater {
                 let constNames = []
                 let constTexts = []
                 let cname = this.getCName(name, c.commonData.element)
-                for (let ii = 0; ii < 6; ++ii) {
-                    if (cname != undefined && constInfo[cname]["c".concat((ii + 1).toString())] != undefined) {
-                        constNames.push(constInfo[cname]["c".concat((ii + 1).toString())]["name"])
-                        constTexts.push(constInfo[cname]["c".concat((ii + 1).toString())]["text"])
-                    } else {
-                        constNames.push("UNKNOWN NAME - PLEASE REPORT THE ISSUE")
-                        constTexts.push("UNKNOWN TEXT - PLEASE REPORT THE ISSUE")
+                const constInfoRequest = await apiLoadLocaleLogic("characters", cname)
+                if (constInfoRequest.success) {
+                    const constInfo = constInfoRequest.content!.constellations
+                    for (let ii = 0; ii < 6; ++ii) {
+                        if (cname != undefined && constInfo[ii] != undefined) {
+                            constNames.push(constInfo[ii].name)
+                            constTexts.push(constInfo[ii].description)
+                        } else {
+                            constNames.push("UNKNOWN NAME - PLEASE REPORT THE ISSUE")
+                            constTexts.push(["UNKNOWN TEXT - PLEASE REPORT THE ISSUE"])
+                        }
                     }
                 }
 

@@ -3,6 +3,8 @@ import { ConfigContext } from "./ConfigContext";
 import { ICharacterData } from "@/server/gamedata/ICharacterData";
 import { ImgApi } from "./ImgApi";
 import Card, { ECardSize } from "./Card";
+import MarkdownDescription from "./MarkdownDescription";
+
 
 export default function CharacterCard({char} : {char: ICharacterData}) {
     const {colorDirector} = useContext(ConfigContext)
@@ -11,15 +13,20 @@ export default function CharacterCard({char} : {char: ICharacterData}) {
     const [hoveredItem, setHoveredItem] = useState(0)
     const [hiddableClassname, setHiddableClassname] = useState("hidden")
 
-    const buildDescription = (title : string, text : string) => {
+    const buildDescription = (title : string, text : string[]) => {
+        const childs = []
+        for (let i = 0; i < text.length; ++i) {
+            childs.push(<MarkdownDescription html={text[i]} />)
+        }
         return <div key="level">
-            <h2>{title}</h2>
-            {text}
+            <p className="text-lg font-bold">{title}</p>
+            <br/>
+            {childs}
         </div>
     }
 
     const changeOnHoverCb = (n : number) => {
-        return () => {setHiddableClassname(""); setHoveredItem(n)}
+        return () => {setHiddableClassname("flex flex-col"); setHoveredItem(n)}
     }
 
     const changeOffHoverCb = () => {setHiddableClassname("hidden"); setHoveredItem(0)}
@@ -32,10 +39,15 @@ export default function CharacterCard({char} : {char: ICharacterData}) {
         return content
     }
 
+    
+
+    // const constTextsApi = jsonToIGoLocaleCharacter(await(await fetch("/api/locale/en/characters/".concat(char.name))).json())
+    
     let constellations = []
     const constPaths = [char.commonData.assets.c1, char.commonData.assets.c2, char.commonData.assets.c3, char.commonData.assets.c4, char.commonData.assets.c5, char.commonData.assets.c6]
     const constNames = [char.commonData.constNames.c1, char.commonData.constNames.c2, char.commonData.constNames.c3, char.commonData.constNames.c4, char.commonData.constNames.c5, char.commonData.constNames.c6]
     const constTexts = [char.commonData.constTexts.c1, char.commonData.constTexts.c2, char.commonData.constTexts.c3, char.commonData.constTexts.c4, char.commonData.constTexts.c5, char.commonData.constTexts.c6]
+    // const constTexts = constTextsApi.constellations
     for (let i = 0; i < constPaths.length; ++i) {
         constellations.push(buildConstellationIcon(constPaths[i], i+1))
     }
@@ -44,7 +56,7 @@ export default function CharacterCard({char} : {char: ICharacterData}) {
     <div className="relative flex flex-row justify-center m-2">
         <ImgApi key="character-card" alt="" className="w-full rounded-md" src={fname} />
         <div className={"absolute outline outline-1 inset-0 rounded-md text-sm bg-gray-800/80 text-white font-normal w-full max-w-xl p-2 ".concat(hiddableClassname, " ", colorDirector.outlineAccent(5))}>
-            {hoveredItem > 0 ? buildDescription(constNames[hoveredItem - 1], constTexts[hoveredItem - 1]) : ""}
+            {hoveredItem > 0 ? buildDescription(constNames[hoveredItem - 1], constTexts[hoveredItem - 1]) : [""]}
         </div>
     </div>
     <div className="grid grid-cols-3 justify-items-center">

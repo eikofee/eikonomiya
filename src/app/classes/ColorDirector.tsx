@@ -397,8 +397,9 @@ export class ColorDirector {
         this.element = element
     }
 
-    public bg(level: number) : string {
-        switch (this.element) {
+    public bg(level: number, element? : EElement) : string {
+        element = element == undefined ? this.element : element
+        switch (element) {
             case EElement.ANEMO:
                 return bgAnemo[level];
             case EElement.GEO:
@@ -418,8 +419,9 @@ export class ColorDirector {
         }
     }
 
-    public bgAccent(light: number) : string {
-        switch (this.element) {
+    public bgAccent(light: number, element? : EElement) : string {
+        element = element == undefined ? this.element : element
+        switch (element) {
             case EElement.ANEMO:
                 return bgAnemo[9 - light];
             case EElement.GEO:
@@ -439,8 +441,9 @@ export class ColorDirector {
         }
     }
 
-    public textAccent(light: number) : string {
-        switch (this.element) {
+    public textAccent(light: number, element? : EElement) : string {
+        element = element == undefined ? this.element : element
+        switch (element) {
             case EElement.ANEMO:
                 return textAnemo[9 - light];
             case EElement.GEO:
@@ -460,8 +463,9 @@ export class ColorDirector {
         }
     }
 
-    public borderAccent(light: number) : string {
-        switch (this.element) {
+    public borderAccent(light: number, element? : EElement) : string {
+        element = element == undefined ? this.element : element
+        switch (element) {
             case EElement.ANEMO:
                 return borderAnemo[9 - light];
             case EElement.GEO:
@@ -481,8 +485,9 @@ export class ColorDirector {
         }
     }
 
-    public outlineAccent(light: number) : string {
-        switch (this.element) {
+    public outlineAccent(light: number, element? : EElement) : string {
+        element = element == undefined ? this.element : element
+        switch (element) {
             case EElement.ANEMO:
                 return outlineAnemo[9 - light];
             case EElement.GEO:

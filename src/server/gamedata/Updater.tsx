@@ -721,7 +721,7 @@ export class Updater {
                     chamber: enkaData.abysses.chamber
                 },
                 characters: characters,
-                profilePictureCharacterName: "characters_".concat(enkaData.profilePicture.toLowerCase(), "_face")
+                profilePictureCharacterName: "characters_".concat(this.cleanNameForPath(enkaData.profilePicture), "_face")
             }
 
             await this.writeData(this.uid, pi)

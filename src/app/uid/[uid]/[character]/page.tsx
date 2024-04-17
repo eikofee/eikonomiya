@@ -1,6 +1,6 @@
 "use server";
 import { loadAllEffects, loadCharacters, loadConfigFile, loadRules } from '@/server/DataLoader';
-import RootComponent from '../../components/RootComponent';
+import RootComponent from '../../../components/RootComponent';
 import { Updater } from '@/server/gamedata/Updater';
 
 

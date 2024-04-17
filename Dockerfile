@@ -32,6 +32,7 @@ RUN npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
+RUN apk add --no-cache python3 py3-requests git
 WORKDIR /app
 
 ENV NODE_ENV production

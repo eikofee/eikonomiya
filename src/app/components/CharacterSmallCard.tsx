@@ -42,12 +42,12 @@ export default function CharacterSmallCard({uid, character, useHref, useLargeFon
                     </div>
 
     if (useHref) {
-        content = <a href={"/".concat(uid,"/",character.name)}>{content}</a>
+        content = <a href={"/uid/".concat(uid,"/",character.name)}>{content}</a>
     }
 
     if (useBackground) {
         return <div className="min-w-[200px] max-w-full transition ease-in-out group rounded-md border bg-white/25 px-3 cursor-pointer z-10 mb-2 hover:shadow-lg" style={{
-            backgroundImage : "url(api/assets/".concat(character.commonData.assets.characterNameCard, ")"),
+            backgroundImage : "url(/api/assets/".concat(character.commonData.assets.characterNameCard, ")"),
             backgroundSize : "cover"
         }} >{content}</div>
     } else {

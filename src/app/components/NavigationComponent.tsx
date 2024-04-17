@@ -22,7 +22,7 @@ export default function NavigationComponent({currentCharacter, characterList, ui
                         </div>
                     </div>
         if (useHref) {
-            return <a href={"/".concat(uid,"/",c.name)}>{content}</a>
+            return <a href={"/uid/".concat(uid,"/",c.name)}>{content}</a>
         } else {
             return content
         }

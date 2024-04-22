@@ -17,6 +17,7 @@ import { stringToERegion } from "./gamedata/enums/ERegion";
 import { stringToEStat } from "./gamedata/enums/EStat";
 import { stringToEWeaponType } from "./gamedata/enums/EWeaponType";
 import * as yaml from 'yaml';
+import { stringToETalentType } from "./gamedata/enums/ETalentType";
 
 
 export function parseEffect(data: any[], defaultName: string, defaultIcon: string) : IEffect[] {
@@ -415,64 +416,44 @@ export function parseCharacterData(json: any): ICharacterData {
         })
     }
 
+
     const res : ICharacterData = {
         name: json["name"],
         element: stringToEElement(json["element"]),
         level: json["level"],
-        ascensionLevel: json["ascensionLevel"],
-        ascensionStatName: json["ascensionStatName"],
-        ascensionStatValue: json["ascensionStatValue"],
-        friendshipLevel: json["friendshipLevel"],
-        skills: {
-            levelAA: json["skills"]["levelAA"],
-            levelSkill: json["skills"]["levelSkill"],
-            levelUlt: json["skills"]["levelUlt"]
+        ascension: {
+            level: json["ascension"]["level"],
+            statName: stringToEStat(json["ascension"]["statName"]),
+            statValue: json["ascension"]["statValue"]
         },
-        commonData: {
-            name: json["commonData"]["name"],
-            element: stringToEElement(json["commonData"]["element"]),
-            region: stringToERegion(json["commonData"]["region"]),
-            rarity: stringToERarity(json["commonData"]["rarity"]),
-            weaponType: stringToEWeaponType(json["commonData"]["weaponType"]),
-            ascensionStatName: stringToEStat(json["commonData"]["ascensionStatName"]),
-            ascensionStatBaseValue: json["commonData"]["ascensionStatBaseValue"],
-            assets: {
-                characterPortrait: json["commonData"]["assets"]["characterPortrait"],
-                characterCard: json["commonData"]["assets"]["characterCard"],
-                characterNameCard: json["commonData"]["assets"]["characterNameCard"],
-                aa: json["commonData"]["assets"]["aa"],
-                skill: json["commonData"]["assets"]["skill"],
-                burst: json["commonData"]["assets"]["burst"],
-                a1: json["commonData"]["assets"]["a1"],
-                a4: json["commonData"]["assets"]["a4"],
-                c1: json["commonData"]["assets"]["c1"],
-                c2: json["commonData"]["assets"]["c2"],
-                c3: json["commonData"]["assets"]["c3"],
-                c4: json["commonData"]["assets"]["c4"],
-                c5: json["commonData"]["assets"]["c5"],
-                c6: json["commonData"]["assets"]["c6"]
+        friendshipLevel: json["friendshipLevel"],
+        talents: {
+            aa: {
+                type: stringToETalentType(json["talents"]["aa"]["type"]),
+                name: json["talents"]["aa"]["name"],
+                description: json["talents"]["aa"]["description"],
+                icon: json["talents"]["aa"]["icon"],
+                level: json["talents"]["aa"]["level"],
+                levelMax: json["talents"]["aa"]["levelMax"],
+                fields: json["talents"]["aa"]["fields"]
             },
-            baseStats: {
-                hp: json["commonData"]["baseStats"]["hp"],
-                atk: json["commonData"]["baseStats"]["atk"],
-                atk_nw: json["commonData"]["baseStats"]["atk_nw"],
-                def: json["commonData"]["baseStats"]["def"]
+            skill: {
+                type: stringToETalentType(json["talents"]["skill"]["type"]),
+                name: json["talents"]["skill"]["name"],
+                description: json["talents"]["skill"]["description"],
+                icon: json["talents"]["skill"]["icon"],
+                level: json["talents"]["skill"]["level"],
+                levelMax: json["talents"]["skill"]["levelMax"],
+                fields: json["talents"]["skill"]["fields"]
             },
-            constNames: {
-                c1: json["commonData"]["constNames"]["c1"],
-                c2: json["commonData"]["constNames"]["c2"],
-                c3: json["commonData"]["constNames"]["c3"],
-                c4: json["commonData"]["constNames"]["c4"],
-                c5: json["commonData"]["constNames"]["c5"],
-                c6: json["commonData"]["constNames"]["c6"]
-            },
-            constTexts: {
-                c1: json["commonData"]["constTexts"]["c1"],
-                c2: json["commonData"]["constTexts"]["c2"],
-                c3: json["commonData"]["constTexts"]["c3"],
-                c4: json["commonData"]["constTexts"]["c4"],
-                c5: json["commonData"]["constTexts"]["c5"],
-                c6: json["commonData"]["constTexts"]["c6"]
+            burst: {
+                type: stringToETalentType(json["talents"]["burst"]["type"]),
+                name: json["talents"]["burst"]["name"],
+                description: json["talents"]["burst"]["description"],
+                icon: json["talents"]["burst"]["icon"],
+                level: json["talents"]["burst"]["level"],
+                levelMax: json["talents"]["burst"]["levelMax"],
+                fields: json["talents"]["burst"]["fields"]
             }
         },
         weapon: {
@@ -500,7 +481,13 @@ export function parseCharacterData(json: any): ICharacterData {
         anormalStats: anormalStats.toIStatBag(),
         staticEffects: staticEffects,
         dynamicEffects: [],
-        constellation: parseInt(json["constellation"])
+        constellationLevel: parseInt(json["constellationLevel"]),
+        apiName: json["apiName"],
+        rarity: stringToERarity(json["rarity"]),
+        region: stringToERegion(json["region"]),
+        weaponType: stringToEWeaponType(json["weaponType"]),
+        constellations: json["constellations"],
+        baseStats: json["baseStats"]
     }
 
     return res;

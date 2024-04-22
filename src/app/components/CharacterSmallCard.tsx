@@ -31,7 +31,7 @@ export default function CharacterSmallCard({uid, character, useHref, useLargeFon
     }
     let content = <div className="items-center h-20 w-full flex flex-row cursor-pointer relative">
                         <div className="absolute inset-y-0 -left-2 overflow-hidden">
-                            <ImgApi className="h-full" src={character.commonData.assets.characterPortrait} alt={""} />
+                            <ImgApi className="h-full" src={"characters_".concat(character.apiName, "_face")} alt={""} />
                         </div>
                         <div className={"p-1 text-center absolute top-2 left-20 -right-2 text-ellipsis bg-slate-100/70 rounded-md ".concat(useLargeFont ? "font-bold text-xl" : textSize)}>
                             {character.name}
@@ -47,7 +47,7 @@ export default function CharacterSmallCard({uid, character, useHref, useLargeFon
 
     if (useBackground) {
         return <div className="min-w-[200px] max-w-full transition ease-in-out group rounded-md border bg-white/25 px-3 cursor-pointer z-10 mb-2 hover:shadow-lg" style={{
-            backgroundImage : "url(/api/assets/".concat(character.commonData.assets.characterNameCard, ")"),
+            backgroundImage : "url(/api/assets/characters_".concat(character.apiName, "_namecard)"),
             backgroundSize : "cover"
         }} >{content}</div>
     } else {

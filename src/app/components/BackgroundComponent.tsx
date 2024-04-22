@@ -3,7 +3,7 @@ import { ERegion } from "@/server/gamedata/enums/ERegion";
 
 export default function BackgroundComponent({character} : {character: ICharacterData}) {
     let bg = "bg-fontaine"
-    switch (character.commonData.region) {
+    switch (character.region) {
         case ERegion.MONDSTADT:
             bg = "bg-mondstadt"
             break;

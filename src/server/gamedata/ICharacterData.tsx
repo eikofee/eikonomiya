@@ -9,96 +9,66 @@ import { EStat, stringToEStat } from "./enums/EStat"
 import { ERarity } from "./enums/ERarity"
 import { ERegion } from "./enums/ERegion"
 import { EWeaponType } from "./enums/EWeaponType"
+import { ITalent, buildDefaultITalent, copyTalent } from "./ITalent"
+import { IConstellation } from "./IConstellation"
 
 export interface ICharacterData {
-    name: string
-    element: EElement
+    name: string,
+    apiName: string,
+    element: EElement,
+    rarity: ERarity,
+    region: ERegion,
+    weaponType: EWeaponType,
 
-    level: number
-    ascensionLevel: number
-    ascensionStatName: EStat,
-    ascensionStatValue: number,
-    constellation: number,
-    friendshipLevel: number
-    skills: {
-        levelAA: number
-        levelSkill: number
-        levelUlt: number
+    level: number,
+    ascension: {
+        level: number,
+        statName: EStat,
+        statValue: number,
     }
 
-    commonData: ICharacterCommonData
-    weapon: IWeapon
-    artifacts: IArtifact[]
+    constellationLevel: number,
+    constellations : IConstellation[]
 
-    totalStats: IStatBag
-    lastUpdated: number
-    anormalStats: IStatBag
+    friendshipLevel: number,
+    talents: {
+        aa: ITalent,
+        skill: ITalent,
+        burst: ITalent,
+    }
 
-    staticEffects: IEffect[]
-    dynamicEffects: IEffect[]
+    weapon: IWeapon,
+    artifacts: IArtifact[],
+
+    baseStats: IBaseStats
+    totalStats: IStatBag,
+    lastUpdated: number,
+    anormalStats: IStatBag,
+
+    staticEffects: IEffect[],
+    dynamicEffects: IEffect[],
+
 }
 
 export function buildDefaultICharacterData() {
     const res : ICharacterData = {
         name: "Default Character",
+        apiName: "defaultcharacter",
         element: EElement.NONE,
         level: 0,
-        ascensionLevel: 0,
-        friendshipLevel: 0,
-        skills: {
-            levelAA: 0,
-            levelSkill: 0,
-            levelUlt: 0
+        ascension: {
+            level: 0,
+            statName: EStat.NONE,
+            statValue: 0
         },
-        commonData: {
-            name: "",
-            element: EElement.NONE,
-            rarity: ERarity.I,
-            weaponType: EWeaponType.SWORD,
-            ascensionStatName: EStat.UNKNOWN,
-            ascensionStatBaseValue: 0,
-            baseStats: {
-                hp: 0,
-                atk: 0,
-                def: 0,
-                atk_nw: 0
-            },
-            region: ERegion.UNKNOWN,
-            assets: {
-                characterPortrait: "",
-                characterCard: "",
-                aa: "",
-                skill: "",
-                burst: "",
-                a1: "",
-                a4: "",
-                c1: "",
-                c2: "",
-                c3: "",
-                c4: "",
-                c5: "",
-                c6: "",
-                characterNameCard: ""
-            },
-            constNames: {
-                c1: "",
-                c2: "",
-                c3: "",
-                c4: "",
-                c5: "",
-                c6: ""
-            },
-            constTexts: {
-                c1: [""],
-                c2: [""],
-                c3: [""],
-                c4: [""],
-                c5: [""],
-                c6: [""]
-            }
+        friendshipLevel: 0,
+        talents: {
+            aa: buildDefaultITalent(),
+            skill: buildDefaultITalent(),
+            burst: buildDefaultITalent()
         },
         weapon: {
-            type: EWeaponType.SWORD,
+            type: EWeaponType.UNKNOWN,
             name: "Default Weapon Name",
             mainStat: {
                 name: EStat.UNKNOWN,
@@ -124,63 +94,23 @@ export function buildDefaultICharacterData() {
         },
         staticEffects: [],
         dynamicEffects: [],
-        ascensionStatName: EStat.UNKNOWN,
-        ascensionStatValue: 0,
-        constellation: 0
+        rarity: ERarity.UNKNOWN,
+        region: ERegion.UNKNOWN,
+        weaponType: EWeaponType.UNKNOWN,
+        constellationLevel: 0,
+        constellations: [],
+        baseStats: {
+            hp: 0,
+            atk: 0,
+            atk_nw: 0,
+            def: 0
+        }
     }
 
     return res
 }
 
 export function copyCharacterData(ref: ICharacterData) : ICharacterData{
-    const commonData: ICharacterCommonData = {
-        name: ref.commonData.name,
-        element: ref.commonData.element,
-        rarity: ref.commonData.rarity,
-        region: ref.commonData.region,
-        weaponType: ref.commonData.weaponType,
-        assets: {
-            characterPortrait: ref.commonData.assets.characterPortrait,
-            characterCard: ref.commonData.assets.characterCard,
-            characterNameCard: ref.commonData.assets.characterNameCard,
-            aa: ref.commonData.assets.aa,
-            skill: ref.commonData.assets.skill,
-            burst: ref.commonData.assets.burst,
-            a1: ref.commonData.assets.a1,
-            a4: ref.commonData.assets.a4,
-            c1: ref.commonData.assets.c1,
-            c2: ref.commonData.assets.c2,
-            c3: ref.commonData.assets.c3,
-            c4: ref.commonData.assets.c4,
-            c5: ref.commonData.assets.c5,
-            c6: ref.commonData.assets.c6
-        },
-        ascensionStatName: ref.commonData.ascensionStatName,
-        ascensionStatBaseValue: ref.commonData.ascensionStatBaseValue,
-        baseStats: {
-            hp: ref.commonData.baseStats.hp,
-            atk: ref.commonData.baseStats.atk,
-            atk_nw: ref.commonData.baseStats.atk_nw,
-            def: ref.commonData.baseStats.def
-        },
-        constNames: {
-            c1: ref.commonData.constNames.c1,
-            c2: ref.commonData.constNames.c2,
-            c3: ref.commonData.constNames.c3,
-            c4: ref.commonData.constNames.c4,
-            c5: ref.commonData.constNames.c5,
-            c6: ref.commonData.constNames.c6
-        },
-        constTexts: {
-            c1: ref.commonData.constTexts.c1,
-            c2: ref.commonData.constTexts.c2,
-            c3: ref.commonData.constTexts.c3,
-            c4: ref.commonData.constTexts.c4,
-            c5: ref.commonData.constTexts.c5,
-            c6: ref.commonData.constTexts.c6
-        },
-        
-    }
 
     const totalStats = new StatBag()
     for (let i = 0; i < ref.totalStats.names.length; ++i) {
@@ -219,18 +149,10 @@ export function copyCharacterData(ref: ICharacterData) : ICharacterData{
 
     const res : ICharacterData = {
         name: ref.name,
+        apiName: ref.apiName,
         element: ref.element,
         level: ref.level,
-        ascensionLevel: ref.ascensionLevel,
-        ascensionStatName: ref.ascensionStatName,
-        ascensionStatValue: ref.ascensionStatValue,
         friendshipLevel: ref.friendshipLevel,
-        skills: {
-            levelAA: ref.skills.levelAA,
-            levelSkill: ref.skills.levelSkill,
-            levelUlt: ref.skills.levelUlt
-        },
-        commonData: commonData,
         weapon: {
             type: ref.weapon.type,
             name: ref.weapon.name,
@@ -251,12 +173,32 @@ export function copyCharacterData(ref: ICharacterData) : ICharacterData{
             ascensionLevel: ref.weapon.ascensionLevel
         },
         artifacts: artifacts,
+        baseStats: {
+            hp: ref.baseStats.hp,
+            atk: ref.baseStats.atk,
+            atk_nw: ref.baseStats.atk_nw,
+            def: ref.baseStats.def
+        },
         totalStats: totalStats.toIStatBag(),
         lastUpdated: ref.lastUpdated,
         anormalStats: anomalies.toIStatBag(),
         staticEffects: staticEffects,
         dynamicEffects: dynamicEffects,
-        constellation: ref.constellation
+        rarity: ref.rarity,
+        region: ref.region,
+        weaponType: ref.weaponType,
+        ascension: {
+            level: ref.ascension.level,
+            statName: ref.ascension.statName,
+            statValue: ref.ascension.statValue
+        },
+        constellationLevel: 0,
+        constellations: [],
+        talents: {
+            aa: copyTalent(ref.talents.aa),
+            skill: copyTalent(ref.talents.skill),
+            burst: copyTalent(ref.talents.burst)
+        }
     }
 
     return res

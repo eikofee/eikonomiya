@@ -8,10 +8,9 @@ import { EEffectType } from "./enums/EEffectType"
 import { EStat, stringToEStat } from "./enums/EStat"
 
 function buildBaseStats(character: ICharacterData, additionalStats: IStatBag) {
-    const characterBase = character.commonData
     const weapon = character.weapon
     const artifacts = character.artifacts
-    const ascensionLevel = character.ascensionLevel
+    const ascensionLevel = character.ascension.level
     let sb = new StatBag()
     sb.addStat({name: EStat.ER_P, value: 1})
     sb.addStat({name: EStat.CR_P, value: 0.05})
@@ -54,8 +53,8 @@ function buildBaseStats(character: ICharacterData, additionalStats: IStatBag) {
             break;
     }
 
-    sb.addStat({name: characterBase.ascensionStatName, value: characterBase.ascensionStatBaseValue * ascendedFactor})
-    const baseStats = [characterBase.baseStats.hp, characterBase.baseStats.atk_nw + weapon.mainStat.value, characterBase.baseStats.def]
+    sb.addStat({name: character.ascension.statName, value: character.ascension.statValue * ascendedFactor})
+    const baseStats = [character.baseStats.hp, character.baseStats.atk_nw + weapon.mainStat.value, character.baseStats.def]
     const bonusStats = [EStat.HP_P, EStat.ATK_P, EStat.DEF_P]
     const flatStats = [EStat.HP, EStat.ATK, EStat.DEF]
     const destStats = [EStat.F_HP, EStat.F_ATK, EStat.F_DEF,]

@@ -32,9 +32,9 @@ export default function StatCard({character, statbag} : {character: ICharacterDa
     }
 
     const {colorDirector} = useContext(ConfigContext)
-    const finalHP = character.commonData.baseStats.hp * (1+getStat(EStat.HP_P)) + getStat(EStat.HP)
-    const finalATK = (character.commonData.baseStats.atk_nw! + character.weapon.mainStat.value) * (1+getStat(EStat.ATK_P)) + getStat(EStat.ATK)
-    const finalDEF = character.commonData.baseStats.def * (1+getStat(EStat.DEF_P)) + getStat(EStat.DEF)
+    const finalHP = character.baseStats.hp * (1+getStat(EStat.HP_P)) + getStat(EStat.HP)
+    const finalATK = (character.baseStats.atk_nw! + character.weapon.mainStat.value) * (1+getStat(EStat.ATK_P)) + getStat(EStat.ATK)
+    const finalDEF = character.baseStats.def * (1+getStat(EStat.DEF_P)) + getStat(EStat.DEF)
     let baseStat = ["hp", "atk", "def"]
     let baseValues = [finalHP, finalATK, finalDEF]
     let subBase = 0;
@@ -46,19 +46,19 @@ export default function StatCard({character, statbag} : {character: ICharacterDa
         switch (baseStat[i]) {
             case "hp":
                 // info = <p>{character.commonData.baseStats.hp.toFixed(0)} * (100% + {(getStat(EStat.HP_P) * 100).toFixed(1)}%) + {getStat(EStat.HP).toFixed(0)}</p>
-                subBase = character.commonData.baseStats.hp
+                subBase = character.baseStats.hp
                 subBonus = getStat(EStat.HP_P)
                 subFlat = getStat(EStat.HP)
                 break;
             case "atk":
-                // info = <p>({character.commonData.baseStats.atk_nw.toFixed(0)} + {character.weapon.mainStat.value.toFixed(0)}) * (100% + {(getStat(EStat.ATK_P) * 100).toFixed(1)}%) + {getStat(EStat.ATK).toFixed(0)}</p>
-                subBase = character.commonData.baseStats.atk
+                // info = <p>({character.baseStats.atk_nw.toFixed(0)} + {character.weapon.mainStat.value.toFixed(0)}) * (100% + {(getStat(EStat.ATK_P) * 100).toFixed(1)}%) + {getStat(EStat.ATK).toFixed(0)}</p>
+                subBase = character.baseStats.atk
                 subBonus = getStat(EStat.ATK_P)
                 subFlat = getStat(EStat.ATK)
                 break;
             case "def":
-                // info = <p>{character.commonData.baseStats.def.toFixed(0)} * (100% + {(getStat(EStat.DEF_P) * 100).toFixed(1)}%) + {getStat(EStat.DEF).toFixed(0)}</p>
-                subBase = character.commonData.baseStats.def
+                // info = <p>{character.baseStats.def.toFixed(0)} * (100% + {(getStat(EStat.DEF_P) * 100).toFixed(1)}%) + {getStat(EStat.DEF).toFixed(0)}</p>
+                subBase = character.baseStats.def
                 subBonus = getStat(EStat.DEF_P)
                 subFlat = getStat(EStat.DEF)
                 break;

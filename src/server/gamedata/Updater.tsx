@@ -24,6 +24,8 @@ import { EElement } from "./enums/EElement";
 import { IApiEffectCard } from "./IApiEffectCard";
 import { apiLogicLoadEffectData } from "../api/ApiLogicLoadEffectData";
 import { apiLogicLoadLocale } from "../api/ApiLogicLoadLocale";
+import { ETalentType } from "./enums/ETalentType";
+import { IConstellation } from "./IConstellation";
 
 export enum ELoadStatus {
     SUCCESS,
@@ -75,7 +77,7 @@ export class Updater {
             return s.toLowerCase().replaceAll(" ", "").replaceAll("'", "").replace("-","")
         }
 
-    private buildBaseStats(characterBase : ICharacterCommonData, weapon: IWeapon, artifacts: IArtifact[], ascensionLevel: number) {
+    private buildBaseStats(ascensionStatName: EStat, ascensionStatBaseValue: number, weapon: IWeapon, artifacts: IArtifact[], ascensionLevel: number) {
         let sb = new StatBag()
         sb.addStat({name: EStat.ER_P, value: 1})
         sb.addStat({name: EStat.CR_P, value: 0.05})
@@ -113,7 +115,7 @@ export class Updater {
                 break;
         }
 
-        sb.addStat({name: characterBase.ascensionStatName, value: characterBase.ascensionStatBaseValue * ascendedFactor})
+        sb.addStat({name: ascensionStatName, value: ascensionStatBaseValue * ascendedFactor})
         return sb
     }
 
@@ -408,12 +410,12 @@ export class Updater {
         return res;
     }
 
-    private async getCharacterEffects(c: ICharacterCommonData): Promise<IEffect[]> {
+    private async getCharacterEffects(name: string): Promise<IEffect[]> {
         const characterEffectsRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/talents.yml", { cache: 'no-store' })).text()
         let res : IEffect[] = []
-        const charEffects = yaml.parse(characterEffectsRawData)[c.name]
+        const charEffects = yaml.parse(characterEffectsRawData)[name]
         if (charEffects != undefined) {
-            return this.parseEffect(charEffects, c.name, c.assets.characterPortrait, 0)
+            return this.parseEffect(charEffects, name, "characters_".concat(name, "_face"), 0)
         }
 
         return res;
@@ -514,69 +516,25 @@ export class Updater {
                     r = stringToERegion(reg[name])
                 }
 
-                let constNames = []
-                let constTexts = []
+                let consts : IConstellation[] = []
                 let cname = this.getCName(name, c.commonData.element)
                 const constInfoRequest = await apiLogicLoadLocale("characters", cname)
                 if (constInfoRequest.success) {
                     const constInfo = constInfoRequest.content!.constellations
                     for (let ii = 0; ii < 6; ++ii) {
                         if (cname != undefined && constInfo[ii] != undefined) {
-                            constNames.push(constInfo[ii].name)
-                            constTexts.push(constInfo[ii].description)
+                            consts.push({
+                                name: constInfo[ii].name,
+                                level: ii + 1,
+                                description: constInfo[ii].description
+                            })
                         } else {
-                            constNames.push("UNKNOWN NAME - PLEASE REPORT THE ISSUE")
-                            constTexts.push(["UNKNOWN TEXT - PLEASE REPORT THE ISSUE"])
+                            consts.push({
+                                name: "MISSING NAME",
+                                level: ii + 1,
+                                description: ["MISSING DESCRIPTION"]
+                            })
                         }
-                    }
-                }
-
-                const cleanName = this.cleanNameForPath(name)
-                const common: ICharacterCommonData = {
-                    name: name,
-                    element: c.commonData.element,
-                    region: r,
-                    rarity: c.commonData.rarity,
-                    weaponType: c.commonData.weapon,
-                    ascensionStatName: ascensionName,
-                    ascensionStatBaseValue: ascensionValue,
-                    assets: {
-                        characterCard: "characters_".concat(cleanName, "_card"),
-                        characterPortrait: "characters_".concat(cleanName, "_face"),
-                        characterNameCard: "characters_".concat(cleanName, "_namecard"),
-                        aa: "generic_".concat(c.commonData.weapon),
-                        skill: "characters_".concat(cleanName, "_skill"),
-                        burst: "characters_".concat(cleanName, "_burst"),
-                        a1: "characters_".concat(cleanName, "_a1"),
-                        a4: "characters_".concat(cleanName, "_a4"),
-                        c1: "characters_".concat(cleanName, "_c1"),
-                        c2: "characters_".concat(cleanName, "_c2"),
-                        c3: "characters_".concat(cleanName, "_c3"),
-                        c4: "characters_".concat(cleanName, "_c4"),
-                        c5: "characters_".concat(cleanName, "_c5"),
-                        c6: "characters_".concat(cleanName, "_c6")
-                    },
-                    baseStats: {
-                        hp: c.baseStats.get(EStat.HP)!.value,
-                        atk: c.baseStats.get(EStat.ATK)!.value,
-                        atk_nw: c.baseStats.get(EStat.ATK)!.value - c.weapon.mainStat.value,
-                        def: c.baseStats.get(EStat.DEF)!.value
-                    },
-                    constNames: {
-                        c1: constNames[0],
-                        c2: constNames[1],
-                        c3: constNames[2],
-                        c4: constNames[3],
-                        c5: constNames[4],
-                        c6: constNames[5]
-                    },
-                    constTexts: {
-                        c1: constTexts[0],
-                        c2: constTexts[1],
-                        c3: constTexts[2],
-                        c4: constTexts[3],
-                        c5: constTexts[4],
-                        c6: constTexts[5]
                     }
                 }
 
@@ -613,10 +571,10 @@ export class Updater {
                     artes.push(a)
                 }
 
-                let currentStats = this.buildBaseStats(common, weapon, artes, c.ascensionLevel)
+                let currentStats = this.buildBaseStats(ascensionName, ascensionValue, weapon, artes, c.ascensionLevel)
                 const artifactEffects = await this.getArtifactEffects(artes)
                 const weaponEffects = await this.getWeaponEffects(weapon)
-                const inherentEffect = await this.getCharacterEffects(common)
+                const inherentEffect = await this.getCharacterEffects(name)
                 const currentEffects = artifactEffects.concat(weaponEffects, inherentEffect)
 
 
@@ -685,17 +643,42 @@ export class Updater {
                     name: name,
                     element: c.commonData.element,
                     level: c.level,
-                    ascensionLevel: c.ascensionLevel,
-                    ascensionStatName: ascensionName,
-                    ascensionStatValue: ascensionValue * ascendedFactor,
-                    friendshipLevel: c.friendship,
-                    constellation: c.constellation,
-                    skills: {
-                        levelAA: c.skills[0].level,
-                        levelSkill: c.skills[1].level,
-                        levelUlt: c.skills[2].level
+                    ascension: {
+                        level: c.ascensionLevel,
+                        statName: ascensionName,
+                        statValue: ascensionValue * ascendedFactor
                     },
-                    commonData: common,
+                    friendshipLevel: c.friendship,
+                    constellationLevel: c.constellation,
+                    talents: {
+                        aa: {
+                            type: ETalentType.NORMAL,
+                            name: "",
+                            description: [],
+                            icon: "",
+                            level: c.skills[0].level,
+                            levelMax: 11,
+                            fields: []
+                        },
+                        skill: {
+                            type: ETalentType.SKILL,
+                            name: "",
+                            description: [],
+                            icon: "",
+                            level: c.skills[1].level,
+                            levelMax: 13,
+                            fields: []
+                        },
+                        burst: {
+                            type: ETalentType.BURST,
+                            name: "",
+                            description: [],
+                            icon: "",
+                            level: c.skills[2].level,
+                            levelMax: 13,
+                            fields: []
+                        },
+                    },
                     weapon: weapon,
                     artifacts: artes,
                     totalStats: currentStats.toIStatBag(),
@@ -703,6 +686,17 @@ export class Updater {
                     lastUpdated: Date.now(),
                     staticEffects: currentEffects,
                     anormalStats: anomalies.toIStatBag(),
+                    apiName: this.cleanNameForPath(name),
+                    rarity: c.commonData.rarity,
+                    region: r,
+                    weaponType: c.commonData.weapon,
+                    constellations: consts,
+                    baseStats: {
+                        hp: c.baseStats.get(EStat.HP)!.value,
+                        atk: c.baseStats.get(EStat.ATK)!.value,
+                        atk_nw: c.baseStats.get(EStat.ATK)!.value - c.weapon.mainStat.value,
+                        def: c.baseStats.get(EStat.DEF)!.value
+                    }
                 }
 
                 characters.push(char)

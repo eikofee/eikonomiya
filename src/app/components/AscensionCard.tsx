@@ -21,7 +21,7 @@ export default function AscensionCard({char} : {char: ICharacterData}) {
     
     let content = <div className="flex flex-col">
         <div className="aspect-square grad-5star basis-1/5 flex items-center justify-center h-full rounded-t-md">
-            <ImgApi alt="" src={char.commonData.assets.characterPortrait} className="max-w-full max-h-full"/>
+            <ImgApi alt="" src={"characters_".concat(char.apiName, "_face")} className="max-w-full max-h-full"/>
         </div>
         <div className="basis-3/5 px-1 py-2">
             <ul>
@@ -35,10 +35,10 @@ export default function AscensionCard({char} : {char: ICharacterData}) {
                         </div>
                     </div>
                 </li>
-                {statLine("HP", char.commonData.baseStats.hp)}
-                {statLine("ATK", char.commonData.baseStats.atk_nw!)}
-                {statLine("DEF", char.commonData.baseStats.def)}
-                {statLine(char.ascensionStatName, char.ascensionStatValue)}
+                {statLine("HP", char.baseStats.hp)}
+                {statLine("ATK", char.baseStats.atk_nw!)}
+                {statLine("DEF", char.baseStats.def)}
+                {statLine(char.ascension.statName, char.ascension.statValue)}
             </ul>
         </div>
     </div>

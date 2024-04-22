@@ -518,9 +518,9 @@ export class Updater {
 
                 let consts : IConstellation[] = []
                 let cname = this.getCName(name, c.commonData.element)
-                const constInfoRequest = await apiLogicLoadLocale("characters", cname)
-                if (constInfoRequest.success) {
-                    const constInfo = constInfoRequest.content!.constellations
+                const localeInfoRequest = await apiLogicLoadLocale("characters", cname)
+                if (localeInfoRequest.success) {
+                    const constInfo = localeInfoRequest.content!.constellations
                     for (let ii = 0; ii < 6; ++ii) {
                         if (cname != undefined && constInfo[ii] != undefined) {
                             consts.push({
@@ -653,8 +653,8 @@ export class Updater {
                     talents: {
                         aa: {
                             type: ETalentType.NORMAL,
-                            name: "",
-                            description: [],
+                            name: localeInfoRequest.success ? localeInfoRequest.content!.auto.name : "",
+                            description: localeInfoRequest.success ? localeInfoRequest.content!.auto.fields.normal.concat(localeInfoRequest.content!.auto.fields.charged, localeInfoRequest.content!.auto.fields.plunging) : [""],
                             icon: "",
                             level: c.skills[0].level,
                             levelMax: 11,
@@ -662,8 +662,8 @@ export class Updater {
                         },
                         skill: {
                             type: ETalentType.SKILL,
-                            name: "",
-                            description: [],
+                            name: localeInfoRequest.success ? localeInfoRequest.content!.skill.name : "",
+                            description: localeInfoRequest.success ? localeInfoRequest.content!.skill.description : [""],
                             icon: "",
                             level: c.skills[1].level,
                             levelMax: 13,
@@ -671,8 +671,8 @@ export class Updater {
                         },
                         burst: {
                             type: ETalentType.BURST,
-                            name: "",
-                            description: [],
+                            name: localeInfoRequest.success ? localeInfoRequest.content!.burst.name : "",
+                            description: localeInfoRequest.success ? localeInfoRequest.content!.burst.description : [""],
                             icon: "",
                             level: c.skills[2].level,
                             levelMax: 13,
@@ -797,8 +797,4 @@ export class Updater {
         const pr = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/rules")
         await fsPromises.writeFile(pr.concat("/", rule.character), JSON.stringify(rule))
     }
-}
-
-function apiLoadLocaleLogic(arg0: string, cname: string) {
-    throw new Error("Function not implemented.");
 }

@@ -39,30 +39,53 @@ export default function CharacterCard({char} : {char: ICharacterData}) {
     }
 
     let constellations = []
-    console.log(char.constellationLevel)
     for (let i = 0; i < char.constellations.length; ++i) {
         constellations.push(buildConstellationIcon(i+1))
+    }
+
+    let contentTitle = ""
+    let contentDescription = [""]
+    if (hoveredItem > 0) {
+        if (hoveredItem > 10) {
+            switch (hoveredItem) {
+                case 11:
+                    contentTitle = char.talents.aa.name
+                    contentDescription = char.talents.aa.description
+                    break;
+                case 12:
+                    contentTitle = char.talents.skill.name
+                    contentDescription = char.talents.skill.description
+                    break;
+                case 13:
+                    contentTitle = char.talents.burst.name
+                    contentDescription = char.talents.burst.description
+                    break;
+            }
+        } else {
+            contentTitle = char.constellations[hoveredItem - 1].name
+            contentDescription = char.constellations[hoveredItem - 1].description
+        }
     }
 
     let content = <div className={bgClass}>
     <div key="character-card" className="relative flex flex-row justify-center mb-2">
         <ImgApi key="character-card" alt="" className="rounded-md" src={"characters_".concat(char.apiName, "_card")} />
         <div className={"absolute outline outline-1 inset-0 rounded-md text-sm bg-gray-800/80 text-white font-normal w-full max-w-xl p-2 ".concat(hiddableClassname, " ", colorDirector.outlineAccent(5))}>
-            {hoveredItem > 0 ? buildDescription(char.constellations[hoveredItem - 1].name, char.constellations[hoveredItem - 1].description) : [""]}
+            {hoveredItem > 0 ? buildDescription(contentTitle, contentDescription) : [""]}
         </div>
     </div>
     <div key="character-talents" className="grid grid-cols-3 justify-items-center">
-    <div className="w-16 h-16 rounded-full bg-slate-700/70 relative">
-                <ImgApi key="talent-aa" src={"characters_".concat(char.apiName, "_aa")} />
-                <div className={"absolute rounded-md text-sm px-1 left-3/4 top-3/4 ".concat(colorDirector.bgAccent(5))}>{char.talents.aa.level}</div>
+            <div className="w-16 h-16 rounded-full bg-slate-700/70 relative" onMouseEnter={changeOnHoverCb(11)} onMouseLeave={changeOffHoverCb}>
+                <ImgApi key="talent-aa" src={"generic_".concat(char.weaponType.toString().toLowerCase())} />
+                <div className={"absolute rounded-md text-sm px-1 left-3/4 top-3/4 font-bold ".concat(colorDirector.bgAccent(5))}>{char.talents.aa.level}</div>
             </div>
-            <div className="w-16 h-16 rounded-full bg-slate-700/70 relative">
+            <div className="w-16 h-16 rounded-full bg-slate-700/70 relative" onMouseEnter={changeOnHoverCb(12)} onMouseLeave={changeOffHoverCb}>
                 <ImgApi key="talent-skill" src={"characters_".concat(char.apiName, "_skill")} />
-                <div className={"absolute rounded-md text-sm px-1 left-3/4 top-3/4 ".concat(colorDirector.bgAccent(5))}>{char.talents.skill.level}</div>
+                <div className={"absolute rounded-md text-sm px-1 left-3/4 top-3/4  font-bold ".concat(colorDirector.bgAccent(5))}>{char.talents.skill.level}</div>
             </div>
-            <div className="w-16 h-16 rounded-full bg-slate-700/70 relative">
+            <div className="w-16 h-16 rounded-full bg-slate-700/70 relative" onMouseEnter={changeOnHoverCb(13)} onMouseLeave={changeOffHoverCb}>
                 <ImgApi key="talent-burst" src={"characters_".concat(char.apiName, "_burst")} />
-                <div className={"absolute rounded-md text-sm px-1 left-3/4 top-3/4 ".concat(colorDirector.bgAccent(5))}>{char.talents.burst.level}</div>
+                <div className={"absolute rounded-md text-sm px-1 left-3/4 top-3/4  font-bold ".concat(colorDirector.bgAccent(5))}>{char.talents.burst.level}</div>
             </div>
     </div>
     <div key="character-consts" className="grid grid-cols-6 my-3 justify-items-center">

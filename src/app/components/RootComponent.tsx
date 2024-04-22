@@ -19,6 +19,7 @@ import EffectList, { EEffectListType } from "./EffectList";
 import EffectCardExplorer from "./EffectCardExplorer";
 import StatLineDraw from "./StatLineDrawer";
 import Card from "./Card";
+import TalentCard from "./TalentCard";
 
 
 export default function RootComponent({data: characters, currentCharacterName: currentCharacterName, rules, uid, iconfig, defaultEffectCards} : ({data: ICharacterData[], currentCharacterName: string, rules: ICharacterRule[], uid: string, iconfig: IConfigDirector, defaultEffectCards: IEffect[]})) {
@@ -151,6 +152,7 @@ export default function RootComponent({data: characters, currentCharacterName: c
                             <EffectList char={characterData} effects={characterData.staticEffects} type={EEffectListType.STATIC} cb={effectCb}/>
                         </div>
                         <div className="flex flex-col gap-1 max-w-large max-h-full grow">
+                            {/* <TalentCard character={characterData} fieldName="skill" /> */}
                             <EffectList char={characterData} effects={characterData.dynamicEffects} type={EEffectListType.DYNAMIC} cb={effectCb}/>
                             <EffectCardExplorer allCards={effectCards} addToCharacterCb={addToCharacterCb} />
                         </div>

@@ -16,6 +16,6 @@ export default function MarkdownDescription({html} : {html: string}) {
     t = t.replace("<dendro>", '<span class="'.concat(colorDirector.textAccent(6, EElement.DENDRO), ' font-bold">')).replace("</dendro>", "</span>")
     t = t.replace("<hydro>", '<span class="'.concat(colorDirector.textAccent(6, EElement.HYDRO), ' font-bold">')).replace("</hydro>", "</span>")
     t = t.replace("<pyro>", '<span class="'.concat(colorDirector.textAccent(6, EElement.PYRO), ' font-bold">')).replace("</pyro>", "</span>")
-    t = t.replace("<crto>", '<span class="'.concat(colorDirector.textAccent(6, EElement.CRYO), ' font-bold">')).replace("</cryo>", "</span>")
+    t = t.replace("<cryo>", '<span class="'.concat(colorDirector.textAccent(6, EElement.CRYO), ' font-bold">')).replace("</cryo>", "</span>")
     return <Markdown rehypePlugins={[rehypeRaw]}>{t}</Markdown>
 }

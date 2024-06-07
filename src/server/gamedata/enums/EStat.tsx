@@ -50,6 +50,7 @@ export enum EStat {
     MELT_DMG_P = "melt dmg%",
     ELECTROCHARGED_DMG_P = "electrocharged dmg%",
     SUPERCONDUCT_DMG_P = "superconduct dmg%",
+    SWIRL_DMG_P = "swirl dmg%",
     
     MOVE_SPD_P = "mov spd%",
     UNKNOWN = "unknown",
@@ -105,6 +106,7 @@ export function eStatToReadable (s: EStat) : string {
         case EStat.MELT_DMG_P: return "Melt DMG%";
         case EStat.ELECTROCHARGED_DMG_P: return "Electrocharged DMG%";
         case EStat.SUPERCONDUCT_DMG_P: return "Superconduct DMG%";
+        case EStat.SWIRL_DMG_P: return "Swirl DMG%";
 
         case EStat.UNKNOWN: return "Unknown";
         case EStat.NONE: return "None";
@@ -159,6 +161,7 @@ export function stringToEStat (s: string): EStat {
         case "melt dmg%": return EStat.MELT_DMG_P;
         case "electrocharged dmg%": return EStat.ELECTROCHARGED_DMG_P;
         case "superconduct dmg%": return EStat.SUPERCONDUCT_DMG_P;
+        case "swirl dmg%": return EStat.SWIRL_DMG_P;
 
 
         case "mov spd%": return EStat.MOVE_SPD_P;

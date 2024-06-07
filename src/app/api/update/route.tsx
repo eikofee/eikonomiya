@@ -11,13 +11,25 @@ export interface IGo2EikoResult {
 const execPromiser = promisify(exec)
 async function runGo2Eiko(mode: string) {
     if (mode == "data") {
-        const result = await execPromiser("python3 ./go2eiko.py --method checkout -d")
-        return result.stdout
+        if (process.platform == 'win32') {
+            const result = await execPromiser("python ./go2eiko.py --method checkout -d")
+            return result.stdout
+
+        } else {
+            const result = await execPromiser("python3 ./go2eiko.py --method checkout -d")
+            return result.stdout
+        }
     }
 
     if (mode == "cwal") {
-        const result = await execPromiser("python3 ./go2eiko.py --method checkout -c -w -a -l -d")
-        return result.stdout
+        if (process.platform == 'win32') {
+            const result = await execPromiser("python ./go2eiko.py --method checkout -c -w -a -l -d")
+            return result.stdout
+
+        } else {
+            const result = await execPromiser("python3 ./go2eiko.py --method checkout -c -w -a -l -d")
+            return result.stdout
+        }
     }
 
     return ""

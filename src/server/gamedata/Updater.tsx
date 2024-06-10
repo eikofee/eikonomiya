@@ -26,6 +26,10 @@ import { apiLogicLoadEffectData } from "../api/ApiLogicLoadEffectData";
 import { apiLogicLoadLocale } from "../api/ApiLogicLoadLocale";
 import { ETalentType } from "./enums/ETalentType";
 import { IConstellation } from "./IConstellation";
+import { apiLogicLoadTalentsValues } from "../api/ApiLogicLoadTalentsValues";
+import { INumericField } from "./INumericField";
+import { IScaledNumber } from "./IScaledNumber";
+import { apiLogicLoadTalentsKeys } from "../api/ApiLogicLoadTalentsKeys";
 
 export enum ELoadStatus {
     SUCCESS,
@@ -519,6 +523,8 @@ export class Updater {
                 let consts : IConstellation[] = []
                 let cname = this.getCName(name, c.commonData.element)
                 const localeInfoRequest = await apiLogicLoadLocale("characters", cname)
+                const talentsValuesInfoRequest = await apiLogicLoadTalentsValues(cname)
+                const talentsKeysInfoRequest = await apiLogicLoadTalentsKeys(cname)
                 if (localeInfoRequest.success) {
                     const constInfo = localeInfoRequest.content!.constellations
                     for (let ii = 0; ii < 6; ++ii) {
@@ -639,6 +645,41 @@ export class Updater {
                     }
                 }
 
+                // talent values
+                let aaFields : INumericField[] = []
+                let skillFields : INumericField[] = []
+                let burstFields : INumericField[] = []
+                if (talentsValuesInfoRequest.success && talentsKeysInfoRequest.success) {
+                    const values = talentsValuesInfoRequest.content!
+                    const keys = talentsKeysInfoRequest.content!
+                    for (let i = 0; i < values.auto.length; ++i) {
+                        const f : INumericField = {
+                            id: keys.auto[i],
+                            values: values.auto[i]
+                        }
+
+                        aaFields.push(f)
+                    }
+
+                    for (let i = 0; i < values.skill.length; ++i) {
+                        const f : INumericField = {
+                            id: keys.skill[i],
+                            values: values.skill[i]
+                        }
+
+                        skillFields.push(f)
+                    }
+
+                    for (let i = 0; i < values.burst.length; ++i) {
+                        const f : INumericField = {
+                            id: keys.burst[i],
+                            values: values.burst[i]
+                        }
+
+                        burstFields.push(f)
+                    }
+                }
+
                 const char: ICharacterData = {
                     name: name,
                     element: c.commonData.element,
@@ -658,7 +699,7 @@ export class Updater {
                             icon: "",
                             level: c.skills[0].level,
                             levelMax: 11,
-                            fields: []
+                            fields: aaFields
                         },
                         skill: {
                             type: ETalentType.SKILL,
@@ -667,7 +708,7 @@ export class Updater {
                             icon: "",
                             level: c.skills[1].level,
                             levelMax: 13,
-                            fields: []
+                            fields: skillFields
                         },
                         burst: {
                             type: ETalentType.BURST,
@@ -676,7 +717,7 @@ export class Updater {
                             icon: "",
                             level: c.skills[2].level,
                             levelMax: 13,
-                            fields: []
+                            fields: burstFields
                         },
                     },
                     weapon: weapon,

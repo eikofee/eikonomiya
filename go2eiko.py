@@ -325,15 +325,24 @@ def download_recursively(
 
             # Getting the new filename
             old_filename = os.path.basename(image)
+
+            if old_filename == "expCurve.json":
+                continue
+
             if callable(name_converter):
                 filename = name_converter(old_filename)
             elif isinstance(name_converter, str) and name_converter == "index.ts":
                 image_folder = os.path.dirname(image)
                 index_dot_ts = open(os.path.join(image_folder, "index.ts")).read()
                 filename = intex_dot_ts2name_converter(index_dot_ts, old_filename)
+            elif isinstance(name_converter, str) and name_converter == "values":
+                image_folder = os.path.dirname(image)
+                filename = image_folder.split("\\")[-1].lower() + ".json"
 
             # Getting the path for the current image
             folder = os.path.basename(os.path.dirname(image))
+            if isinstance(name_converter, str) and name_converter == "values":
+                folder = ""
             real_output_path = os.path.join(MASTER_OUTPUT_PATH, output_path, folder.lower())
             os.makedirs(real_output_path, exist_ok=True)
 
@@ -518,6 +527,16 @@ def download_locale():
         name_converter=name_converter,
         extensions=GO_EXTENSIONS_DATA
     )
+        
+def download_values():
+    download_recursively(
+        path = "libs/gi/stats/Data/Characters/",
+        output_path="gamedata/characters/",
+        name_converter="values",
+        extensions=GO_EXTENSIONS_DATA,
+        force_download=FORCE,
+        expected_files=15,
+    )
 
 
 def main(**kwargs):
@@ -532,6 +551,8 @@ def main(**kwargs):
             checkout_eikonomiya()
         if kwargs["locale"]:
             sparse_checkout(path_to_checkout="libs/gi/dm-localization/assets/locales/en")
+        if kwargs["values"]:
+            sparse_checkout(path_to_checkout="libs/gi/stats/Data/Characters")
 
     if kwargs["characters"]:
         download_characters()
@@ -547,6 +568,9 @@ def main(**kwargs):
 
     if kwargs["locale"]:
         download_locale()
+
+    if kwargs["values"]:
+        download_values()
 
     if METHOD == "checkout" and not kwargs["keep"]:
        del_temp_folder()
@@ -578,6 +602,7 @@ if __name__ == "__main__":
     parser.add_argument("--artifacts", "-a", action="store_true", help="Download the artifacts' assets")
     parser.add_argument("--data", "-d", action="store_true", help="Download eikonomiya data")
     parser.add_argument("--locale", "-l", action="store_true", help="Download locales (EN)")
+    parser.add_argument("--values", "-v", action="store_true", help="Download in-game talent values")
     parser.add_argument("--force", "-f", action="store_true", help="Force the redownload of all the assets")
     parser.add_argument("--output", "-o", type=str, help="Path of the 'data' folder", default=DEFAULT_MASTER_OUTPUT_PATH)
     parser.add_argument("--keep", "-k", action="store_true", help="If using 'checkout' method, keep the temp folder")

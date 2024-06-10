@@ -1,4 +1,4 @@
 export interface INumericField {
-    name: string,
+    id: string,
     values: number[]
 }

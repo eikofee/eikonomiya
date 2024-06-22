@@ -4,6 +4,7 @@ import { ConfigDirector } from "./classes/ConfigDirector"
 import AddUidWidget from "./components/AddUidWidget"
 import { ImgApi } from "./components/ImgApi"
 import UpdateResources from "./components/UpdateResources"
+import PlayerInfoCardSmall from "./components/playerInfoCards/PlayerInfoCardSmall"
 
 export default async function Page() {
 
@@ -26,7 +27,8 @@ export default async function Page() {
     
     let piList = []
     for (let i = 0; i < playerInfoList.length; ++i) {
-        piList.push(<div className="group rounded-md border min-w-[144px] max-w-md backdrop-blur-xl bg-white/25 px-3 cursor-pointer z-10 gap-10 text-center" >{buildPlayerCard(playerInfoList[i])}</div>)
+        // piList.push(<div className="group rounded-md border min-w-[144px] max-w-md backdrop-blur-xl bg-white/25 px-3 cursor-pointer z-10 gap-10 text-center" >{buildPlayerCard(playerInfoList[i])}</div>)
+        piList.push(<PlayerInfoCardSmall info={playerInfoList[i]}/>)
     }
         let infoElement = <div className="w-1/3">
         <div className={"w-full rounded-md border backdrop-blur-xl bg-white/25 p-2 gap-2 mb-2 z-10 border-slate-400"}>

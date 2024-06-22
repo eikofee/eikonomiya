@@ -40,3 +40,13 @@ const config: Config = {
   plugins: [],
 }
 export default config
+
+declare global {
+    interface String {
+    toApiName(): string;
+  }
+  }
+
+  String.prototype.toApiName = function() {
+  return this.toLowerCase().replaceAll(" ", "").replaceAll("'", "").replace("-","")
+}

@@ -3,7 +3,7 @@ import { EElement } from "./enums/EElement"
 import { EStat } from "./enums/EStat"
 
 export async function buildEnkaTranslator() {
-    let localizationTable = await (await fetch("https://raw.githubusercontent.com/EnkaNetwork/API-docs/master/store/loc.json")).json()
+    let localizationTable = await (await fetch("https://raw.githubusercontent.com/EnkaNetwork/API-docs/master/store/loc.json", {cache: "no-cache"})).json()
     localizationTable = localizationTable["en"]
     localizationTable["1533656818"] = "Aether"
     localizationTable["3816664530"] = "Lumine"

@@ -15,6 +15,7 @@ export interface IPlayerInfo {
     abysses: IAbyssesInfo,
     characters: ICharacterData[],
     profilePictureCharacterName: string,
+    namecardName: string,
 }
 
 export interface IPlayerInfoWithoutCharacters {
@@ -26,6 +27,7 @@ export interface IPlayerInfoWithoutCharacters {
     achievementCount: number,
     abysses: IAbyssesInfo,
     profilePictureCharacterName: string,
+    namecardName: string,
 }
 
 export function copyIPlayerInfo(x: IPlayerInfo): IPlayerInfo {
@@ -46,7 +48,8 @@ export function copyIPlayerInfo(x: IPlayerInfo): IPlayerInfo {
             chamber: x.abysses.chamber
         },
         characters: chars,
-        profilePictureCharacterName: x.profilePictureCharacterName
+        profilePictureCharacterName: x.profilePictureCharacterName,
+        namecardName: x.namecardName
     }
 
     return res
@@ -64,7 +67,8 @@ export function copyIPlayerInfoWithoutCharacters(x: IPlayerInfo | IPlayerInfoWit
             floor: x.abysses.floor,
             chamber: x.abysses.chamber
         },
-        profilePictureCharacterName: x.profilePictureCharacterName
+        profilePictureCharacterName: x.profilePictureCharacterName,
+        namecardName: x.namecardName
     }
 
     return res
@@ -82,7 +86,8 @@ export function readIPlayerInfoWithoutCharacters(x: any) {
             floor: parseInt(x["abysses"]["floor"]),
             chamber: parseInt(x["abysses"]["chamber"])
         },
-        profilePictureCharacterName: x["profilePictureCharacterName"]
+        profilePictureCharacterName: x["profilePictureCharacterName"],
+        namecardName: x["namecardName"]
     }
 
     return res

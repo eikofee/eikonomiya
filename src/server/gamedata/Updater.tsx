@@ -486,6 +486,7 @@ export class Updater {
             const enkaData = await this.bridge.loadPlayerData()
             let characters : ICharacterData[] = []
             const regionRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/regions.yml")).text()
+            const namecardIds = await (await fetch("https://raw.githubusercontent.com/EnkaNetwork/API-docs/master/store/namecards.json")).json()
             const reg = yaml.parse(regionRawData)
             // const constInfoRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/character-const-text.yml")).text()
             // const constInfo = yaml.parse(constInfoRawData)
@@ -543,6 +544,7 @@ export class Updater {
                         }
                     }
                 }
+
 
                 const weapon : IWeapon = {
                     type: c.weapon.type,
@@ -644,6 +646,7 @@ export class Updater {
                         anomalies.addStat(c.finalStats.get(currentStat)!)
                     }
                 }
+                console.log("ping4")
 
                 // talent values
                 let aaFields : INumericField[] = []
@@ -651,7 +654,9 @@ export class Updater {
                 let burstFields : INumericField[] = []
                 if (talentsValuesInfoRequest.success && talentsKeysInfoRequest.success) {
                     const values = talentsValuesInfoRequest.content!
+                    console.log(values)
                     const keys = talentsKeysInfoRequest.content!
+                    console.log(keys)
                     for (let i = 0; i < values.auto.length; ++i) {
                         const f : INumericField = {
                             id: keys.auto[i],
@@ -742,7 +747,7 @@ export class Updater {
 
                 characters.push(char)
             }
-
+            console.log("ping4")
 
             const pi : IPlayerInfo = {
                 name: enkaData.name,
@@ -756,7 +761,8 @@ export class Updater {
                     chamber: enkaData.abysses.chamber
                 },
                 characters: characters,
-                profilePictureCharacterName: "characters_".concat(this.cleanNameForPath(enkaData.profilePicture), "_face")
+                profilePictureCharacterName: "characters_".concat(this.cleanNameForPath(enkaData.profilePicture), "_face"),
+                namecardName: namecardIds[enkaData.namecardId].icon
             }
 
             await this.writeData(this.uid, pi)
@@ -778,7 +784,8 @@ export class Updater {
                     achievementCount: resi.achievementCount,
                     abysses: resi.abysses,
                     characters: [],
-                    profilePictureCharacterName: resi.profilePictureCharacterName
+                    profilePictureCharacterName: resi.profilePictureCharacterName,
+                    namecardName: resi.namecardName
                 }
                 res.playerInfo = pi
                 res.status = ELoadStatus.LOCAL_ONLY

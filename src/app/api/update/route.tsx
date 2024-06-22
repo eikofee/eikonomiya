@@ -23,11 +23,11 @@ async function runGo2Eiko(mode: string) {
 
     if (mode == "cwal") {
         if (process.platform == 'win32') {
-            const result = await execPromiser("python ./go2eiko.py --method checkout -c -w -a -l -d")
+            const result = await execPromiser("python ./go2eiko.py --method checkout -c -w -a -l -d -v")
             return result.stdout
 
         } else {
-            const result = await execPromiser("python3 ./go2eiko.py --method checkout -c -w -a -l -d")
+            const result = await execPromiser("python3 ./go2eiko.py --method checkout -c -w -a -l -d -v")
             return result.stdout
         }
     }

@@ -1,28 +1,28 @@
 "use client";
 import { useState } from "react";
-import CharacterCard from "./CharacterCard";
-import RuleCard from "./RuleCard";
-import { ColorDirector } from "../classes/ColorDirector";
-import { ConfigContext } from "./ConfigContext";
-import StatCard from "./StatCard";
-import { FullEquipCard } from "./FullEquipCard";
-import BackgroundComponent from "./BackgroundComponent";
-import NavigationComponent from "./NavigationComponent";
+import CharacterCard from "../CharacterCard";
+import RuleCard from "../RuleCard";
+import { ColorDirector } from "../../classes/ColorDirector";
+import { ConfigContext } from "../ConfigContext";
+import StatCard from "../StatCard";
+import { FullEquipCard } from "../FullEquipCard";
+import BackgroundComponent from "../BackgroundComponent";
+import NavigationComponent from "../NavigationComponent";
 import { ICharacterData, buildDefaultICharacterData, copyCharacterData } from "@/server/gamedata/ICharacterData";
-import { ICharacterRule, buildDefaultICharacterRule } from "../interfaces/ICharacterRule";
+import { ICharacterRule, buildDefaultICharacterRule } from "../../interfaces/ICharacterRule";
 import { stringToEStat } from "@/server/gamedata/enums/EStat";
 import { IEffect } from "@/server/gamedata/IEffect";
 import { computeStats } from "@/server/gamedata/StatComputations";
-import { ConfigDirector, IConfigDirector } from "../classes/ConfigDirector";
+import { ConfigDirector, IConfigDirector } from "../../classes/ConfigDirector";
 import { IStatBag } from "@/server/gamedata/IStatBag";
-import EffectList, { EEffectListType } from "./EffectList";
-import EffectCardExplorer from "./EffectCardExplorer";
-import StatLineDraw from "./StatLineDrawer";
-import Card from "./Card";
-import TalentCard from "./TalentCard";
+import EffectList, { EEffectListType } from "../EffectList";
+import EffectCardExplorer from "../EffectCardExplorer";
+import StatLineDraw from "../StatLineDrawer";
+import Card from "../Card";
+import TalentCard from "../TalentCard";
 
 
-export default function RootComponent({data: characters, currentCharacterName: currentCharacterName, rules, uid, iconfig, defaultEffectCards} : ({data: ICharacterData[], currentCharacterName: string, rules: ICharacterRule[], uid: string, iconfig: IConfigDirector, defaultEffectCards: IEffect[]})) {
+export default function CharacterPageRoot({data: characters, currentCharacterName: currentCharacterName, rules, uid, iconfig, defaultEffectCards} : ({data: ICharacterData[], currentCharacterName: string, rules: ICharacterRule[], uid: string, iconfig: IConfigDirector, defaultEffectCards: IEffect[]})) {
     
     let char = buildDefaultICharacterData()
 

@@ -6,7 +6,7 @@ import { ICharacterRule } from "@/app/interfaces/ICharacterRule";
 import { IStatTuple } from "./gamedata/IStatTuple";
 import { IPlayerInfoWithoutCharacters, readIPlayerInfoWithoutCharacters } from "./gamedata/IPlayerInfo";
 import { parseAllEffects, parseCharacterData } from "./DataParser";
-import { IConfigDirector, ETheme } from "@/app/classes/ConfigDirector";
+import { IConfigDirector, ETheme, buildDefaultConfigDirector } from "@/app/classes/ConfigDirector";
 import { IEffect } from "./gamedata/IEffect";
 import { ETarget } from "./gamedata/enums/ETarget";
 import { upgradeCharacterDataFile, upgradePlayerFile, upgradeRuleDataFile } from "./DataUpgrade";
@@ -82,22 +82,19 @@ export async function getPlayerInfoList(): Promise<IPlayerInfoWithoutCharacters[
 }
 
 export async function loadConfigFile(createIfDoesNotExist: boolean) : Promise<IConfigDirector> {
-    const iconfig : IConfigDirector = {
-        theme: ETheme.LIGHT
-    }
+    const iconfig = buildDefaultConfigDirector()
     const p = await buildPathToDataFolder()
     if (p.status) {
         const fileList = await fsPromises.readdir(p.path)
         if (!fileList.includes(process.env.CONFIG_FILENAME!) && createIfDoesNotExist) {
             const p3 = path.join(process.cwd(), process.env.DATA_PATH!, process.env.CONFIG_FILENAME!)
-            await fsPromises.writeFile(p3, JSON.stringify({
-                "theme": iconfig.theme
-            }))
+            await fsPromises.writeFile(p3, JSON.stringify(iconfig))
         }
     
         const p2 = path.resolve(process.cwd(), process.env.DATA_PATH!)
         const jsonData = JSON.parse((await fsPromises.readFile(p2.concat("/", process.env.CONFIG_FILENAME!))).toString())
         iconfig.theme = jsonData["theme"]
+        iconfig.artifactRating = jsonData["artifactRating"]
     }
 
     return iconfig

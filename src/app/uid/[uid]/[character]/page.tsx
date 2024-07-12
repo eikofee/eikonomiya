@@ -1,6 +1,6 @@
 "use server";
 import { loadAllEffects, loadCharacters, loadConfigFile, loadRules } from '@/server/DataLoader';
-import RootComponent from '../../../components/RootComponent';
+import CharacterPageRoot from '../../../components/rootComponents/CharacterPageRoot';
 import { Updater } from '@/server/gamedata/Updater';
 
 
@@ -48,6 +48,6 @@ export default async function Page({ params }: { params: { character: string, ui
     }
 
     return (
-            <RootComponent data={characters} currentCharacterName={characterName} rules={rules} uid={uid} iconfig={configDirector} defaultEffectCards={effectList}/>
+            <CharacterPageRoot data={characters} currentCharacterName={characterName} rules={rules} uid={uid} iconfig={configDirector} defaultEffectCards={effectList}/>
     )
 }

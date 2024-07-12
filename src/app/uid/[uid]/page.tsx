@@ -3,6 +3,7 @@ import { getPlayerInfoList, loadCharacters, loadConfigFile, loadRules } from "@/
 import CharacterSelectButton from "../../components/CharacterSelectButton";
 import PlayerInfoCardBig from "@/app/components/playerInfoCards/PlayerInfoCard";
 import MarkdownDescription from "@/app/components/MarkdownDescription";
+import PlayerPageRoot from "@/app/components/rootComponents/PlayerPageRoot";
 
 export default async function Page({ params }: { params: { uid: string } }) {
     const uid = params.uid
@@ -11,6 +12,8 @@ export default async function Page({ params }: { params: { uid: string } }) {
         status: ELoadStatus.FAILED,
         message: ""
     }
+
+    const configDirector = await loadConfigFile(true)
 
     if (!isNaN(parseInt(uid))) {
         const u = new Updater(uid)
@@ -44,23 +47,5 @@ export default async function Page({ params }: { params: { uid: string } }) {
     const characters = playerInfo.characters
     const charRules = await loadRules(uid)
 
-    let charList = []
-
-    for (let i = 0; i < characters.length; ++i) {
-        const charRule = charRules.filter(x => x.character == characters[i].name)[0]
-        // charList.push(<Card c={buildCharacterCard(characterList[i], true, false) } cname="px-3 cursor-pointer z-10" />)
-        charList.push(<CharacterSelectButton uid={uid} character={characters[i]} rule={charRule} useHref={true} useLargeFont={false} useBackground={true} borderColor="" />)
-    }
-
-    
-    let content = <div className={"pl-1 w-full h-screen flex flex-col place-content-center items-center"}>
-        <PlayerInfoCardBig info={playerInfo} />
-        <div className="grid grid-cols-auto-fit-fr-medium max-w-[1600px] gap-2 rounded-md border backdrop-blur-xl bg-white/25 p-2 w-3/4 z-10 border-slate-400">
-            {charList}
-        </div>
-    </div>
-
-    return (
-            content
-    )
+    return <PlayerPageRoot playerInfo={playerInfo} characters={characters} characterRules={charRules} config={configDirector} />
 }

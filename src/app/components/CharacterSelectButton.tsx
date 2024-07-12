@@ -1,9 +1,14 @@
+"use client";
 import { ICharacterData } from "@/server/gamedata/ICharacterData"
 import { ImgApi } from "./ImgApi"
 import { ICharacterRule } from "../interfaces/ICharacterRule"
 import Icon from "./Icon"
+import { useContext } from "react"
+import { ConfigContext } from "./ConfigContext"
 
 export default function CharacterSelectButton({uid, character, rule, useHref, useLargeFont, useBackground, borderColor}: {uid: string, character: ICharacterData, rule: ICharacterRule, useHref: boolean, useLargeFont: boolean, useBackground: boolean, borderColor: string}) {
+
+    const {config} = useContext(ConfigContext)
     let textSize = "text-sm"
     if (character.name.length > 14) {
         textSize = "text-xs"
@@ -37,11 +42,11 @@ export default function CharacterSelectButton({uid, character, rule, useHref, us
     for (let i = 0 ; i < rule.currentRating.length; ++i) {
         let colorValue = "fill-red-600"
         let currentValue = rule.currentRating[i]
-        if (currentValue > 0.25) {
+        if (currentValue > config.artifactRating.low) {
             colorValue = "fill-yellow-600"
         }
         
-        if (currentValue > 0.5) {
+        if (currentValue > config.artifactRating.med) {
             colorValue = "fill-green-600"
         }
 

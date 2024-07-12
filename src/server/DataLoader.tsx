@@ -9,6 +9,7 @@ import { parseAllEffects, parseCharacterData } from "./DataParser";
 import { IConfigDirector, ETheme } from "@/app/classes/ConfigDirector";
 import { IEffect } from "./gamedata/IEffect";
 import { ETarget } from "./gamedata/enums/ETarget";
+import { upgradeCharacterDataFile, upgradePlayerFile, upgradeRuleDataFile } from "./DataUpgrade";
 
 export async function checkDataFolderExistence(): Promise<boolean> {
     const p = path.resolve(process.cwd())
@@ -62,7 +63,13 @@ export async function getPlayerInfoList(): Promise<IPlayerInfoWithoutCharacters[
                 const files = await fsPromises.readdir(pl)
                 
                 if (files.includes("player")) {
-                    const jsonData = JSON.parse((await fsPromises.readFile(pl.concat("/player"))).toString())
+                    let jsonData = JSON.parse((await fsPromises.readFile(pl.concat("/player"))).toString())
+                    const upgrade = upgradeRuleDataFile(jsonData)
+                    if (upgrade.edidted) {
+        
+                    }
+
+                    jsonData = upgrade.content
                     const pi = readIPlayerInfoWithoutCharacters(jsonData)
                     res.push(pi)
                 }
@@ -112,7 +119,13 @@ export async function loadCharacters(uid: string) : Promise<ICharacterData[]>{
         const fileList = await fsPromises.readdir(p.path)
         for (let i = 0; i < fileList.length; ++i) {
             let f = fileList[i]
-            const jsonData = JSON.parse((await fsPromises.readFile(p.path.concat("/", f))).toString())
+            let jsonData = JSON.parse((await fsPromises.readFile(p.path.concat("/", f))).toString())
+            const upgrade = upgradeRuleDataFile(jsonData)
+            if (upgrade.edidted) {
+
+            }
+
+            jsonData = upgrade.content
             res.push(parseCharacterData(jsonData))
         }
     }
@@ -127,7 +140,13 @@ export async function loadRules(uid: string) : Promise<ICharacterRule[]>{
         const fileList = await fsPromises.readdir(p.path)
         for (let i = 0; i < fileList.length; ++i) {
             let f = fileList[i]
-            const jsonData = JSON.parse((await fsPromises.readFile(p.path.concat("/", f))).toString())
+            let jsonData = JSON.parse((await fsPromises.readFile(p.path.concat("/", f))).toString())
+            const upgrade = upgradeRuleDataFile(jsonData)
+            if (upgrade.edidted) {
+                await writeRule(uid, upgrade.content)
+            }
+
+            jsonData = upgrade.content
             let values : IStatTuple[] = []
             let rating : number[] = []
             for (let j = 0; j < jsonData["stats"].length; ++j) {
@@ -142,6 +161,7 @@ export async function loadRules(uid: string) : Promise<ICharacterRule[]>{
             }
 
             res.push({
+                version: jsonData["version"],
                 ruleName: "defaultRuleName",
                 character: jsonData["character"],
                 stats: values,
@@ -151,4 +171,9 @@ export async function loadRules(uid: string) : Promise<ICharacterRule[]>{
     }
 
     return res
+}
+
+export async function writeRule(uid: string, rule: ICharacterRule) {
+    const pr = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/rules")
+    await fsPromises.writeFile(pr.concat("/", rule.character), JSON.stringify(rule))
 }

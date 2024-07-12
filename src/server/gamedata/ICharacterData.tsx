@@ -12,6 +12,7 @@ import { ITalent, buildDefaultITalent, copyTalent } from "./ITalent"
 import { IConstellation } from "./IConstellation"
 
 export interface ICharacterData {
+    version: string,
     name: string,
     apiName: string,
     element: EElement,
@@ -51,6 +52,7 @@ export interface ICharacterData {
 
 export function buildDefaultICharacterData() {
     const res : ICharacterData = {
+        version: process.env.BUILD_VERSION!,
         name: "Default Character",
         apiName: "defaultcharacter",
         element: EElement.NONE,
@@ -147,6 +149,7 @@ export function copyCharacterData(ref: ICharacterData) : ICharacterData{
     }
 
     const res : ICharacterData = {
+        version: ref.version,
         name: ref.name,
         apiName: ref.apiName,
         element: ref.element,

@@ -418,6 +418,7 @@ export function parseCharacterData(json: any): ICharacterData {
 
 
     const res : ICharacterData = {
+        version: process.env.BUILD_VERSION!,
         name: json["name"],
         element: stringToEElement(json["element"]),
         level: json["level"],

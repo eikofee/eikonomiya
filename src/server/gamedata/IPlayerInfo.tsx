@@ -6,6 +6,7 @@ interface IAbyssesInfo {
 }
 
 export interface IPlayerInfo {
+    version: string,
     name: string,
     uid: string,
     arLevel: number,
@@ -19,6 +20,7 @@ export interface IPlayerInfo {
 }
 
 export interface IPlayerInfoWithoutCharacters {
+    version: string,
     name: string,
     uid: string,
     arLevel: number,
@@ -37,6 +39,7 @@ export function copyIPlayerInfo(x: IPlayerInfo): IPlayerInfo {
     }
 
     const res : IPlayerInfo = {
+        version: x.version,
         name: x.name,
         uid: x.uid,
         arLevel: x.arLevel,
@@ -57,6 +60,7 @@ export function copyIPlayerInfo(x: IPlayerInfo): IPlayerInfo {
 
 export function copyIPlayerInfoWithoutCharacters(x: IPlayerInfo | IPlayerInfoWithoutCharacters): IPlayerInfoWithoutCharacters {
     const res: IPlayerInfoWithoutCharacters = {
+        version: x.version,
         name: x.name,
         uid: x.uid,
         arLevel: x.arLevel,
@@ -76,6 +80,7 @@ export function copyIPlayerInfoWithoutCharacters(x: IPlayerInfo | IPlayerInfoWit
 
 export function readIPlayerInfoWithoutCharacters(x: any) {
     const res: IPlayerInfoWithoutCharacters = {
+        version: x["version"],
         name: x["name"],
         uid: x["uid"],
         arLevel: parseInt(x["arLevel"]),

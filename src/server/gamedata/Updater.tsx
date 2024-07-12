@@ -30,6 +30,7 @@ import { apiLogicLoadTalentsValues } from "../api/ApiLogicLoadTalentsValues";
 import { INumericField } from "./INumericField";
 import { IScaledNumber } from "./IScaledNumber";
 import { apiLogicLoadTalentsKeys } from "../api/ApiLogicLoadTalentsKeys";
+import { writeRule } from "../DataLoader";
 
 export enum ELoadStatus {
     SUCCESS,
@@ -683,6 +684,7 @@ export class Updater {
                 }
 
                 const char: ICharacterData = {
+                    version: process.env.BUILD_VERSION!,
                     name: name,
                     element: c.commonData.element,
                     level: c.level,
@@ -746,6 +748,7 @@ export class Updater {
             }
 
             const pi : IPlayerInfo = {
+                version: process.env.BUILD_VERSION!,
                 name: enkaData.name,
                 uid: this.uid,
                 arLevel: enkaData.arLevel,
@@ -772,6 +775,7 @@ export class Updater {
                 const data = (await fsPromises.readFile(p)).toString()
                 const resi = readIPlayerInfoWithoutCharacters(JSON.parse((data)))
                 const pi : IPlayerInfo = {
+                    version: process.env.BUILD_VERSION!,
                     name: resi.name,
                     uid: resi.uid,
                     arLevel: resi.arLevel,
@@ -831,7 +835,8 @@ export class Updater {
                     })
                 }
 
-                await this.writeRule(uid, {
+                await writeRule(uid, {
+                    version: process.env.BUILD_VERSION!,
                     character: characterName,
                     ruleName: "defaultRuleName",
                     stats: rule,
@@ -839,10 +844,5 @@ export class Updater {
             }
 
         }
-    }
-
-    public async writeRule(uid: string, rule: ICharacterRule) {
-        const pr = path.join(process.cwd(), "/", process.env.DATA_PATH!, "/", uid, "/rules")
-        await fsPromises.writeFile(pr.concat("/", rule.character), JSON.stringify(rule))
     }
 }

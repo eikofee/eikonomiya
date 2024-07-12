@@ -19,6 +19,7 @@ export async function GET(request: Request) {
             if (fileList.includes(characterName)) {
                 // content = JSON.parse((await fsPromises.readFile(p.concat("/", characterName))).toString())
                 let rule: ICharacterRule = {
+                    version: process.env.BUILD_VERSION!,
                     ruleName: "defaultRuleName",
                     character: characterName,
                     stats: [],

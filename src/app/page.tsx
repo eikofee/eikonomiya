@@ -1,29 +1,12 @@
 import { getPlayerInfoList, loadConfigFile } from "@/server/DataLoader"
-import { IPlayerInfoWithoutCharacters } from "@/server/gamedata/IPlayerInfo"
-import { ConfigDirector } from "./classes/ConfigDirector"
 import AddUidWidget from "./components/AddUidWidget"
-import { ImgApi } from "./components/ImgApi"
 import UpdateResources from "./components/UpdateResources"
 import PlayerInfoCardSmall from "./components/playerInfoCards/PlayerInfoCardSmall"
 
 export default async function Page() {
 
-    const buildPlayerCard = (pi: IPlayerInfoWithoutCharacters) => {
-        let content = <div className="items-center h-full flex flex-row cursor-pointer">
-                        <div className="h-12 basis-1/2 overflow-hidden">
-                            <ImgApi className="w-12" src={pi.profilePictureCharacterName} alt={""} />
-                        </div>
-                        <div className="text-center text-ellipsis items-center w-full font-bold text-xl">
-                            {pi.name}
-                        </div>
-                    </div>
-    
-            return <a href={"/uid/".concat(pi.uid)}>{content}</a>
-    }
-    
     const playerInfoList = await getPlayerInfoList()
     const iconfig = await loadConfigFile(true)
-    const config = new ConfigDirector(iconfig)
     
     let piList = []
     for (let i = 0; i < playerInfoList.length; ++i) {

@@ -13,10 +13,14 @@ async function runGo2Eiko(mode: string) {
     if (mode == "data") {
         if (process.platform == 'win32') {
             const result = await execPromiser("python ./go2eiko.py --method checkout -d")
+            await execPromiser("del go2eiko.log")
+
             return result.stdout
 
         } else {
             const result = await execPromiser("python3 ./go2eiko.py --method checkout -d")
+            await execPromiser("rm go2eiko.log")
+
             return result.stdout
         }
     }
@@ -24,10 +28,12 @@ async function runGo2Eiko(mode: string) {
     if (mode == "cwal") {
         if (process.platform == 'win32') {
             const result = await execPromiser("python ./go2eiko.py --method checkout -c -w -a -l -d -v")
+            await execPromiser("del go2eiko.log")
             return result.stdout
 
         } else {
             const result = await execPromiser("python3 ./go2eiko.py --method checkout -c -w -a -l -d -v")
+            await execPromiser("rm go2eiko.log")
             return result.stdout
         }
     }
@@ -79,15 +85,25 @@ export async function GET(request: Request) {
             break;
         
         case "status":
-            const status = await pythonStatus()
-            const logs = await getGo2EikoLogs()
-            const lastLine = logs[logs.length - 2]
-            const res : IGo2EikoResult = {
-                isRunning: status,
-                lastLine: lastLine
-            }
+            try {
+                const status = await pythonStatus()
+                const logs = await getGo2EikoLogs()
+                const lastLine = logs[logs.length - 2]
+                const res : IGo2EikoResult = {
+                    isRunning: status,
+                    lastLine: lastLine
+                }
+                
+                return Response.json(res, headerResponse)
+            } catch (e) {
+                console.log(e)
+                const res : IGo2EikoResult = {
+                    isRunning: false,
+                    lastLine: ""
+                }
 
-            return Response.json(res, headerResponse)
+                return Response.json(res, headerResponse)
+            }
             break;
     
         case "logs":

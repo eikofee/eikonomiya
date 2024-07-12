@@ -40,19 +40,31 @@ export default function CharacterSelectButton({uid, character, rule, useHref, us
     let artes = []
     let artesNames = ["fleur", "plume", "sablier", "coupe", "couronne"]
     for (let i = 0 ; i < rule.currentRating.length; ++i) {
-        let colorValue = "fill-red-600"
+        let colorValue = !useBackground ? "bg-red-600" : "fill-red-600"
         let currentValue = rule.currentRating[i]
         if (currentValue > config.artifactRating.low) {
-            colorValue = "fill-yellow-600"
+            colorValue = !useBackground ? "bg-yellow-600" : "fill-yellow-600"
         }
         
         if (currentValue > config.artifactRating.med) {
-            colorValue = "fill-green-600"
+            colorValue = !useBackground ? "bg-green-600" : "fill-green-600"
         }
 
-        artes.push(<Icon n={artesNames[i]} customStyle={colorValue} customInfo={(currentValue * 100).toFixed(0).concat("%")}/>)
+        if (useBackground) {
+            artes.push(<Icon n={artesNames[i]} customStyle={colorValue} customInfo={(currentValue * 100).toFixed(0).concat("%")}/>)
+        } else {
+            artes.push(<div className={"w-1/5 h-[6px] rounded-full ".concat(colorValue)}></div>)
+        }
     }
 
+    let arteline = <div className="text-xs absolute flex flex-row gap-1 p-1 bottom-1 left-20 text-ellipsis h-6 bg-slate-100/70 rounded-md">
+        {artes}
+    </div>
+    if (!useBackground) {
+        arteline = <div className="text-xs absolute flex flex-row gap-1 p-1 top-10 -right-2 left-20 text-ellipsis h-[14px] rounded-md bg-slate-100/70">
+        {artes}
+    </div>
+    }
     let content = <div className="items-center h-20 w-full flex flex-row cursor-pointer relative">
                         <div className="absolute inset-y-0 -left-2 overflow-hidden">
                             <ImgApi className="h-full" src={"characters_".concat(character.apiName, "_face")} alt={""} />
@@ -61,9 +73,7 @@ export default function CharacterSelectButton({uid, character, rule, useHref, us
                             {character.name}
                         </div>
                         
-                        <div className="text-xs absolute flex flex-row gap-1 p-1 bottom-1 left-20 text-ellipsis h-6 bg-slate-100/70 rounded-md">
-                            {artes}
-                        </div>
+                        {arteline}
                         <div className="text-xs absolute bottom-1 -right-2 text-right text-ellipsis bg-slate-100/70 rounded-md p-px">
                             {updateIndicator}
                         </div>

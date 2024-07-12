@@ -10,9 +10,10 @@ export default function UpdateResources() {
     useEffect(() => {
         if (isRunning) {
             const timer = setInterval(async () => {
-                const res = await (await fetch("/api/update?mode=status", {cache: "no-cache"})).json()
-                setLogLine(res.lastLine.replace("\r", ""))
-                setIsRunning(res.isRunning)
+                    const res = await (await fetch("/api/update?mode=status", {cache: "no-cache"})).json()
+                    setLogLine(res.lastLine.replace("\r", ""))
+                    setIsRunning(res.isRunning)
+                    setIsRunning(false)
             }, 1000)
 
         return () => {

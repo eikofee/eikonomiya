@@ -2,6 +2,7 @@ import { ELoadStatus, ILoadPlayerInfoStatus, Updater } from "@/server/gamedata/U
 import { getPlayerInfoList, loadCharacters, loadConfigFile, loadRules } from "@/server/DataLoader";
 import CharacterSelectButton from "../../components/CharacterSelectButton";
 import PlayerInfoCardBig from "@/app/components/playerInfoCards/PlayerInfoCard";
+import MarkdownDescription from "@/app/components/MarkdownDescription";
 
 export default async function Page({ params }: { params: { uid: string } }) {
     const uid = params.uid
@@ -25,9 +26,11 @@ export default async function Page({ params }: { params: { uid: string } }) {
             Given UID is not a number : <code>{uid}</code>
         </div>
         )
-    } if (loadStatus.message != "") {
-        return <div className="bg-blue-500 w-full">
-                {loadStatus.message}
+    }
+    
+    if (loadStatus.message != "") {
+        return <div className="bg-blue-500 w-full h-full">
+            {loadStatus.message.split("\n").map(x => <p>{x}</p>)}
             </div>
     } else if (playerInfo == undefined) {
             return (

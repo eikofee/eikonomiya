@@ -60,10 +60,14 @@ export class Updater {
     }
 
     private async getAscensionStatName(name: string) : Promise<EStat> {
-        const ascensionRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/character-ascensions.yml")).text()
-        const sets = yaml.parse(ascensionRawData)
-        const statName = sets[name]["stat"]
-        return stringToEStat(statName)
+        try {
+            const ascensionRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/character-ascensions.yml")).text()
+            const sets = yaml.parse(ascensionRawData)
+            const statName = sets[name]["stat"]
+            return stringToEStat(statName)
+        } catch (error) {
+            return EStat.UNKNOWN
+        }
     }
     
     private async computeAscensionStatValue(statName: EStat, characterName: string, rarity: ERarity): Promise<number> {
@@ -482,15 +486,31 @@ export class Updater {
             status: ELoadStatus.FAILED,
             message: ""
         }
-
+        
         try {
             const enkaData = await this.bridge.loadPlayerData()
             let characters : ICharacterData[] = []
-            const regionRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/regions.yml")).text()
-            const namecardIds = await (await fetch("https://raw.githubusercontent.com/EnkaNetwork/API-docs/master/store/namecards.json")).json()
-            const reg = yaml.parse(regionRawData)
-            // const constInfoRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/character-const-text.yml")).text()
-            // const constInfo = yaml.parse(constInfoRawData)
+            let regionRawData = ""
+            try {
+                regionRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/regions.yml")).text()
+            } catch (e) {
+                throw new Error("[Updater Error] Could not load region data from GitHub (https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/regions.yml).");
+            }
+
+            let namecardIds:any = {}
+            try {
+                namecardIds = await (await fetch("https://raw.githubusercontent.com/EnkaNetwork/API-docs/master/store/namecards.json")).json()
+            } catch (e) {
+                throw new Error("[Updater Error] Could not load namecards IDs from EnkaNetwork's GitHub (https://raw.githubusercontent.com/EnkaNetwork/API-docs/master/store/namecards.json).")
+            }
+
+            let reg:any = {}
+            try {
+                reg = yaml.parse(regionRawData)
+            } catch (e) {
+                throw new Error("[Updater Error] Could not parse YAML data from regions.")
+            }
+
             for (let i = 0; i < enkaData.charShowcase.length; ++i) {
                 const c = enkaData.charShowcase[i].info
                 const name = this.enkaTranslator.translate(c.commonData.nameId)
@@ -770,6 +790,8 @@ export class Updater {
 
             return res
         } catch(e: any) {
+                res.status = ELoadStatus.LOCAL_ONLY
+                res.message += e + "\n[Updater Info] Attempting to load local info on player ".concat(this.uid)
             try {
                 const p = path.join(process.cwd(), process.env.DATA_PATH!, this.uid, "player")
                 const data = (await fsPromises.readFile(p)).toString()
@@ -788,11 +810,10 @@ export class Updater {
                     namecardName: resi.namecardName
                 }
                 res.playerInfo = pi
-                res.status = ELoadStatus.LOCAL_ONLY
-                res.message = "Enka.network API threw error : ".concat(e)
+                
                 return res
             } catch (ee: any) {
-                res.message = "[Updater Error] : Could not load online or local player data. Enka Error : ".concat(e)
+                res.message += "\n" + ee + "\n[Updater Error] : Could not load online or local player data."
                 return res
             }
         }

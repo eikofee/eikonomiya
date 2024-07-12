@@ -1,5 +1,6 @@
 import { ICharacterRule } from '@/app/interfaces/ICharacterRule';
-import { checkDataFolderExistence } from '@/server/DataLoader';
+import { apiLogicComputeArtifactRating } from '@/server/api/ApiLogicComputeArtifactRating';
+import { checkDataFolderExistence, loadCharacters } from '@/server/DataLoader';
 import { EStat } from '@/server/gamedata/enums/EStat';
 import {promises as fsPromises} from 'fs';
 import path from 'path'
@@ -20,7 +21,8 @@ export async function GET(request: Request) {
                 let rule: ICharacterRule = {
                     ruleName: "defaultRuleName",
                     character: characterName,
-                    stats: []
+                    stats: [],
+                    currentRating: [],
                 }
                 
                 if (searchParams.has("mode") && searchParams.get("mode") == "edit") {
@@ -33,11 +35,26 @@ export async function GET(request: Request) {
                                 value: parseFloat(searchParams.get(label)!)
                             })
                         }
-                        // content.lastUpdated = Date.now()
                         const newRule = rule
                         await fsPromises.writeFile(p.concat("/", characterName), JSON.stringify(newRule))
                         content = {message: "Rule updated.", newRule: newRule}
                     }
+                } else if (searchParams.has("mode") && searchParams.get("mode") == "rate") {
+                    const labels = [EStat.HP, EStat.ATK, EStat.DEF, EStat.HP_P, EStat.ATK_P, EStat.DEF_P, EStat.EM, EStat.ER_P, EStat.CR_P, EStat.CDMG_P]
+                    for (let i = 0; i < labels.length; ++i) {
+                        const label = labels[i]
+                        if (searchParams.has(label)) {
+                            rule.stats.push({
+                                name: label,
+                                value: parseFloat(searchParams.get(label)!)
+                            })
+                        }
+                    }
+
+                    const characterData = (await loadCharacters(uid)).filter(x => x.name == characterName)[0]
+                    const newRule = (await apiLogicComputeArtifactRating(characterData, rule)).content!
+                    await fsPromises.writeFile(p.concat("/", characterName), JSON.stringify(newRule))
+                        content = {message: "Rating computed and rule updated.", newRule: newRule}
                 }
             }
         } else {

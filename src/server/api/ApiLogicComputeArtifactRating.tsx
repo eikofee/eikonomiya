@@ -1,16 +1,14 @@
-import AscensionCard from "./AscensionCard";
-import { ICharacterRule } from "../interfaces/ICharacterRule";
-import ArtifactCard, { IArtifactCardInfo } from "./ArtifactCard";
-import WeaponCard from "./WeaponCard";
-import { ICharacterData } from "@/server/gamedata/ICharacterData";
-import { EArtifact } from "@/server/gamedata/enums/EArtifact";
-import { IArtifact } from "@/server/gamedata/IArtifact";
-import Card, { ECardSize } from "./Card";
-import { IStatTuple } from "@/server/gamedata/IStatTuple";
-import { EStat, statIsPercentage } from "@/server/gamedata/enums/EStat";
+import { ICharacterRule } from "@/app/interfaces/ICharacterRule";
+import { ICharacterData } from "../gamedata/ICharacterData";
+import { IArtifactCardInfo } from "@/app/components/ArtifactCard";
+import { EArtifact } from "../gamedata/enums/EArtifact";
+import { EStat, statIsPercentage } from "../gamedata/enums/EStat";
+import { IArtifact } from "../gamedata/IArtifact";
+import { IStatTuple } from "../gamedata/IStatTuple";
+import { IApiResult } from "@/app/interfaces/IApiResult";
 
-export function FullEquipCard({character, rule}:{character : ICharacterData, rule: ICharacterRule}) {
-
+export async function apiLogicComputeArtifactRating(character: ICharacterData, rule: ICharacterRule) : Promise<IApiResult<ICharacterRule>> {
+    
     let mvs: IStatTuple[] = []
     for (let i = 0; i < rule.stats.length; ++i) {
         mvs.push(rule.stats[i])
@@ -77,30 +75,12 @@ export function FullEquipCard({character, rule}:{character : ICharacterData, rul
     }
 
     const arteScores = artes.map(x => computeArtifactScoreInfo(x))
+    rule.currentRating = arteScores.map(x => x.totalScorePercent/100)
 
-    let totalScore = 0
-    for (let i = 0; i < arteScores.length; ++i) {
-        totalScore += arteScores[i].totalScorePercent
+    const res : IApiResult<ICharacterRule> = {
+        success: true,
+        content: rule
     }
-    totalScore = totalScore/5
-    const totalScoreContent = <div className="h-full flex flex-col w-full justify-center items-center font-semibold">
-        <div>Score :</div>
-        <div>{totalScore.toFixed(0).concat("%")}</div>
-    </div>
-
-    let arteCards = []
-    for (let i = 0; i < artes.length; ++i) {
-        arteCards.push(<ArtifactCard key={"artifact-".concat(i.toString())} equip={artes[i]} score={arteScores[i]} />)
-    }
-
-    return (
-        <div className="grid grow grid-cols-auto-fit-small gap-1 bg-inherit">
-                        <div className="flex flex-col gap-1">
-                            <AscensionCard char={character} />
-                            <Card content={totalScoreContent} grow={true} maxw={ECardSize.SEMI}/>
-                        </div>
-                        <WeaponCard equip={character.weapon} rule={rule}/>
-                        {arteCards}
-        </div>
-    )
+    
+    return res
 }

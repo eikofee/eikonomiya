@@ -129,6 +129,7 @@ export async function loadRules(uid: string) : Promise<ICharacterRule[]>{
             let f = fileList[i]
             const jsonData = JSON.parse((await fsPromises.readFile(p.path.concat("/", f))).toString())
             let values : IStatTuple[] = []
+            let rating : number[] = []
             for (let j = 0; j < jsonData["stats"].length; ++j) {
                 values.push({
                     name: jsonData["stats"][j]["name"],
@@ -136,10 +137,15 @@ export async function loadRules(uid: string) : Promise<ICharacterRule[]>{
                 })
             }
 
+            for (let j = 0; j < jsonData["currentRating"].length; ++j) {
+                rating.push(jsonData["currentRating"][j])
+            }
+
             res.push({
                 ruleName: "defaultRuleName",
                 character: jsonData["character"],
-                stats: values
+                stats: values,
+                currentRating: rating
             })
         }
     }

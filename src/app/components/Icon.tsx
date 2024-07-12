@@ -236,7 +236,7 @@ export function fillIconColor(c: string, active = EIconColorType.ELEMENT) {
 }
 
         // export default function Icon({n}: {n: string}) {
-export default function Icon({n, useTooltip = true, customColor = "", customColorType = EIconColorType.ELEMENT}: {n: string, useTooltip?: boolean, customColor?: string, customColorType? : EIconColorType}) {
+export default function Icon({n, useTooltip = true, customColor = "", customColorType = EIconColorType.ELEMENT, customStyle = "", customInfo = ""}: {n: string, useTooltip?: boolean, customColor?: string, customColorType? : EIconColorType, customStyle? : string, customInfo? : string}) {
     let content : ReactElement[] = []
     // let svgClassname = "h-4 w-4"
     let svgClassname = "h-full w-full"
@@ -358,15 +358,19 @@ export default function Icon({n, useTooltip = true, customColor = "", customColo
 
     }
 
-    if (customColor != undefined && customColor != "") {
+    if (customStyle == "" && customColor != undefined && customColor != "") {
         svgClassname = svgClassname.concat(fillIconColor(customColor, customColorType))
+    }
+
+    if (customStyle != "") {
+        svgClassname = svgClassname.concat(" ", customStyle)
     }
 
     let svg = <svg key="svg" viewBox="0 0 24 24" className={svgClassname}>
                     {content}
                 </svg>
     if (useTooltip) {
-        return <Tooltip child={svg} info={eStatToReadable(stringToEStat(n))} childClassname="w-full h-full" infoClassname="absolute bg-gray-800 text-white font-normal text-sm rounded p-2 whitespace-nowrap bottom-full left-1/2 transform -translate-x-1/2 " />
+        return <Tooltip child={svg} info={customInfo == "" ? eStatToReadable(stringToEStat(n)) : customInfo} childClassname="w-full h-full" infoClassname="absolute bg-gray-800 text-white font-normal text-sm rounded p-2 whitespace-nowrap bottom-full left-1/2 transform -translate-x-1/2 " />
     } else {
         return svg
     }

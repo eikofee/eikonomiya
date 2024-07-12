@@ -1,11 +1,12 @@
 import { useContext, useState } from "react";
 import { ConfigContext } from "./ConfigContext";
 import { ICharacterData } from "@/server/gamedata/ICharacterData";
-import CharacterSmallCard from "./CharacterSmallCard";
+import CharacterSelectButton from "./CharacterSelectButton";
 import { ImgApi } from "./ImgApi";
 import Card from "./Card";
+import { ICharacterRule } from "../interfaces/ICharacterRule";
 
-export default function NavigationComponent({currentCharacter, characterList, uid, popupId, setPopupId}:{currentCharacter: ICharacterData, characterList: ICharacterData[], uid: string, popupId: number, setPopupId: (x: number) => void}) {
+export default function NavigationComponent({currentCharacter, characterList, characterRules, uid, popupId, setPopupId}:{currentCharacter: ICharacterData, characterList: ICharacterData[], characterRules: ICharacterRule[], uid: string, popupId: number, setPopupId: (x: number) => void}) {
 
 
 
@@ -30,7 +31,7 @@ export default function NavigationComponent({currentCharacter, characterList, ui
 
     let charList = []
     for (let i = 0; i < characterList.length; ++i) {
-        charList.push(<CharacterSmallCard key={"nav-char-".concat(characterList[i].name)} uid={uid} character={characterList[i]} useHref={true} useLargeFont={false} useBackground={false} borderColor={colorDirector.borderAccent(3)} />)
+        charList.push(<CharacterSelectButton key={"nav-char-".concat(characterList[i].name)} uid={uid} rule={characterRules[i]} character={characterList[i]} useHref={true} useLargeFont={false} useBackground={false} borderColor={colorDirector.borderAccent(3)} />)
     }
 
     const contentClassName = `

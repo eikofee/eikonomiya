@@ -3,7 +3,6 @@ import { IWeapon } from "./IWeapon"
 import { IEffect, copyEffect } from "./IEffect"
 import { StatBag } from "./StatBag"
 import { EElement } from "./enums/EElement"
-import { ICharacterCommonData } from "./ICharacterCommonData"
 import { IStatBag } from "./IStatBag"
 import { EStat, stringToEStat } from "./enums/EStat"
 import { ERarity } from "./enums/ERarity"
@@ -200,6 +199,19 @@ export function copyCharacterData(ref: ICharacterData) : ICharacterData{
             burst: copyTalent(ref.talents.burst)
         }
     }
+
+    return res
+}
+
+export function getTotalStatRollValue(ref: ICharacterData, stat: EStat) {
+    let res = 0
+    ref.artifacts.forEach(x => {
+        x.subStats.forEach(y => {
+            if (y.name == stat) {
+                res += y.value
+            }
+        })
+    })
 
     return res
 }

@@ -41,7 +41,7 @@ export default function RootComponent({data: characters, currentCharacterName: c
     const [rule, setRule] = useState(defaultRule)
 
     async function saveRuleCallback() {
-        let url = "/api/rules?mode=edit&characterName=".concat(rule.character,"&uid=", uid)
+        let url = "/api/rules?mode=rate&characterName=".concat(rule.character,"&uid=", uid)
         for (let i = 0; i < rule.stats.length; ++i) {
             url = url.concat("&", rule.stats[i].name, "=", rule.stats[i].value.toString())
         }
@@ -132,8 +132,8 @@ export default function RootComponent({data: characters, currentCharacterName: c
         <div className="flex flex-col p-1 gap-1 h-screen w-full">
             <div className="flex flex-col relative h-15">
                 <div className={"flex flex-row gap-1 h-full"}>
-                    <NavigationComponent currentCharacter={characterData} characterList={characters} uid={uid} popupId={popupId} setPopupId={setPopupId}/>
-                    <RuleCard rule={rule} setRuleCallback={setRule} saveRuleCallback={saveRuleCallback} popupId={popupId} setPopupId={setPopupId}/>
+                    <NavigationComponent currentCharacter={characterData} characterList={characters} characterRules={rules} uid={uid} popupId={popupId} setPopupId={setPopupId}/>
+                    <RuleCard rule={rule} characterData={characterData} setRuleCallback={setRule} saveRuleCallback={saveRuleCallback} popupId={popupId} setPopupId={setPopupId}/>
                 </div>
                 {/* <TopOverSpace content={hiddableContent} /> */}
             </div>

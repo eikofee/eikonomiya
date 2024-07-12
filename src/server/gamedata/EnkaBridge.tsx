@@ -250,7 +250,6 @@ export class EnkaBridge {
             if (i < avatarDatabase.length) {
                 const avatarId = avatarDatabase[i][constantKey].toString()
                 profilePictureCharacterName = this.translator.translate((await this.getCharacterCommonData(avatarId)).nameId)
-                console.log(profilePictureCharacterName)
             }
         }
         

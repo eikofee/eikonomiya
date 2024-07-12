@@ -2,8 +2,8 @@ import { IPlayerInfo, IPlayerInfoWithoutCharacters } from "@/server/gamedata/IPl
 import { ImgApi } from "../ImgApi";
 import SmallField from "./SmallField";
 
-export default function PlayerInfoCard({info} : {info: IPlayerInfo | IPlayerInfoWithoutCharacters}) {
-    let content = <div className="items-center h-full w-full flex flex-row cursor-pointer relative">
+export default function PlayerInfoCardBig({info} : {info: IPlayerInfo | IPlayerInfoWithoutCharacters}) {
+    let content = <div className="items-center h-full w-full flex flex-row relative">
                         <div className="absolute inset-y-0 -left-2 overflow-hidden">
                             <ImgApi className="h-full" src={info.profilePictureCharacterName.toApiName()} alt={""} />
                         </div>
@@ -21,7 +21,7 @@ export default function PlayerInfoCard({info} : {info: IPlayerInfo | IPlayerInfo
                             </div>
                         </div>
                     </div>
-    return <div className="w-1/4 min-h-[150px] min-w-[600px] transition ease-in-out group rounded-md border bg-white/25 px-3 cursor-pointer z-10 mb-2 hover:shadow-lg" style={{
+    return <div className="w-1/4 min-h-[150px] min-w-[600px] transition ease-in-out group rounded-md border bg-white/25 px-3 z-10 mb-2" style={{
         backgroundImage : "url(https://enka.network/ui/".concat(info.namecardName, ".png)"),
         backgroundSize : "cover"
     }} >{content}</div>

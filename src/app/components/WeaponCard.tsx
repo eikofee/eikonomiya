@@ -3,14 +3,13 @@
 import { IWeapon } from "@/server/gamedata/IWeapon";
 import { ICharacterRule } from "../interfaces/ICharacterRule";
 import Icon from "./Icon";
-import { eStatToReadable } from "@/server/gamedata/enums/EStat";
+import { eStatToReadable, statIsPercentage } from "@/server/gamedata/enums/EStat";
 import Tooltip from "./Tooltip";
 import { ImgApi } from "./ImgApi";
 import Card, { ECardSize } from "./Card";
 
 export default function WeaponCard({equip, rule} : {equip: IWeapon, rule: ICharacterRule}) {
 
-    const isPercentage = (s: string) => s.includes("%")
 
     let subLine = <p></p>
     if (equip.subStat != undefined) {
@@ -23,7 +22,7 @@ export default function WeaponCard({equip, rule} : {equip: IWeapon, rule: IChara
                     </div>
                 </div>
                 <div className={"text-right grow"}>
-                    {isPercentage(eStatToReadable(equip.subStat.name)) ? (equip.subStat.value! * 100).toFixed(1): equip.subStat.value}{isPercentage(equip.subStat.name) ? "%" : ""}
+                    {statIsPercentage(equip.subStat.name) ? (equip.subStat.value! * 100).toFixed(1).concat("%"): equip.subStat.value}
                 </div>
             </div>
         </div>
@@ -52,7 +51,7 @@ export default function WeaponCard({equip, rule} : {equip: IWeapon, rule: IChara
                             </div>
                         </div>
                         <div className={"text-right grow"}>
-                            {isPercentage(equip.mainStat.name) ? (equip.mainStat.value * 100).toFixed(1): equip.mainStat.value}{isPercentage(equip.mainStat.name) ? "%" : ""}
+                            {statIsPercentage(equip.mainStat.name) ? (equip.mainStat.value * 100).toFixed(1).concat("%"): equip.mainStat.value}
                         </div>
                     </div>
                 </div>

@@ -19,5 +19,5 @@ export default function PlayerInfoCardSmall({info} : {info: IPlayerInfo | IPlaye
     return <div className="w-1/4 min-h-[75px] min-w-[300px] transition ease-in-out group rounded-md border bg-white/25 px-3 cursor-pointer z-10 mb-2 hover:shadow-lg" style={{
         backgroundImage : "url(https://enka.network/ui/".concat(info.namecardName, ".png)"),
         backgroundSize : "cover"
-    }} >{content}</div>
+    }} ><a href={"/uid/".concat(info.uid)}>{content}</a></div>
 }

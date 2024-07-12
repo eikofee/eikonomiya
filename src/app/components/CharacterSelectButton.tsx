@@ -1,7 +1,9 @@
 import { ICharacterData } from "@/server/gamedata/ICharacterData"
 import { ImgApi } from "./ImgApi"
+import { ICharacterRule } from "../interfaces/ICharacterRule"
+import Icon from "./Icon"
 
-export default function CharacterSmallCard({uid, character, useHref, useLargeFont, useBackground, borderColor}: {uid: string, character: ICharacterData, useHref: boolean, useLargeFont: boolean, useBackground: boolean, borderColor: string}) {
+export default function CharacterSelectButton({uid, character, rule, useHref, useLargeFont, useBackground, borderColor}: {uid: string, character: ICharacterData, rule: ICharacterRule, useHref: boolean, useLargeFont: boolean, useBackground: boolean, borderColor: string}) {
     let textSize = "text-sm"
     if (character.name.length > 14) {
         textSize = "text-xs"
@@ -29,12 +31,33 @@ export default function CharacterSmallCard({uid, character, useHref, useLargeFon
         let text = Math.floor(age / div).toString().concat(h)
         updateIndicator = <div className="text-xs[8px] px-1">{text}</div>
     }
+
+    let artes = []
+    let artesNames = ["fleur", "plume", "sablier", "coupe", "couronne"]
+    for (let i = 0 ; i < rule.currentRating.length; ++i) {
+        let colorValue = "fill-red-600"
+        let currentValue = rule.currentRating[i]
+        if (currentValue > 0.25) {
+            colorValue = "fill-yellow-600"
+        }
+        
+        if (currentValue > 0.5) {
+            colorValue = "fill-green-600"
+        }
+
+        artes.push(<Icon n={artesNames[i]} customStyle={colorValue} customInfo={(currentValue * 100).toFixed(0).concat("%")}/>)
+    }
+
     let content = <div className="items-center h-20 w-full flex flex-row cursor-pointer relative">
                         <div className="absolute inset-y-0 -left-2 overflow-hidden">
                             <ImgApi className="h-full" src={"characters_".concat(character.apiName, "_face")} alt={""} />
                         </div>
                         <div className={"p-1 text-center absolute top-2 left-20 -right-2 text-ellipsis bg-slate-100/70 rounded-md ".concat(useLargeFont ? "font-bold text-xl" : textSize)}>
                             {character.name}
+                        </div>
+                        
+                        <div className="text-xs absolute flex flex-row gap-1 p-1 bottom-1 left-20 text-ellipsis h-6 bg-slate-100/70 rounded-md">
+                            {artes}
                         </div>
                         <div className="text-xs absolute bottom-1 -right-2 text-right text-ellipsis bg-slate-100/70 rounded-md p-px">
                             {updateIndicator}
@@ -46,7 +69,7 @@ export default function CharacterSmallCard({uid, character, useHref, useLargeFon
     }
 
     if (useBackground) {
-        return <div className="min-w-[200px] max-w-full transition ease-in-out group rounded-md border bg-white/25 px-3 cursor-pointer z-10 mb-2 hover:shadow-lg" style={{
+        return <div className="min-w-[200px] max-w-full transition ease-in-out group rounded-md border bg-white/25 px-3 cursor-pointer z-10 hover:shadow-lg" style={{
             backgroundImage : "url(/api/assets/characters_".concat(character.apiName, "_namecard)"),
             backgroundSize : "cover"
         }} >{content}</div>

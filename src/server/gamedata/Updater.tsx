@@ -646,7 +646,6 @@ export class Updater {
                         anomalies.addStat(c.finalStats.get(currentStat)!)
                     }
                 }
-                console.log("ping4")
 
                 // talent values
                 let aaFields : INumericField[] = []
@@ -654,9 +653,7 @@ export class Updater {
                 let burstFields : INumericField[] = []
                 if (talentsValuesInfoRequest.success && talentsKeysInfoRequest.success) {
                     const values = talentsValuesInfoRequest.content!
-                    console.log(values)
                     const keys = talentsKeysInfoRequest.content!
-                    console.log(keys)
                     for (let i = 0; i < values.auto.length; ++i) {
                         const f : INumericField = {
                             id: keys.auto[i],
@@ -747,7 +744,6 @@ export class Updater {
 
                 characters.push(char)
             }
-            console.log("ping4")
 
             const pi : IPlayerInfo = {
                 name: enkaData.name,
@@ -831,11 +827,15 @@ export class Updater {
                 for (let j = 3; j < ruleLabels.length; ++j) {
                     rule.push({
                         name: ruleLabels[j],
-                        value: 3
+                        value: 0
                     })
                 }
 
-                await this.writeRule(uid, {character: characterName, ruleName: "defaultRuleName", stats: rule})
+                await this.writeRule(uid, {
+                    character: characterName,
+                    ruleName: "defaultRuleName",
+                    stats: rule,
+                    currentRating: [0,0,0,0,0]})
             }
 
         }

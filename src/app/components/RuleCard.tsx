@@ -3,67 +3,67 @@
 import { ICharacterRule } from "../interfaces/ICharacterRule";
 import Card from "./Card";
 import Icon from "./Icon";
-import InteractiveGaugeComponent from "./InteractiveGaugeComponent";
-import { EStat, eStatToReadable, stringToEStat } from "@/server/gamedata/enums/EStat";
+import { EStat, eStatToReadable, statIsPercentage, stringToEStat } from "@/server/gamedata/enums/EStat";
 import { ConfigContext } from "./ConfigContext";
 import { useContext, useState } from "react";
 import { IStatTuple } from "@/server/gamedata/IStatTuple";
+import { getTotalStatRollValue, ICharacterData } from "@/server/gamedata/ICharacterData";
 
 
 
-export default function RuleCard({rule, setRuleCallback, saveRuleCallback, popupId, setPopupId}: {rule: ICharacterRule, setRuleCallback: (_x : ICharacterRule) => void, saveRuleCallback: () => void, popupId: number, setPopupId: (x: number) => void}) {
+export default function RuleCard({rule, characterData, setRuleCallback, saveRuleCallback, popupId, setPopupId}: {rule: ICharacterRule, characterData: ICharacterData, setRuleCallback: (_x : ICharacterRule) => void, saveRuleCallback: () => void, popupId: number, setPopupId: (x: number) => void}) {
     const thisId = 2
     let ls = []
     const {colorDirector} = useContext(ConfigContext)
-    const badStats = [
-        EStat.HP,EStat.ATK,EStat.DEF
-    ]
-
     const [ruleValues, setRuleValues] = useState(rule.stats.map(x => x.value))
 
-    function updateRuleFromGauge(e: any) {
-        let value = parseInt(e.target.value)
-        let label = parseInt(e.target.name)
-        const newValues = [...ruleValues]
-        newValues[label] = value
-        setRuleValues(newValues)
-        let stats : IStatTuple[] = []
-        for (let i = 0; i < rule.stats.length; ++i) {
+    function toggleStatImportance(label: number) {
+        return () => {
+
+            let value = ruleValues[label]
+            const newValues = [...ruleValues]
+            newValues[label] = value == 0 ? 1 : 0
+            setRuleValues(newValues)
+            let stats : IStatTuple[] = []
+            for (let i = 0; i < rule.stats.length; ++i) {
                 stats.push({
                     name: rule.stats[i].name,
                     value: newValues[i],
                 })
+            }
+            let newRule : ICharacterRule = {
+                character: rule.character,
+                ruleName: rule.ruleName,
+                stats: stats,
+                currentRating: rule.currentRating
+            }
+            
+            setRuleCallback(newRule)
         }
-        let newRule : ICharacterRule = {
-            character: rule.character,
-            ruleName: rule.ruleName,
-            stats: stats
-        }
-        
-        setRuleCallback(newRule)
     }
     
     for (let i = 0; i < rule.stats.length; ++i) {
         let label = rule.stats[i].name
-            let classname = "w-full flex flex-row justify-between items"
+            let classname = "flex flex-row justify-between items"
             if (i == rule.stats.length - 1) {
                 classname += " rounded-md"
             }
+
+            let statValue = getTotalStatRollValue(characterData, label)
+            let statValueText = statValue.toFixed(0)
+            if (statIsPercentage(label)) {
+                statValueText = (statValue*100).toFixed(1).concat("%")
+            }
             
-            const iconDivClassName = badStats.includes(label) ? "text-slate-500/50 fill-slate-500/50" : ""
+            const iconDivClassName = rule.stats[i].value < 1 ? "text-slate-500/50 fill-slate-500/50" : ""
                 ls.push(
-                    <li className={classname}>
-            <div className={"text-left items-center m-1 flex flex-row ".concat(iconDivClassName)}>
-                <div className={"mr-1 h-4 w-4"}>
+            <div className={"text-left items-center m-1 flex flex-row border-2 p-2 rounded-full cursor-pointer ".concat(iconDivClassName, " ", colorDirector.borderAccent(5))} onClick={toggleStatImportance(i)}>
+                <div className={"mr-1 h-4"}>
                     <Icon n={label} />
                 </div><p>
-                    {eStatToReadable(label)} : {ruleValues[i]}
+                    {statValueText}
                 </p>
-            </div>
-            <div className="items-center">
-                {<InteractiveGaugeComponent type={3} label={i} value={ruleValues[i]} ruleSetterCallback={updateRuleFromGauge} />}
-            </div>
-        </li>)
+            </div>)
     }
 
     const buttonIcon = <div>
@@ -88,7 +88,6 @@ export default function RuleCard({rule, setRuleCallback, saveRuleCallback, popup
 
     let saveRuleCb = () => {
         saveRuleCallback()
-        // TODO: set proper callback answer (200 or else)
         setTextSaveButton("Rule Saved")
     }
     
@@ -105,14 +104,14 @@ export default function RuleCard({rule, setRuleCallback, saveRuleCallback, popup
     } else {
         return <div className="relative h-full">
                     <Card content={content} hfull={true} />
-                    <div className=" w-96 -translate-x-1/4 translate-y-1 absolute flex flex-col rounded-md border backdrop-blur-xl bg-white/25 p-2 z-10 border-slate-400">
-                    <ul>
-                        {ls}
-                    </ul>
+                    <div className=" w-96 -translate-x-1/4 translate-y-1 absolute rounded-md border flex flex-col backdrop-blur-xl bg-white/25 p-2 z-10 border-slate-400">
+                        <div className="flex flex-wrap">
+                            {ls}
+                        </div>
                         <div className={"w-full text-center justify-around h-full px-2 rounded-md cursor-pointer ".concat(colorDirector.bgAccent(5))} onClick={saveRuleCb}>
                             {textSaveButton}
                         </div>
-            </div>
-        </div>
+                    </div>
+                </div>
     }
 }

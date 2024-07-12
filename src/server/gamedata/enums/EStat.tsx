@@ -170,3 +170,7 @@ export function stringToEStat (s: string): EStat {
         default: return EStat.UNKNOWN
     }
 }
+
+export function statIsPercentage(stat: EStat) {
+    return !([EStat.HP, EStat.ATK, EStat.DEF, EStat.EM, EStat.F_HP, EStat.F_ATK, EStat.F_DEF, EStat.NONE, EStat.UNKNOWN].includes(stat))
+}

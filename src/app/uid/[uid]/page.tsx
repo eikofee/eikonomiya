@@ -1,7 +1,7 @@
 import { ELoadStatus, ILoadPlayerInfoStatus, Updater } from "@/server/gamedata/Updater";
-import { getPlayerInfoList, loadCharacters, loadConfigFile } from "@/server/DataLoader";
-import CharacterSmallCard from "../../components/CharacterSmallCard";
-import PlayerInfoCard from "@/app/components/playerInfoCards/PlayerInfoCard";
+import { getPlayerInfoList, loadCharacters, loadConfigFile, loadRules } from "@/server/DataLoader";
+import CharacterSelectButton from "../../components/CharacterSelectButton";
+import PlayerInfoCardBig from "@/app/components/playerInfoCards/PlayerInfoCard";
 
 export default async function Page({ params }: { params: { uid: string } }) {
     const uid = params.uid
@@ -39,21 +39,23 @@ export default async function Page({ params }: { params: { uid: string } }) {
     
     playerInfo.characters = await loadCharacters(uid)
     const characters = playerInfo.characters
+    const charRules = await loadRules(uid)
 
     let charList = []
 
     for (let i = 0; i < characters.length; ++i) {
+        const charRule = charRules.filter(x => x.character == characters[i].name)[0]
         // charList.push(<Card c={buildCharacterCard(characterList[i], true, false) } cname="px-3 cursor-pointer z-10" />)
-        charList.push(<CharacterSmallCard uid={uid} character={characters[i]} useHref={true} useLargeFont={false} useBackground={true} borderColor="" />)
+        charList.push(<CharacterSelectButton uid={uid} character={characters[i]} rule={charRule} useHref={true} useLargeFont={false} useBackground={true} borderColor="" />)
     }
 
     
     let content = <div className={"pl-1 w-full h-screen flex flex-col place-content-center items-center"}>
-        <PlayerInfoCard info={playerInfo} />
-                            <div className="grid grid-cols-auto-fit-fr-medium max-w-[1600px] gap-2 rounded-md border backdrop-blur-xl bg-white/25 p-2 w-3/4 z-10 border-slate-400">
-                                {charList}
-                            </div>
-                    </div>
+        <PlayerInfoCardBig info={playerInfo} />
+        <div className="grid grid-cols-auto-fit-fr-medium max-w-[1600px] gap-2 rounded-md border backdrop-blur-xl bg-white/25 p-2 w-3/4 z-10 border-slate-400">
+            {charList}
+        </div>
+    </div>
 
     return (
             content

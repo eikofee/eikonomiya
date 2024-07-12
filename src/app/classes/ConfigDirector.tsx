@@ -16,6 +16,7 @@ export function stringToETheme(s: string) {
 }
 
 export interface IConfigDirector {
+    version: string,
     theme: ETheme,
     artifactRating : {
         low: number,
@@ -25,6 +26,7 @@ export interface IConfigDirector {
 
 
 export class ConfigDirector {
+    version: string
     theme: ETheme
     artifactRating: {
         low: number,
@@ -34,11 +36,13 @@ export class ConfigDirector {
     constructor(i: IConfigDirector) {
         this.theme = i.theme
         this.artifactRating = i.artifactRating
+        this.version = i.version
     }
 }
 
 export function buildDefaultConfigDirector() : IConfigDirector {
     return {
+        version: process.env.BUILD_VERSION!,
         theme: ETheme.LIGHT,
         artifactRating : {
             low: 0.25,

@@ -9,7 +9,7 @@ import { parseAllEffects, parseCharacterData } from "./DataParser";
 import { IConfigDirector, ETheme, buildDefaultConfigDirector } from "@/app/classes/ConfigDirector";
 import { IEffect } from "./gamedata/IEffect";
 import { ETarget } from "./gamedata/enums/ETarget";
-import { upgradeCharacterDataFile, upgradePlayerFile, upgradeRuleDataFile } from "./DataUpgrade";
+import { upgradeCharacterDataFile, upgradeConfigFile, upgradePlayerFile, upgradeRuleDataFile } from "./DataUpgrade";
 
 export async function checkDataFolderExistence(): Promise<boolean> {
     const p = path.resolve(process.cwd())
@@ -92,7 +92,14 @@ export async function loadConfigFile(createIfDoesNotExist: boolean) : Promise<IC
         }
     
         const p2 = path.resolve(process.cwd(), process.env.DATA_PATH!)
-        const jsonData = JSON.parse((await fsPromises.readFile(p2.concat("/", process.env.CONFIG_FILENAME!))).toString())
+        let jsonData = JSON.parse((await fsPromises.readFile(p2.concat("/", process.env.CONFIG_FILENAME!))).toString())
+        const upgrade = upgradeConfigFile(jsonData)
+        if (upgrade.edidted) {
+            const p3 = path.join(process.cwd(), process.env.DATA_PATH!, process.env.CONFIG_FILENAME!)
+            await fsPromises.writeFile(p3, JSON.stringify(upgrade.content))
+        }
+
+        jsonData = upgrade.content
         iconfig.theme = jsonData["theme"]
         iconfig.artifactRating = jsonData["artifactRating"]
     }

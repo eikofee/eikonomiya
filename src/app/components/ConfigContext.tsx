@@ -5,5 +5,5 @@ import { ConfigDirector, ETheme } from "../classes/ConfigDirector";
 
 export const ConfigContext = createContext({
     colorDirector : new ColorDirector(EElement.NONE),
-    config : new ConfigDirector({theme: ETheme.LIGHT, artifactRating: {low: 0.25, med: 0.5}}),
+    config : new ConfigDirector({version: process.env.BUILD_VERSION!, theme: ETheme.LIGHT, artifactRating: {low: 0.25, med: 0.5}}),
 })

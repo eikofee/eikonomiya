@@ -12,9 +12,9 @@ export default function PlayerInfoCardSmall({info} : {info: IPlayerInfo | IPlaye
                             {info.name}
                         </div>
                         <div className="flex flex-row absolute gap-x-2 left-[75px] -right-2 bottom-2 h-1/3 items-stretch">
-                            <SmallField content={[<ImgApi className="h-full" src={"generic_achievementsL"} alt={""} />, <div>{info.achievementCount}</div>]} />
-                            <SmallField content={[<ImgApi className="h-full" src={"generic_abyssesL"} alt={""} />, <div>{info.abysses.floor}-{info.abysses.chamber}</div>]} />
-                            <SmallField content={[<ImgApi className="h-full" src={"generic_abyssesL"} alt={""} />, <div>???</div>]} />
+                            <SmallField key="field-count" content={[<ImgApi key="i1" className="h-full" src={"generic_achievementsL"} alt={""} />, <div key="i2">{info.achievementCount}</div>]} />
+                            <SmallField key="field-abysses" content={[<ImgApi key="i1" className="h-full" src={"generic_abyssesL"} alt={""} />, <div key="i2">{info.abysses.floor}-{info.abysses.chamber}</div>]} />
+                            <SmallField key="field-theater" content={[<ImgApi key="i1" className="h-full" src={"generic_abyssesL"} alt={""} />, <div key="i2">???</div>]} />
                         </div>
                     </div>
     return <div className="w-1/4 min-h-[75px] min-w-[300px] transition ease-in-out group rounded-md border bg-white/25 px-3 cursor-pointer z-10 mb-2 hover:shadow-lg" style={{

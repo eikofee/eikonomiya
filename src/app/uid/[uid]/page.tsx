@@ -33,7 +33,7 @@ export default async function Page({ params }: { params: { uid: string } }) {
     
     if (loadStatus.message != "") {
         return <div className="bg-blue-500 w-full h-full">
-            {loadStatus.message.split("\n").map(x => <p>{x}</p>)}
+            {loadStatus.message.split("\n").map(x => <p key={x}>{x}</p>)}
             </div>
     } else if (playerInfo == undefined) {
             return (

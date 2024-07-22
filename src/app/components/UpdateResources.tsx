@@ -13,7 +13,6 @@ export default function UpdateResources() {
                     const res = await (await fetch("/api/update?mode=status", {cache: "no-cache"})).json()
                     setLogLine(res.lastLine.replace("\r", ""))
                     setIsRunning(res.isRunning)
-                    setIsRunning(false)
             }, 1000)
 
         return () => {

@@ -30,7 +30,7 @@ TEMP_FOLDER = os.path.join(MASTER_OUTPUT_PATH, "temp")
 FORCE = None
 
 # Eikonomiya-data specific
-ED_DATA_FOLDERS = ["artifacts", "weapons", "resonances", "assets/generic"]
+ED_DATA_FOLDERS = ["artifacts", "weapons", "resonances", "assets/generic", "characters"]
 
 def checkout_eikonomiya():
     current_path = os.getcwd()

@@ -1,4 +1,6 @@
+import { INumericFieldValue } from "./INumericFieldValue";
+
 export interface INumericField {
-    id: string,
-    values: number[]
+    name: string,
+    values: INumericFieldValue[]
 }

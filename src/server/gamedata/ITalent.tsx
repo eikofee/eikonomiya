@@ -7,6 +7,7 @@ export interface ITalent {
     description: string[],
     icon: string,
     level: number,
+    bonusLevel: number,
     levelMax: number,
     fields: INumericField[],
 }
@@ -18,6 +19,7 @@ export function buildDefaultITalent() {
         description: ["Default Talent Description"],
         icon: "Default Talent Icon",
         level: 0,
+        bonusLevel: 0,
         levelMax: 0,
         fields: []
     }
@@ -28,10 +30,11 @@ export function buildDefaultITalent() {
 export function copyTalent(ref: ITalent) : ITalent {
     const fields : INumericField[] = []
     for (let i = 0; i < ref.fields.length; ++i) {
-        fields.push({
+        const f : INumericField = {
             name: ref.fields[i].name,
-            values: ref.fields[i].values
-        })
+            values: ref.fields[i].values,
+        }
+        fields.push(f)
     }
 
     const res : ITalent = {
@@ -40,6 +43,7 @@ export function copyTalent(ref: ITalent) : ITalent {
         description: ref.description,
         icon: ref.icon,
         level: ref.level,
+        bonusLevel: ref.bonusLevel,
         levelMax: ref.levelMax,
         fields: fields
     }

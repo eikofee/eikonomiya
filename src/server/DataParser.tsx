@@ -429,14 +429,15 @@ export function parseCharacterData(json: any): ICharacterData {
         },
         friendshipLevel: json["friendshipLevel"],
         talents: {
-            aa: {
-                type: stringToETalentType(json["talents"]["aa"]["type"]),
-                name: json["talents"]["aa"]["name"],
-                description: json["talents"]["aa"]["description"],
-                icon: json["talents"]["aa"]["icon"],
-                level: json["talents"]["aa"]["level"],
-                levelMax: json["talents"]["aa"]["levelMax"],
-                fields: json["talents"]["aa"]["fields"]
+            auto: {
+                type: stringToETalentType(json["talents"]["auto"]["type"]),
+                name: json["talents"]["auto"]["name"],
+                description: json["talents"]["auto"]["description"],
+                icon: json["talents"]["auto"]["icon"],
+                level: json["talents"]["auto"]["level"],
+                bonusLevel: json["talents"]["auto"]["bonusLevel"],
+                levelMax: json["talents"]["auto"]["levelMax"],
+                fields: json["talents"]["auto"]["fields"]
             },
             skill: {
                 type: stringToETalentType(json["talents"]["skill"]["type"]),
@@ -444,6 +445,7 @@ export function parseCharacterData(json: any): ICharacterData {
                 description: json["talents"]["skill"]["description"],
                 icon: json["talents"]["skill"]["icon"],
                 level: json["talents"]["skill"]["level"],
+                bonusLevel: json["talents"]["skill"]["bonusLevel"],
                 levelMax: json["talents"]["skill"]["levelMax"],
                 fields: json["talents"]["skill"]["fields"]
             },
@@ -453,6 +455,7 @@ export function parseCharacterData(json: any): ICharacterData {
                 description: json["talents"]["burst"]["description"],
                 icon: json["talents"]["burst"]["icon"],
                 level: json["talents"]["burst"]["level"],
+                bonusLevel: json["talents"]["burst"]["bonusLevel"],
                 levelMax: json["talents"]["burst"]["levelMax"],
                 fields: json["talents"]["burst"]["fields"]
             }

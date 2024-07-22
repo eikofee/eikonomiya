@@ -12,6 +12,7 @@ import { ETarget } from "./enums/ETarget";
 import { ERarity } from "./enums/ERarity";
 import { EStat } from "./enums/EStat";
 import { EWeaponType } from "./enums/EWeaponType";
+import { IEnkaProudMapEntry } from "./enkaDataStructures/IEnkaProudMapEntry";
 
 export class EnkaBridge {
 
@@ -171,6 +172,23 @@ export class EnkaBridge {
             }
         }
 
+        const resExtraLevels = [0, 0, 0]
+        const extraLevels = data["proudSkillExtraLevelMap"]
+        if (extraLevels != undefined) {
+
+            const extraLevelsKeys = Object.keys(extraLevels)
+            for (let i = 0; i < extraLevelsKeys.length; ++i) {
+                const k = parseInt(extraLevelsKeys[i])
+                let j = 0
+                while (k != characterCommonData.proudMap[j].skillUpgradeId) {
+                    ++j
+                }
+                
+                resExtraLevels[j] += extraLevels[k]
+            }
+        }
+
+
         const baseSb = new StatBag()
         baseSb.addStat({name: EStat.HP, value: fpm(1)})
         baseSb.addStat({name: EStat.ATK, value: fpm(4)}) // includes weapon
@@ -183,6 +201,7 @@ export class EnkaBridge {
             finalStats: sb,
 
             skills: skills,
+            skillExtraLevel: resExtraLevels,
             artifacts: artifacts,
             weapon: weapon as IEnkaWeapon,
 
@@ -340,11 +359,23 @@ export class EnkaBridge {
                 break;
         }
 
+        let proudMap = []
+        let proudKeys = Object.keys(commonData["ProudMap"])
+        for (let i = 0; i < proudKeys.length; ++i) {
+            const item : IEnkaProudMapEntry = {
+                skillId: proudKeys[i],
+                skillUpgradeId: commonData["ProudMap"][proudKeys[i]]
+            }
+
+            proudMap.push(item)
+        }
+
         const res: IEnkaCharacterCommonData = {
             id: id,
             element: element,
             constellationIds: commonData["Consts"],
             skills: skills,
+            proudMap: proudMap,
             nameId: commonData["NameTextMapHash"],
             sideIconId: commonData["SideIconName"],
             rarity: rarity,

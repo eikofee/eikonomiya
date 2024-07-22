@@ -2,10 +2,10 @@ import { IApiResult } from "@/app/interfaces/IApiResult"
 import {promises as fsPromises} from 'fs';
 import { buildPathToDataFolder } from "../DataLoader";
 import * as yaml from 'yaml';
-import { IGoTalentsKeys } from "../gamedata/goDataStructures/IGoTalentsKeys";
+import { IEikoTalentDesc, IEikoTalentsKeys, IEikoTalentValue } from "../gamedata/IEikoTalentsKeys";
 
 
-type IApiTalentsKeys = IGoTalentsKeys
+type IApiTalentsKeys = IEikoTalentsKeys
 
 export async function apiLogicLoadTalentsKeys(name: string) : Promise<IApiResult<IApiTalentsKeys>> {
     let subPath = name.toLowerCase().replace(" ", "").replaceAll("_", "/")
@@ -23,19 +23,50 @@ export async function apiLogicLoadTalentsKeys(name: string) : Promise<IApiResult
 
 
 export function yamlToIGoTalentsKeys(data: any) {
-    const res : IGoTalentsKeys = {
-        auto: data["auto"],
-        skill: data["skill"],
-        burst: data["burst"],
-        passive1: data["passive1"],
-        passive2: data["passive2"],
-        passive3: data["passive3"],
-        constellation1: data["constellation1"],
-        constellation2: data["constellation2"],
-        constellation3: data["constellation3"],
-        constellation4: data["constellation4"],
-        constellation5: data["constellation5"],
-        constellation6: data["constellation6"]
+    const buildTalentValue = (a: any) => {
+        const res : IEikoTalentValue = {
+            a: a["a"],
+            v: a["v"],
+            flat: a["flat"]
+        }
+
+        return res
+    }
+
+    const buildTalentDesc = (a: any) => {
+        let v = []
+        for (let i = 0; i < a["values"].length; ++i) {
+            v.push(buildTalentValue(a["values"][i]))
+        }
+
+        const res : IEikoTalentDesc = {
+            name: a["name"],
+            values: v
+        }
+
+        return res
+    }
+
+    let auto = []
+    let skill = []
+    let burst = []
+
+    for (let i = 0; i < data["auto"].length; ++i) {
+        auto.push(buildTalentDesc(data["auto"][i]))
+    }
+
+    for (let i = 0; i < data["skill"].length; ++i) {
+        skill.push(buildTalentDesc(data["skill"][i]))
+    }
+
+    for (let i = 0; i < data["burst"].length; ++i) {
+        burst.push(buildTalentDesc(data["burst"][i]))
+    }
+
+    const res : IEikoTalentsKeys = {
+        auto: auto,
+        skill: skill,
+        burst: burst
     }
 
     return res

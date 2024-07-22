@@ -64,8 +64,8 @@ export async function getPlayerInfoList(): Promise<IPlayerInfoWithoutCharacters[
                 
                 if (files.includes("player")) {
                     let jsonData = JSON.parse((await fsPromises.readFile(pl.concat("/player"))).toString())
-                    const upgrade = upgradeRuleDataFile(jsonData)
-                    if (upgrade.edidted) {
+                    const upgrade = upgradePlayerFile(jsonData)
+                    if (upgrade.edited) {
         
                     }
 
@@ -94,7 +94,7 @@ export async function loadConfigFile(createIfDoesNotExist: boolean) : Promise<IC
         const p2 = path.resolve(process.cwd(), process.env.DATA_PATH!)
         let jsonData = JSON.parse((await fsPromises.readFile(p2.concat("/", process.env.CONFIG_FILENAME!))).toString())
         const upgrade = upgradeConfigFile(jsonData)
-        if (upgrade.edidted) {
+        if (upgrade.edited) {
             const p3 = path.join(process.cwd(), process.env.DATA_PATH!, process.env.CONFIG_FILENAME!)
             await fsPromises.writeFile(p3, JSON.stringify(upgrade.content))
         }
@@ -124,8 +124,8 @@ export async function loadCharacters(uid: string) : Promise<ICharacterData[]>{
         for (let i = 0; i < fileList.length; ++i) {
             let f = fileList[i]
             let jsonData = JSON.parse((await fsPromises.readFile(p.path.concat("/", f))).toString())
-            const upgrade = upgradeRuleDataFile(jsonData)
-            if (upgrade.edidted) {
+            const upgrade = upgradeCharacterDataFile(jsonData)
+            if (upgrade.edited) {
 
             }
 
@@ -146,7 +146,7 @@ export async function loadRules(uid: string) : Promise<ICharacterRule[]>{
             let f = fileList[i]
             let jsonData = JSON.parse((await fsPromises.readFile(p.path.concat("/", f))).toString())
             const upgrade = upgradeRuleDataFile(jsonData)
-            if (upgrade.edidted) {
+            if (upgrade.edited) {
                 await writeRule(uid, upgrade.content)
             }
 

@@ -31,6 +31,8 @@ import { INumericField } from "./INumericField";
 import { IScaledNumber } from "./IScaledNumber";
 import { apiLogicLoadTalentsKeys } from "../api/ApiLogicLoadTalentsKeys";
 import { writeRule } from "../DataLoader";
+import { INumericFieldValue } from "./INumericFieldValue";
+import { stringToENumericFieldAttribute } from "./enums/ENumericFieldAttribute";
 
 export enum ELoadStatus {
     SUCCESS,
@@ -669,34 +671,92 @@ export class Updater {
                 }
 
                 // talent values
-                let aaFields : INumericField[] = []
+                let autoFields : INumericField[] = []
                 let skillFields : INumericField[] = []
                 let burstFields : INumericField[] = []
                 if (talentsValuesInfoRequest.success && talentsKeysInfoRequest.success) {
                     const values = talentsValuesInfoRequest.content!
                     const keys = talentsKeysInfoRequest.content!
-                    for (let i = 0; i < values.auto.length; ++i) {
+                    
+                    let autoKey = 0;
+                    for (let i = 0; i < keys.auto.length; ++i) {
+                        let vs = []
+                        for (let j = 0; j < keys.auto[i].values.length; ++j) {
+                            const item = keys.auto[i].values[j]
+                            let index = autoKey;
+                            if (item.v == "auto_++") {
+                                autoKey += 1
+                            } else {
+                                index = parseInt(item.v.split("_")[1])
+                            }
+
+                            const nv : INumericFieldValue = {
+                                attribute: stringToENumericFieldAttribute(item.a),
+                                leveledValues: values.auto[index],
+                                flat: item.flat
+                            }
+
+                            vs.push(nv)
+                        }
                         const f : INumericField = {
-                            id: keys.auto[i],
-                            values: values.auto[i]
+                            name: keys.auto[i].name,
+                            values: vs
                         }
 
-                        aaFields.push(f)
+                        autoFields.push(f)
                     }
 
-                    for (let i = 0; i < values.skill.length; ++i) {
+                    let skillKey = 0;
+                    for (let i = 0; i < keys.skill.length; ++i) {
+                        let vs = []
+                        for (let j = 0; j < keys.skill[i].values.length; ++j) {
+                            const item = keys.skill[i].values[j]
+                            let index = skillKey;
+                            if (item.v == "skill_++") {
+                                skillKey += 1
+                            } else {
+                                index = parseInt(item.v.split("_")[1])
+                            }
+                            
+                            const nv : INumericFieldValue = {
+                                attribute: stringToENumericFieldAttribute(item.a),
+                                leveledValues: values.skill[index],
+                                flat: item.flat
+                            }
+
+                            vs.push(nv)
+                        }
                         const f : INumericField = {
-                            id: keys.skill[i],
-                            values: values.skill[i]
+                            name: keys.skill[i].name,
+                            values: vs
                         }
 
                         skillFields.push(f)
                     }
 
-                    for (let i = 0; i < values.burst.length; ++i) {
+                    let burstKey = 0;
+                    for (let i = 0; i < keys.burst.length; ++i) {
+                        let vs = []
+                        for (let j = 0; j < keys.burst[i].values.length; ++j) {
+                            const item = keys.burst[i].values[j]
+                            let index = burstKey;
+                            if (item.v == "burst_++") {
+                                burstKey += 1
+                            } else {
+                                index = parseInt(item.v.split("_")[1])
+                            }
+                            
+                            const nv : INumericFieldValue = {
+                                attribute: stringToENumericFieldAttribute(item.a),
+                                leveledValues: values.burst[index],
+                                flat: item.flat
+                            }
+
+                            vs.push(nv)
+                        }
                         const f : INumericField = {
-                            id: keys.burst[i],
-                            values: values.burst[i]
+                            name: keys.burst[i].name,
+                            values: vs
                         }
 
                         burstFields.push(f)
@@ -716,14 +776,15 @@ export class Updater {
                     friendshipLevel: c.friendship,
                     constellationLevel: c.constellation,
                     talents: {
-                        aa: {
+                        auto: {
                             type: ETalentType.NORMAL,
                             name: localeInfoRequest.success ? localeInfoRequest.content!.auto.name : "",
                             description: localeInfoRequest.success ? localeInfoRequest.content!.auto.fields.normal.concat(localeInfoRequest.content!.auto.fields.charged, localeInfoRequest.content!.auto.fields.plunging) : [""],
                             icon: "",
                             level: c.skills[0].level,
+                            bonusLevel: c.skillExtraLevel[0],
                             levelMax: 11,
-                            fields: aaFields
+                            fields: autoFields
                         },
                         skill: {
                             type: ETalentType.SKILL,
@@ -731,6 +792,7 @@ export class Updater {
                             description: localeInfoRequest.success ? localeInfoRequest.content!.skill.description : [""],
                             icon: "",
                             level: c.skills[1].level,
+                            bonusLevel: c.skillExtraLevel[1],
                             levelMax: 13,
                             fields: skillFields
                         },
@@ -740,6 +802,7 @@ export class Updater {
                             description: localeInfoRequest.success ? localeInfoRequest.content!.burst.description : [""],
                             icon: "",
                             level: c.skills[2].level,
+                            bonusLevel: c.skillExtraLevel[2],
                             levelMax: 13,
                             fields: burstFields
                         },

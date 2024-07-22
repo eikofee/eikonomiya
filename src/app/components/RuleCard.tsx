@@ -35,7 +35,8 @@ export default function RuleCard({rule, characterData, setRuleCallback, saveRule
                 character: rule.character,
                 ruleName: rule.ruleName,
                 stats: stats,
-                currentRating: rule.currentRating
+                currentRating: rule.currentRating,
+                version: process.env.CURRENT_VERSION!
             }
             
             setRuleCallback(newRule)

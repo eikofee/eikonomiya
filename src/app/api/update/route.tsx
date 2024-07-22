@@ -96,7 +96,6 @@ export async function GET(request: Request) {
                 
                 return Response.json(res, headerResponse)
             } catch (e) {
-                console.log(e)
                 const res : IGo2EikoResult = {
                     isRunning: false,
                     lastLine: ""

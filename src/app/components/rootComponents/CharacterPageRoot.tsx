@@ -19,8 +19,9 @@ import EffectList, { EEffectListType } from "../EffectList";
 import EffectCardExplorer from "../EffectCardExplorer";
 import StatLineDraw from "../StatLineDrawer";
 import Card from "../Card";
-import TalentCard from "../TalentCard";
-
+import { ETabMode } from "../enums/ETabMode";
+import TopTabSwitcher from "../TopTabSwitcher";
+import { FullTalentCard } from "../FullTalentCard";
 
 export default function CharacterPageRoot({data: characters, currentCharacterName: currentCharacterName, rules, uid, iconfig, defaultEffectCards} : ({data: ICharacterData[], currentCharacterName: string, rules: ICharacterRule[], uid: string, iconfig: IConfigDirector, defaultEffectCards: IEffect[]})) {
     
@@ -39,6 +40,7 @@ export default function CharacterPageRoot({data: characters, currentCharacterNam
     let config = new ConfigDirector(iconfig)
 
     const [rule, setRule] = useState(defaultRule)
+    const [tabMode, setTabMode] = useState(ETabMode.ARTIFACTS)
 
     async function saveRuleCallback() {
         let url = "/api/rules?mode=rate&characterName=".concat(rule.character,"&uid=", uid)
@@ -127,6 +129,17 @@ export default function CharacterPageRoot({data: characters, currentCharacterNam
         anomalyCards.push(<Card content={content}/>)
     }
 
+    let topTabContent = <div></div>
+    switch (tabMode) {
+        case ETabMode.ARTIFACTS:
+        default:
+            topTabContent = <FullEquipCard character={characterData} rule={rule}/>
+            break;
+        
+        case ETabMode.TALENT_VALUES:
+            topTabContent = <FullTalentCard character={characterData} />
+            break;
+    }
     return <ConfigContext.Provider value={{colorDirector: colorDirector, config: config}}>
         <BackgroundComponent character={characterData}/>
         <div className="flex flex-col p-1 gap-1 h-screen w-full">
@@ -134,6 +147,7 @@ export default function CharacterPageRoot({data: characters, currentCharacterNam
                 <div className={"flex flex-row gap-1 h-full"}>
                     <NavigationComponent currentCharacter={characterData} characterList={characters} characterRules={rules} uid={uid} popupId={popupId} setPopupId={setPopupId}/>
                     <RuleCard rule={rule} characterData={characterData} setRuleCallback={setRule} saveRuleCallback={saveRuleCallback} popupId={popupId} setPopupId={setPopupId}/>
+                    <TopTabSwitcher currentMode={tabMode} currentModeCallback={setTabMode} />
                 </div>
                 {/* <TopOverSpace content={hiddableContent} /> */}
             </div>
@@ -142,7 +156,7 @@ export default function CharacterPageRoot({data: characters, currentCharacterNam
                     <CharacterCard char={characterData} />
                 </div>
                 <div className={"flex flex-col h-full w-full gap-1"}>
-                    <FullEquipCard character={characterData} rule={rule}/>
+                    {topTabContent}
                     <div className="flex flex-row flex-wrap h-full w-full gap-1">
                         <div className="flex flex-col gap-1 max-h-full max-w-large grow">
                             <StatCard character={characterData} statbag={statBag}/>

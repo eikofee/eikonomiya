@@ -49,8 +49,8 @@ export default function CharacterCard({char} : {char: ICharacterData}) {
         if (hoveredItem > 10) {
             switch (hoveredItem) {
                 case 11:
-                    contentTitle = char.talents.aa.name
-                    contentDescription = char.talents.aa.description
+                    contentTitle = char.talents.auto.name
+                    contentDescription = char.talents.auto.description
                     break;
                 case 12:
                     contentTitle = char.talents.skill.name
@@ -77,15 +77,15 @@ export default function CharacterCard({char} : {char: ICharacterData}) {
     <div key="character-talents" className="grid grid-cols-3 justify-items-center">
             <div className="w-16 h-16 rounded-full bg-slate-700/70 relative" onMouseEnter={changeOnHoverCb(11)} onMouseLeave={changeOffHoverCb}>
                 <ImgApi key="talent-aa" src={"generic_".concat(char.weaponType.toString().toLowerCase())} />
-                <div className={"absolute rounded-md text-sm px-1 left-3/4 top-3/4 font-bold ".concat(colorDirector.bgAccent(5))}>{char.talents.aa.level}</div>
+                <div className={"absolute rounded-md text-sm px-1 left-3/4 top-3/4 font-bold ".concat(colorDirector.bgAccent(5))}>{char.talents.auto.level + char.talents.auto.bonusLevel}</div>
             </div>
             <div className="w-16 h-16 rounded-full bg-slate-700/70 relative" onMouseEnter={changeOnHoverCb(12)} onMouseLeave={changeOffHoverCb}>
                 <ImgApi key="talent-skill" src={"characters_".concat(char.apiName, "_skill")} />
-                <div className={"absolute rounded-md text-sm px-1 left-3/4 top-3/4  font-bold ".concat(colorDirector.bgAccent(5))}>{char.talents.skill.level}</div>
+                <div className={"absolute rounded-md text-sm px-1 left-3/4 top-3/4  font-bold ".concat(colorDirector.bgAccent(5))}>{char.talents.skill.level + char.talents.skill.bonusLevel}</div>
             </div>
             <div className="w-16 h-16 rounded-full bg-slate-700/70 relative" onMouseEnter={changeOnHoverCb(13)} onMouseLeave={changeOffHoverCb}>
                 <ImgApi key="talent-burst" src={"characters_".concat(char.apiName, "_burst")} />
-                <div className={"absolute rounded-md text-sm px-1 left-3/4 top-3/4  font-bold ".concat(colorDirector.bgAccent(5))}>{char.talents.burst.level}</div>
+                <div className={"absolute rounded-md text-sm px-1 left-3/4 top-3/4  font-bold ".concat(colorDirector.bgAccent(5))}>{char.talents.burst.level + char.talents.burst.bonusLevel}</div>
             </div>
     </div>
     <div key="character-consts" className="grid grid-cols-6 my-3 justify-items-center">

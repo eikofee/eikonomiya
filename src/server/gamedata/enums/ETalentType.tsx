@@ -33,3 +33,22 @@ export function stringToETalentType(name: string) : ETalentType {
         default: return ETalentType.UNKNOWN
     }
 }
+
+export function eTalentTypeToTag(e: ETalentType) {
+    switch(e) {
+        case ETalentType.NONE: return "None"
+        case ETalentType.NORMAL: return "Normal Attack"
+        case ETalentType.SKILL:return "Elemental Skill"
+        case ETalentType.BURST:return "Elemental Burst"
+        case ETalentType.A1:return "A1"
+        case ETalentType.A4:return "A4"
+        case ETalentType.OTHER:return "Other"
+        case ETalentType.C1:return "Const. 1"
+        case ETalentType.C2:return "Const. 2"
+        case ETalentType.C3:return "Const. 3"
+        case ETalentType.C4:return "Const. 4"
+        case ETalentType.C5:return "Const. 5"
+        case ETalentType.C6:return "Const. 6"
+        case ETalentType.UNKNOWN: return "Unknown"
+    }
+}

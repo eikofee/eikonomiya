@@ -12,6 +12,7 @@ export interface IEnkaCharacterData {
     finalStats: StatBag,
     baseStats: StatBag,
     skills: IEnkaSkill[],
+    skillExtraLevel: number[], // auto, skill, burst
     artifacts: IEnkaArtifact[],
     weapon: IEnkaWeapon,
     constellation: number,

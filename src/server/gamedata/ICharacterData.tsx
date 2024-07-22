@@ -32,7 +32,7 @@ export interface ICharacterData {
 
     friendshipLevel: number,
     talents: {
-        aa: ITalent,
+        auto: ITalent,
         skill: ITalent,
         burst: ITalent,
     }
@@ -64,7 +64,7 @@ export function buildDefaultICharacterData() {
         },
         friendshipLevel: 0,
         talents: {
-            aa: buildDefaultITalent(),
+            auto: buildDefaultITalent(),
             skill: buildDefaultITalent(),
             burst: buildDefaultITalent()
         },
@@ -197,10 +197,10 @@ export function copyCharacterData(ref: ICharacterData) : ICharacterData{
         constellationLevel: 0,
         constellations: [],
         talents: {
-            aa: copyTalent(ref.talents.aa),
+            auto: copyTalent(ref.talents.auto),
             skill: copyTalent(ref.talents.skill),
             burst: copyTalent(ref.talents.burst)
-        }
+        },
     }
 
     return res

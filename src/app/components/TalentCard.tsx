@@ -1,51 +1,53 @@
 import { ICharacterData } from "@/server/gamedata/ICharacterData";
-import { useContext, useState } from "react";
+import { ITalent } from "@/server/gamedata/ITalent";
+import Card, { ECardSize } from "./Card";
+import { useContext } from "react";
 import { EAccentType } from "../classes/ColorDirector";
 import { ConfigContext } from "./ConfigContext";
 import { ImgApi } from "./ImgApi";
-import MarkdownDescription from "./MarkdownDescription";
-import Card from "./Card";
+import { ETalentType, eTalentTypeToTag } from "@/server/gamedata/enums/ETalentType";
+import { ENumericFieldAttribute, ENumericFieldAttributeToUnit } from "@/server/gamedata/enums/ENumericFieldAttribute";
 
-export default function TalentCard({character, fieldName}: {character: ICharacterData, fieldName: string}) {
-    const [expandDescription, setExpandDescription] = useState(false)
-
-    const toggleExpand = () => {
-        setExpandDescription(!expandDescription)
-    }
+export default function TalentCard({character, talent} : {character: ICharacterData, talent: ITalent}) {
 
     const {colorDirector} = useContext(ConfigContext)
-    let skillName = ""
-    let skillDescription = [""]
-    switch (fieldName) {
-        case "aa":
-            skillName = character.talents.aa.name
-            skillDescription = character.talents.aa.description
-            break;
-        case "skill":
-            skillName = character.talents.aa.name
-            skillDescription = character.talents.aa.description
-            break;
-        case "burst":
-            skillName = character.talents.aa.name
-            skillDescription = character.talents.aa.description
-            break;
+
+    let talentLine = (name : string, value : number, attribute : ENumericFieldAttribute, isPercentage: boolean) =>{
+        return <li className="flex justify-between place-items-center">
+            <div className="w-full flex flex-row items-center px-1">
+                            <div className="text-left text-sm">
+                                {name}
+                            </div>
+                            <div className="text-right grow text-sm">
+                                {isPercentage ? (value * 100).toFixed(1): value.toString()}
+                                {isPercentage ? "%" : ""}
+                                {ENumericFieldAttributeToUnit(attribute)}
+                            </div>
+                        </div>
+        </li>
     }
 
-    const content = 
-    <div key="effect-child" className={"w-full rounded-t-md"}>
-        <div className={"flex flex-row justify-between ".concat(colorDirector.bgAccent(7))}> 
-            <div className="flex flex-row">
-                <div className="aspect-square w-8 place-self-start">
-                    <ImgApi key={"talent-".concat(fieldName)} src={"characters_".concat(character.name, "_", fieldName)} />
-                </div>
-                <div className="pl-2 text-sm font-semibold place-self-center grow">{skillName}</div>
-            </div>
-            <button onClick={toggleExpand} className={"pr-2 text-sm text-right cursor-pointer ".concat(colorDirector.textAccent(3))}>{expandDescription ? "Collapse" : "Expand"}</button>
-        </div>
-        {/* {effect.tag != "" ? <div className={"text-right place-self-end self-center h-1/2 rounded-md text-xs mr-2 p-1 text-white ".concat(colorDirector.bgAccent(EAccentType.STRONG))}>{effect.tag}</div> : ""} */}
-        {expandDescription ? <div> {skillDescription.map(x => <MarkdownDescription html={x} />)}</div>
-             : ""}
-    </div>
+    let ls = []
+    for (let i = 0; i < talent.fields.length; ++i) {
+        ls.push(talentLine(talent.fields[i].name, talent.fields[i].values[0].leveledValues[talent.level - 1 + talent.bonusLevel], talent.fields[i].values[0].attribute, !talent.fields[i].values[0].flat))
+    }
 
-    return <Card content={content} />
+    let title = <div key="effect-child" className={"flex flex-row flex-grow w-full rounded-t-md ".concat(colorDirector.bgAccent(7))}>
+    {/* <img alt="" src={effect.icon} className="aspect-square w-8 place-self-start"/> */}
+    <div className="aspect-square w-8 place-self-start">
+        <ImgApi key="talent-icon" src={talent.type == ETalentType.NORMAL ? "generic_".concat(character.weaponType.toString().toLowerCase()) : "characters_".concat(character.apiName, "_", talent.type.toString())} />
+    </div>
+    <div className="pl-2 text-sm font-semibold place-self-center grow">{talent.name}</div>
+    <div className="pr-2 text-xs text-right self-center"> Lv. {talent.level + talent.bonusLevel}</div>
+    <div className={"text-right place-self-end self-center h-1/2 rounded-md text-xs mr-2 p-1 text-white ".concat(colorDirector.bgAccent(EAccentType.STRONG))}>{eTalentTypeToTag(talent.type)}</div>
+</div>
+
+    let content = <div className="bg-inherit">
+        {title}
+        <ul key="talent-list">
+            {ls}
+        </ul>
+    </div>;
+
+    return <Card content={content} minw={ECardSize.LARGE} />
 }

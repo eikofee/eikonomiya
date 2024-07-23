@@ -14,11 +14,11 @@ export default function NavigationComponent({currentCharacter, characterList, ch
     const thisId = 1
 
     const buildCharacterCard = (c: ICharacterData, useHref: boolean, useLargeFont: boolean) => {
-        let content = <div className="items-center h-14 w-full flex flex-row cursor-pointer">
-                        <div className="h-14 w-full max-w-16 overflow-hidden">
-                            <ImgApi className="h-14" src={"characters_".concat(c.apiName, "_face")} alt={""} />
+        let content = <div className="min-h-[75px] items-center h-full w-full flex flex-row cursor-pointer relative">
+                        <div className="absolute inset-y-0 -left-2 overflow-hidden">
+                            <ImgApi className="h-full" src={"characters_".concat(c.apiName, "_face")} alt={""} />
                         </div>
-                        <div className={"text-center w-full text-ellipsis rounded-md ".concat(useLargeFont ? colorDirector.bgAccent(5).concat(" font-bold text-xl") : "bg-slate-100/60 text-sm")}>
+                        <div className={"text-center absolute left-[75px] -right-2 text-ellipsis rounded-md ".concat(useLargeFont ? colorDirector.bgAccent(5).concat(" font-bold text-xl") : "bg-slate-100/60 text-sm")}>
                             {c.name}
                         </div>
                     </div>

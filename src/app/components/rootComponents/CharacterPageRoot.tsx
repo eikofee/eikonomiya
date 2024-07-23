@@ -22,8 +22,11 @@ import Card from "../Card";
 import { ETabMode } from "../enums/ETabMode";
 import TopTabSwitcher from "../TopTabSwitcher";
 import { FullTalentCard } from "../FullTalentCard";
+import PlayerInfoCardSmall from "../playerInfoCards/PlayerInfoCardSmall";
+import { getPlayerInfoLight } from "@/server/DataLoader";
+import { IPlayerInfoWithoutCharacters } from "@/server/gamedata/IPlayerInfo";
 
-export default function CharacterPageRoot({data: characters, currentCharacterName: currentCharacterName, rules, uid, iconfig, defaultEffectCards} : ({data: ICharacterData[], currentCharacterName: string, rules: ICharacterRule[], uid: string, iconfig: IConfigDirector, defaultEffectCards: IEffect[]})) {
+export default function CharacterPageRoot({data: characters, currentCharacterName: currentCharacterName, rules, uid, iconfig, defaultEffectCards, playerInfo} : ({data: ICharacterData[], currentCharacterName: string, rules: ICharacterRule[], uid: string, iconfig: IConfigDirector, defaultEffectCards: IEffect[], playerInfo: IPlayerInfoWithoutCharacters})) {
     
     let char = buildDefaultICharacterData()
 
@@ -145,9 +148,14 @@ export default function CharacterPageRoot({data: characters, currentCharacterNam
         <div className="flex flex-col p-1 gap-1 h-screen w-full">
             <div className="flex flex-col relative h-15">
                 <div className={"flex flex-row gap-1 h-full"}>
-                    <NavigationComponent currentCharacter={characterData} characterList={characters} characterRules={rules} uid={uid} popupId={popupId} setPopupId={setPopupId}/>
-                    <RuleCard rule={rule} characterData={characterData} setRuleCallback={setRule} saveRuleCallback={saveRuleCallback} popupId={popupId} setPopupId={setPopupId}/>
-                    <TopTabSwitcher currentMode={tabMode} currentModeCallback={setTabMode} />
+                    <div className="flex flex-row gap-1 h-full w-full">
+                        <NavigationComponent currentCharacter={characterData} characterList={characters} characterRules={rules} uid={uid} popupId={popupId} setPopupId={setPopupId}/>
+                        <RuleCard rule={rule} characterData={characterData} setRuleCallback={setRule} saveRuleCallback={saveRuleCallback} popupId={popupId} setPopupId={setPopupId}/>
+                        <TopTabSwitcher currentMode={tabMode} currentModeCallback={setTabMode} />
+                    </div>
+                    <PlayerInfoCardSmall info={playerInfo} />
+                </div>
+                <div>
                 </div>
                 {/* <TopOverSpace content={hiddableContent} /> */}
             </div>

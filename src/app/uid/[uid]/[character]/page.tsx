@@ -1,5 +1,5 @@
 "use server";
-import { loadAllEffects, loadCharacters, loadConfigFile, loadRules } from '@/server/DataLoader';
+import { getPlayerInfoLight, loadAllEffects, loadCharacters, loadConfigFile, loadRules } from '@/server/DataLoader';
 import CharacterPageRoot from '../../../components/rootComponents/CharacterPageRoot';
 import { Updater } from '@/server/gamedata/Updater';
 
@@ -11,6 +11,7 @@ export default async function Page({ params }: { params: { character: string, ui
     const uid = params.uid
     let currentChar = undefined
     const characters = await loadCharacters(uid)
+    const playerInfo = await getPlayerInfoLight(uid)
     for (let i = 0; i < characters.length; ++i) {
         if (characters[i].name == characterName) {
             currentChar = characters[i]
@@ -48,6 +49,6 @@ export default async function Page({ params }: { params: { character: string, ui
     }
 
     return (
-            <CharacterPageRoot data={characters} currentCharacterName={characterName} rules={rules} uid={uid} iconfig={configDirector} defaultEffectCards={effectList}/>
+            <CharacterPageRoot data={characters} currentCharacterName={characterName} rules={rules} uid={uid} iconfig={configDirector} defaultEffectCards={effectList} playerInfo={playerInfo}/>
     )
 }

@@ -58,6 +58,27 @@ export function copyIPlayerInfo(x: IPlayerInfo): IPlayerInfo {
     return res
 }
 
+export function buildDefaultIPlayerInfo() : IPlayerInfo {
+    const res : IPlayerInfo = {
+        version: "",
+        name: "default",
+        uid: "",
+        arLevel: 0,
+        description: "",
+        worldLevel: 0,
+        achievementCount: 0,
+        abysses: {
+            floor: 0,
+            chamber: 0
+        },
+        characters: [],
+        profilePictureCharacterName: "",
+        namecardName: ""
+    }
+
+    return res
+}
+
 export function copyIPlayerInfoWithoutCharacters(x: IPlayerInfo | IPlayerInfoWithoutCharacters): IPlayerInfoWithoutCharacters {
     const res: IPlayerInfoWithoutCharacters = {
         version: x.version,

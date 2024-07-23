@@ -4,12 +4,13 @@ import fs from 'fs';
 import { ICharacterData } from "./gamedata/ICharacterData";
 import { ICharacterRule } from "@/app/interfaces/ICharacterRule";
 import { IStatTuple } from "./gamedata/IStatTuple";
-import { IPlayerInfoWithoutCharacters, readIPlayerInfoWithoutCharacters } from "./gamedata/IPlayerInfo";
+import { buildDefaultIPlayerInfo, IPlayerInfoWithoutCharacters, readIPlayerInfoWithoutCharacters } from "./gamedata/IPlayerInfo";
 import { parseAllEffects, parseCharacterData } from "./DataParser";
 import { IConfigDirector, ETheme, buildDefaultConfigDirector } from "@/app/classes/ConfigDirector";
 import { IEffect } from "./gamedata/IEffect";
 import { ETarget } from "./gamedata/enums/ETarget";
 import { upgradeCharacterDataFile, upgradeConfigFile, upgradePlayerFile, upgradeRuleDataFile } from "./DataUpgrade";
+import { rejects } from "assert";
 
 export async function checkDataFolderExistence(): Promise<boolean> {
     const p = path.resolve(process.cwd())
@@ -79,6 +80,37 @@ export async function getPlayerInfoList(): Promise<IPlayerInfoWithoutCharacters[
     }
 
     return res
+}
+
+export async function getPlayerInfoLight(uid: string) : Promise<IPlayerInfoWithoutCharacters> {
+    const p = await buildPathToDataFolder()
+    if (p.status) {
+        let scannedFiles = [];
+        const fileList = await fsPromises.readdir(p.path)
+        for (let i = 0; i < fileList.length; ++i) {
+            scannedFiles.push(fileList[i])
+            if (!fileList[i].includes(".") && fileList[i] == uid) {
+                const pl = path.resolve(process.cwd(), process.env.DATA_PATH!, fileList[i])
+                const files = await fsPromises.readdir(pl)
+                
+                if (files.includes("player")) {
+                    let jsonData = JSON.parse((await fsPromises.readFile(pl.concat("/player"))).toString())
+                    const upgrade = upgradePlayerFile(jsonData)
+                    if (upgrade.edited) {
+        
+                    }
+
+                    jsonData = upgrade.content
+                    const pi = readIPlayerInfoWithoutCharacters(jsonData)
+                    return pi
+                }
+            }
+            
+        }
+    }
+
+    return buildDefaultIPlayerInfo()
+
 }
 
 export async function loadConfigFile(createIfDoesNotExist: boolean) : Promise<IConfigDirector> {

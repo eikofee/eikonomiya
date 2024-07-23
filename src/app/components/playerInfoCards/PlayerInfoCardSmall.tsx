@@ -17,7 +17,7 @@ export default function PlayerInfoCardSmall({info} : {info: IPlayerInfo | IPlaye
                             <SmallField key="field-theater" content={[<ImgApi key="i1" className="h-full" src={"generic_abyssesL"} alt={""} />, <div key="i2">???</div>]} />
                         </div>
                     </div>
-    return <div className="w-1/4 min-h-[75px] min-w-[300px] transition ease-in-out group rounded-md border bg-white/25 px-3 cursor-pointer z-10 mb-2 hover:shadow-lg" style={{
+    return <div className="min-h-[75px] min-w-[300px] transition ease-in-out group rounded-md border bg-white/25 px-3 cursor-pointer z-10 hover:shadow-lg" style={{
         backgroundImage : "url(https://enka.network/ui/".concat(info.namecardName, ".png)"),
         backgroundSize : "cover"
     }} ><a href={"/uid/".concat(info.uid)}>{content}</a></div>

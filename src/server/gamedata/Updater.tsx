@@ -426,7 +426,7 @@ export class Updater {
         let res : IEffect[] = []
         const charEffects = yaml.parse(characterEffectsRawData)[name]
         if (charEffects != undefined) {
-            return this.parseEffect(charEffects, name, "characters_".concat(name, "_face"), 0)
+            return this.parseEffect(charEffects, name, "characters_".concat(this.cleanNameForPath(name), "_face"), 0)
         }
 
         return res;

@@ -194,8 +194,8 @@ export function copyCharacterData(ref: ICharacterData) : ICharacterData{
             statName: ref.ascension.statName,
             statValue: ref.ascension.statValue
         },
-        constellationLevel: 0,
-        constellations: [],
+        constellationLevel: ref.constellationLevel,
+        constellations: ref.constellations,
         talents: {
             auto: copyTalent(ref.talents.auto),
             skill: copyTalent(ref.talents.skill),

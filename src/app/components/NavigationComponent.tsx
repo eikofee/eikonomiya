@@ -16,7 +16,7 @@ export default function NavigationComponent({currentCharacter, characterList, ch
     const buildCharacterCard = (c: ICharacterData, useHref: boolean, useLargeFont: boolean) => {
         let content = <div className="min-h-[75px] items-center h-full w-full flex flex-row cursor-pointer relative">
                         <div className="absolute inset-y-0 -left-2 overflow-hidden">
-                            <ImgApi className="h-full" src={"characters_".concat(c.apiName, "_face")} alt={""} />
+                            <ImgApi className="h-full w-full" src={"characters_".concat(c.apiName, "_face")} alt={""} s={256} />
                         </div>
                         <div className={"text-center absolute left-[75px] -right-2 text-ellipsis rounded-md ".concat(useLargeFont ? colorDirector.bgAccent(5).concat(" font-bold text-xl") : "bg-slate-100/60 text-sm")}>
                             {c.name}

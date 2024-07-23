@@ -62,7 +62,7 @@ export default function CharacterCard({char} : {char: ICharacterData}) {
     const buildConstellationIcon = (n: number) => {
         const cn = "w-8 h-8 rounded-full relative cursor-pointer ".concat(char.constellationLevel >= n ? "bg-slate-700/70 outline outline-2 outline-offset-2 ring ".concat(colorDirector.outlineAccent(3)) : "bg-slate-700/30 brightness-25", lockedItem == n ? " outline outline-2 outline-offset-3 ring outline-pink-500 " : "")
         const content = <div key={"const-".concat(n.toString())} className={cn} onMouseEnter={changeOnHoverCb(n)} onMouseLeave={changeOffHoverCb} onClick={changeOnClickCb(n)}>
-                            <ImgApi key={"constellation-".concat(n.toString())} src={"characters_".concat(char.apiName, "_c", n.toString())} />
+                            <ImgApi key={"constellation-".concat(n.toString())} src={"characters_".concat(char.apiName, "_c", n.toString())} s={100}/>
                         </div>
         return content
     }
@@ -112,15 +112,15 @@ export default function CharacterCard({char} : {char: ICharacterData}) {
     </div>
     <div key="character-talents" className="grid grid-cols-3 justify-items-center">
             <div className={"w-16 h-16 rounded-full bg-slate-700/70 relative cursor-pointer".concat(lockedItem == 11 ? " outline outline-2 outline-offset-3 ring outline-pink-500 " : "")} onMouseEnter={changeOnHoverCb(11)} onMouseLeave={changeOffHoverCb} onClick={changeOnClickCb(11)}>
-                <ImgApi key="talent-aa" src={"generic_".concat(char.weaponType.toString().toLowerCase())} />
+                <ImgApi key="talent-aa" src={"generic_".concat(char.weaponType.toString().toLowerCase())} s={128} />
                 <div className={"absolute rounded-md text-sm px-1 left-3/4 top-3/4 font-bold ".concat(colorDirector.bgAccent(5))}>{char.talents.auto.level + char.talents.auto.bonusLevel}</div>
             </div>
             <div className={"w-16 h-16 rounded-full bg-slate-700/70 relative cursor-pointer".concat(lockedItem == 12 ? " outline outline-2 outline-offset-3 ring outline-pink-500 " : "")} onMouseEnter={changeOnHoverCb(12)} onMouseLeave={changeOffHoverCb} onClick={changeOnClickCb(12)}>
-                <ImgApi key="talent-skill" src={"characters_".concat(char.apiName, "_skill")} />
+                <ImgApi key="talent-skill" src={"characters_".concat(char.apiName, "_skill")} s={128} />
                 <div className={"absolute rounded-md text-sm px-1 left-3/4 top-3/4  font-bold ".concat(colorDirector.bgAccent(5))}>{char.talents.skill.level + char.talents.skill.bonusLevel}</div>
             </div>
             <div className={"w-16 h-16 rounded-full bg-slate-700/70 relative cursor-pointer".concat(lockedItem == 13 ? " outline outline-2 outline-offset-3 ring outline-pink-500 " : "")} onMouseEnter={changeOnHoverCb(13)} onMouseLeave={changeOffHoverCb} onClick={changeOnClickCb(13)}>
-                <ImgApi key="talent-burst" src={"characters_".concat(char.apiName, "_burst")} />
+                <ImgApi key="talent-burst" src={"characters_".concat(char.apiName, "_burst")} s={128} />
                 <div className={"absolute rounded-md text-sm px-1 left-3/4 top-3/4  font-bold ".concat(colorDirector.bgAccent(5))}>{char.talents.burst.level + char.talents.burst.bonusLevel}</div>
             </div>
     </div>

@@ -11,7 +11,7 @@ import { EAccentType } from "../classes/ColorDirector";
 
 export function buildImgOrIconForEffect(e : IEffect) {
     e = addSpecialIcon(e)
-    let icon = <ImgApi className="w-full h-full" src={e.icon} />
+    let icon = <ImgApi className="w-full h-full" src={e.icon} s={128} />
     if (e.icon.includes("icon")) {
         let item = e.icon.replace("icon-", "")
         icon = <div className="p-1">

@@ -142,7 +142,7 @@ export default function ArtifactCard({equip, score} : {equip: IArtifact, score: 
     let content = <div className="flex flex-col">
         <div key="artifact-img" className="aspect-square grad-5star basis-1/5 flex items-center justify-center rounded-t-md">
             <div className="relative">
-                <ImgApi key="img" alt="" src={equip.assets.icon} className="max-w-full max-h-full"/>
+                <ImgApi key="img" alt="" src={equip.assets.icon} s={256} className="max-w-full max-h-full" />
                 <div key="stars" className="absolute h-3 flex flex-row bottom-1 w-full justify-center">
                     {stars}
                 </div>

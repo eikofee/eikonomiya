@@ -35,7 +35,7 @@ export default function TalentCard({character, talent} : {character: ICharacterD
     let title = <div key="effect-child" className={"flex flex-row flex-grow w-full rounded-t-md ".concat(colorDirector.bgAccent(7))}>
     {/* <img alt="" src={effect.icon} className="aspect-square w-8 place-self-start"/> */}
     <div className="aspect-square w-8 place-self-start">
-        <ImgApi key="talent-icon" src={talent.type == ETalentType.NORMAL ? "generic_".concat(character.weaponType.toString().toLowerCase()) : "characters_".concat(character.apiName, "_", talent.type.toString())} />
+        <ImgApi key="talent-icon" src={talent.type == ETalentType.NORMAL ? "generic_".concat(character.weaponType.toString().toLowerCase()) : "characters_".concat(character.apiName, "_", talent.type.toString())} s={128}/>
     </div>
     <div className="pl-2 text-sm font-semibold place-self-center grow">{talent.name}</div>
     <div className="pr-2 text-xs text-right self-center"> Lv. {talent.level + talent.bonusLevel}</div>
@@ -48,6 +48,6 @@ export default function TalentCard({character, talent} : {character: ICharacterD
             {ls}
         </ul>
     </div>;
-
-    return <Card content={content} minw={ECardSize.LARGE} />
+ 
+    return <Card content={content} minw={ECardSize.MEDIUM}/>
 }

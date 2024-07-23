@@ -38,8 +38,8 @@ export function eTalentTypeToTag(e: ETalentType) {
     switch(e) {
         case ETalentType.NONE: return "None"
         case ETalentType.NORMAL: return "Normal Attack"
-        case ETalentType.SKILL:return "Elemental Skill"
-        case ETalentType.BURST:return "Elemental Burst"
+        case ETalentType.SKILL:return "Elem. Skill"
+        case ETalentType.BURST:return "Elem. Burst"
         case ETalentType.A1:return "A1"
         case ETalentType.A4:return "A4"
         case ETalentType.OTHER:return "Other"

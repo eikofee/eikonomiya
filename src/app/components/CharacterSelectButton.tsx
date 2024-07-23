@@ -67,7 +67,7 @@ export default function CharacterSelectButton({uid, character, rule, useHref, us
     }
     let content = <div className="items-center h-20 w-full flex flex-row cursor-pointer relative">
                         <div className="absolute inset-y-0 -left-2 overflow-hidden">
-                            <ImgApi className="h-full" src={"characters_".concat(character.apiName, "_face")} alt={""} />
+                            <ImgApi className="h-full w-full" src={"characters_".concat(character.apiName, "_face")} alt={""} s={256} />
                         </div>
                         <div className={"p-1 text-center absolute top-2 left-20 -right-2 text-ellipsis bg-slate-100/70 rounded-md ".concat(useLargeFont ? "font-bold text-xl" : textSize)}>
                             {character.name}

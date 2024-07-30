@@ -63,6 +63,8 @@ export function upgradeRuleDataFile(data: any) : IUpgradeResult {
     switch (currentVersion) {
         case "0.3.8":
             data["currentRating"] = [0,0,0,0,0]
+        case "0.4":
+            data["currentRated"] = [false, false, false, false, false]
         default:
             data["version"] = process.env.BUILD_VERSION!
             break;

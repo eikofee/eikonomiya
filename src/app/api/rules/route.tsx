@@ -24,6 +24,7 @@ export async function GET(request: Request) {
                     character: characterName,
                     stats: [],
                     currentRating: [],
+                    currentRated: []
                 }
                 
                 if (searchParams.has("mode") && searchParams.get("mode") == "edit") {
@@ -54,6 +55,7 @@ export async function GET(request: Request) {
 
                     const characterData = (await loadCharacters(uid)).filter(x => x.name == characterName)[0]
                     const newRule = (await apiLogicComputeArtifactRating(characterData, rule)).content!
+                    console.log(newRule)
                     await fsPromises.writeFile(p.concat("/", characterName), JSON.stringify(newRule))
                         content = {message: "Rating computed and rule updated.", newRule: newRule}
                 }

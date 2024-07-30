@@ -924,7 +924,8 @@ export class Updater {
                     character: characterName,
                     ruleName: "defaultRuleName",
                     stats: rule,
-                    currentRating: [0,0,0,0,0]})
+                    currentRating: [0,0,0,0,0],
+                    currentRated: [false, false, false, false, false]})
             }
 
         }

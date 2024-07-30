@@ -28,10 +28,14 @@ export async function apiLogicComputeArtifactRating(character: ICharacterData, r
         let score = 0
         let totalRolls = 0
         let potentialValuable = 0
-
+        let accounted = true
         let wishStatCount = mvs.filter(x => x.value > 0).length
         if (mvs.filter(x => x.name == a.mainStat.name).length > 0 && mvs.filter(x => x.name == a.mainStat.name)[0].value == 1) {
             wishStatCount -= 1
+        }
+
+        if (wishStatCount <= 0) {
+            accounted = false
         }
 
         let artefactMaxScore = 0
@@ -49,15 +53,16 @@ export async function apiLogicComputeArtifactRating(character: ICharacterData, r
         const res: IArtifactCardInfo = {
             rule: rule,
             totalRolls: totalRolls,
-            potentialAll: totalRolls/9,
-            potentialAllPercent : totalRolls/9 * 100,
-            potentialValuable: potentialValuable/9,
-            potentialValuablePercent : potentialValuable/9 * 100,
-            usefulness: score/9,
-            usefulnessPercent: score/9 * 100,
-            totalScore: score/artefactMaxScore,
-            totalScorePercent: score/artefactMaxScore * 100,
-            artefactMaxScore: artefactMaxScore
+            potentialAll: totalRolls / 9,
+            potentialAllPercent: totalRolls / 9 * 100,
+            potentialValuable: potentialValuable / 9,
+            potentialValuablePercent: potentialValuable / 9 * 100,
+            usefulness: score / 9,
+            usefulnessPercent: score / 9 * 100,
+            totalScore: score / artefactMaxScore,
+            totalScorePercent: score / artefactMaxScore * 100,
+            artefactMaxScore: artefactMaxScore,
+            accounted: accounted
         }
 
         return res
@@ -76,6 +81,7 @@ export async function apiLogicComputeArtifactRating(character: ICharacterData, r
 
     const arteScores = artes.map(x => computeArtifactScoreInfo(x))
     rule.currentRating = arteScores.map(x => x.totalScorePercent/100)
+    rule.currentRated = arteScores.map(x => x.accounted)
 
     const res : IApiResult<ICharacterRule> = {
         success: true,

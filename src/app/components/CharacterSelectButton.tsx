@@ -42,16 +42,21 @@ export default function CharacterSelectButton({uid, character, rule, useHref, us
     for (let i = 0 ; i < rule.currentRating.length; ++i) {
         let colorValue = !useBackground ? "bg-red-600" : "fill-red-600"
         let currentValue = rule.currentRating[i]
-        if (currentValue > config.artifactRating.low) {
-            colorValue = !useBackground ? "bg-yellow-600" : "fill-yellow-600"
-        }
-        
-        if (currentValue > config.artifactRating.med) {
-            colorValue = !useBackground ? "bg-green-600" : "fill-green-600"
+        if (!rule.currentRated[i]) {
+            colorValue = !useBackground ? "bg-gray-500" : "fill-gray-500"
+        } else {
+
+            if (currentValue > config.artifactRating.low) {
+                colorValue = !useBackground ? "bg-yellow-600" : "fill-yellow-600"
+            }
+            
+            if (currentValue > config.artifactRating.med) {
+                colorValue = !useBackground ? "bg-green-600" : "fill-green-600"
+            }
         }
 
         if (useBackground) {
-            artes.push(<Icon n={artesNames[i]} customStyle={colorValue} customInfo={(currentValue * 100).toFixed(0).concat("%")}/>)
+            artes.push(<Icon n={artesNames[i]} customStyle={colorValue} customInfo={(rule.currentRated[i] ? (currentValue * 100).toFixed(0).concat("%") : "N/A")}/>)
         } else {
             artes.push(<div className={"w-1/5 h-[6px] rounded-full ".concat(colorValue)}></div>)
         }

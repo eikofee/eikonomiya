@@ -5,7 +5,8 @@ export interface ICharacterRule {
     ruleName: string,
     character: string,
     stats: IStatTuple[],
-    currentRating: number[]
+    currentRating: number[],
+    currentRated: boolean[]
 }
 
 export function buildDefaultICharacterRule() {
@@ -14,7 +15,8 @@ export function buildDefaultICharacterRule() {
         character: "Default Character",
         ruleName: "defaultRuleName",
         stats: [],
-        currentRating: []
+        currentRating: [],
+        currentRated: []
     }
 
     return res

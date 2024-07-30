@@ -27,6 +27,7 @@ export function FullEquipCard({character, rule}:{character : ICharacterData, rul
     }
 
     function computeArtifactScoreInfo(a: IArtifact) {
+        let accounted = true
         let score = 0
         let totalRolls = 0
         let potentialValuable = 0
@@ -34,6 +35,10 @@ export function FullEquipCard({character, rule}:{character : ICharacterData, rul
         let wishStatCount = mvs.filter(x => x.value > 0).length
         if (mvs.filter(x => x.name == a.mainStat.name).length > 0 && mvs.filter(x => x.name == a.mainStat.name)[0].value == 1) {
             wishStatCount -= 1
+        }
+
+        if (wishStatCount <= 0) {
+            accounted = false
         }
 
         let artefactMaxScore = 0
@@ -49,6 +54,7 @@ export function FullEquipCard({character, rule}:{character : ICharacterData, rul
             }
         }
         const res: IArtifactCardInfo = {
+            accounted: accounted,
             rule: rule,
             totalRolls: totalRolls,
             potentialAll: totalRolls/9,
@@ -79,10 +85,17 @@ export function FullEquipCard({character, rule}:{character : ICharacterData, rul
     const arteScores = artes.map(x => computeArtifactScoreInfo(x))
 
     let totalScore = 0
+    let eligible = 0
     for (let i = 0; i < arteScores.length; ++i) {
-        totalScore += arteScores[i].totalScorePercent
+        if (arteScores[i].accounted) {
+            totalScore += arteScores[i].totalScorePercent
+            eligible += 1
+        }
     }
-    totalScore = totalScore/5
+    if (eligible > 0) {
+        totalScore = totalScore/eligible
+    }
+    
     const totalScoreContent = <div className="h-full flex flex-col w-full justify-center items-center font-semibold">
         <div>Score :</div>
         <div>{totalScore.toFixed(0).concat("%")}</div>

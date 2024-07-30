@@ -201,6 +201,7 @@ export async function loadRules(uid: string) : Promise<ICharacterRule[]>{
             jsonData = upgrade.content
             let values : IStatTuple[] = []
             let rating : number[] = []
+            let rated : boolean[] = []
             for (let j = 0; j < jsonData["stats"].length; ++j) {
                 values.push({
                     name: jsonData["stats"][j]["name"],
@@ -212,12 +213,17 @@ export async function loadRules(uid: string) : Promise<ICharacterRule[]>{
                 rating.push(jsonData["currentRating"][j])
             }
 
+            for (let j = 0; j < jsonData["currentRated"].length; ++j) {
+                rated.push(jsonData["currentRated"][j])
+            }
+
             res.push({
                 version: jsonData["version"],
                 ruleName: "defaultRuleName",
                 character: jsonData["character"],
                 stats: values,
-                currentRating: rating
+                currentRating: rating,
+                currentRated: rated
             })
         }
     }

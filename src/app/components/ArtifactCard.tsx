@@ -13,7 +13,7 @@ import { EAccentType } from "../classes/ColorDirector";
 
 export interface IArtifactCardInfo {
     rule: ICharacterRule,
-
+    accounted: boolean,
     totalRolls: number,
     potentialAll: number,
     potentialAllPercent: number,
@@ -117,15 +117,22 @@ export default function ArtifactCard({equip, score} : {equip: IArtifact, score: 
     let infoLine = [
         <p key="total-rolls">Total Rolls : {score.totalRolls.toFixed(1)}/9</p>,
         <p key="potential-percent">Potential (useful): {(score.potentialValuablePercent).toFixed(1)}%</p>,
-        <p key="scaled-score">Usefulness Score : {(score.usefulnessPercent).toFixed(1)}%</p>,
-        <p key="total-score">Total Score : {(score.totalScore * score.artefactMaxScore).toFixed(1)}/{score.artefactMaxScore}</p>
     ]
+    if (score.accounted) {
+        infoLine = infoLine.concat([
+            <p key="scaled-score">Usefulness Score : {(score.usefulnessPercent).toFixed(1)}%</p>,
+            <p key="total-score">Total Score : {(score.totalScore * score.artefactMaxScore).toFixed(1)}/{score.artefactMaxScore}</p>
+        ])
+    } else {
+        infoLine = infoLine.concat([<p key="no-score">No substat available</p>])
+    }
+
     let scoreLine = <div className="w-full flex flex-row items-center align-baseline font-semibold">
         <div key="score-title" className="text-left basis-3/5 truncate">
             Score :
         </div>
         <div key="score-value" className={"text-right basis-2/5"}>
-            {(score.totalScorePercent).toFixed(0).concat("%")}
+            {score.accounted ? (score.totalScorePercent).toFixed(0).concat("%") : "-"}
         </div>
     </div>
 

@@ -20,12 +20,13 @@ import * as yaml from 'yaml';
 import { stringToETalentType } from "./gamedata/enums/ETalentType";
 
 
-export function parseEffect(data: any[], defaultName: string, defaultIcon: string) : IEffect[] {
+export function parseEffect(data: any, defaultName: string, defaultIcon: string) : IEffect[] {
     let res = []
     const refinement = 0
-    for (let i = 0; i < data.length; ++i) {
+    const dataCards = data["cards"]
+    for (let i = 0; i < dataCards.length; ++i) {
         let effectName = defaultName
-        const rawEffect = data[i];
+        const rawEffect = dataCards[i];
         if (rawEffect["name"] != undefined) {
             effectName = rawEffect["name"]
         }

@@ -5,12 +5,13 @@ import { ICharacterData } from "./gamedata/ICharacterData";
 import { ICharacterRule } from "@/app/interfaces/ICharacterRule";
 import { IStatTuple } from "./gamedata/IStatTuple";
 import { buildDefaultIPlayerInfo, IPlayerInfoWithoutCharacters, readIPlayerInfoWithoutCharacters } from "./gamedata/IPlayerInfo";
-import { parseAllEffects, parseCharacterData } from "./DataParser";
+import { parseAllEffects, parseCharacterData, parseEffect } from "./DataParser";
 import { IConfigDirector, ETheme, buildDefaultConfigDirector } from "@/app/classes/ConfigDirector";
 import { IEffect } from "./gamedata/IEffect";
 import { ETarget } from "./gamedata/enums/ETarget";
 import { upgradeCharacterDataFile, upgradeConfigFile, upgradePlayerFile, upgradeRuleDataFile } from "./DataUpgrade";
-import { rejects } from "assert";
+import * as yaml from 'yaml';
+
 
 export async function checkDataFolderExistence(): Promise<boolean> {
     const p = path.resolve(process.cwd())
@@ -140,12 +141,27 @@ export async function loadConfigFile(createIfDoesNotExist: boolean) : Promise<IC
 }
 
 export async function loadAllEffects() : Promise<IEffect[]> {
-    const effectsRaw = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/effects.yml")).text()
-    return parseAllEffects(effectsRaw)
+    // const effectsRaw = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/effects.yml")).text()
+    // return parseAllEffects(effectsRaw)
+    let res : IEffect[] = []
+    res = res.concat(await loadEffectsResonances())
+
+    return res
 }
 
-export async function loadEffects(...flags: ETarget[]) {
+export async function loadEffectsResonances() : Promise<IEffect[]> {
+    let res: IEffect[] = []
+    const p = await buildPathToDataFolder("gamedata", "resonances")
+    if (p.status) {
+        const fileList = await fsPromises.readdir(p.path)
+        for (let i = 0; i < fileList.length; ++i) {
+            let f = fileList[i]
+            const effects = yaml.parse((await fsPromises.readFile(p.path.concat("/", f))).toString())
+            res = res.concat(parseEffect(effects, "defaultName", ""))
+        }
+    }
 
+    return res
 }
 
 export async function loadCharacters(uid: string) : Promise<ICharacterData[]>{

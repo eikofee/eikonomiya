@@ -10,34 +10,11 @@ import { EStat, statIsPercentage } from "@/server/gamedata/enums/EStat";
 import { ImgApi } from "./ImgApi";
 import Card, { ECardSize } from "./Card";
 import { EAccentType } from "../classes/ColorDirector";
+import { IArtifactRating } from "@/server/api/ApiLogicComputeArtifactRating";
 
-export interface IArtifactCardInfo {
-    rule: ICharacterRule,
-    accounted: boolean,
-    totalRolls: number,
-    potentialAll: number,
-    potentialAllPercent: number,
-    potentialValuable: number,
-    potentialValuablePercent: number,
-    usefulness: number,
-    usefulnessPercent: number,
-    totalScore: number,
-    totalScorePercent: number,
-    artefactMaxScore: number
 
-}
+export default function ArtifactCard({equip, rating} : {equip: IArtifact, rating: IArtifactRating}) {
 
-export default function ArtifactCard({equip, score} : {equip: IArtifact, score: IArtifactCardInfo}) {
-
-    const getRuleValue = (e: EStat) => {
-        for (let i = 0; i < score.rule.stats.length; ++i) {
-            if (score.rule.stats[i].name == e) {
-                return score.rule.stats[i].value
-            }
-        }
-
-        return 0;
-    }
     const {colorDirector} = useContext(ConfigContext)
 
     const badStats = [
@@ -96,10 +73,8 @@ export default function ArtifactCard({equip, score} : {equip: IArtifact, score: 
                         </div>
         let infoLine = <div>
             <p>
-            {"".concat("Rolls = ", (equip.subStats[i].rollValue).toFixed(1))}
-            </p><p>
-                {"Score = ".concat((equip.subStats[i].rollValue * getRuleValue(equip.subStats[i].name!)).toFixed(1))}
-                </p>
+                "Rolls = " {rating.individualRolls[i].toFixed(1)}
+            </p>
             </div>
         let scoreLineDisplay = <div className="grid grid-cols-6 gap-x-0.5">
             {rolls}
@@ -115,13 +90,13 @@ export default function ArtifactCard({equip, score} : {equip: IArtifact, score: 
     }
 
     let infoLine = [
-        <p key="total-rolls">Total Rolls : {score.totalRolls.toFixed(1)}/9</p>,
-        <p key="potential-percent">Potential (useful): {(score.potentialValuablePercent).toFixed(1)}%</p>,
+        <p key="total-rolls">Total Rolls : {rating.totalRolls.toFixed(1)}/9</p>,
+        <p key="potential-percent">Potential (useful): {(rating.potentialValuable * 100).toFixed(1)}%</p>,
     ]
-    if (score.accounted) {
+    if (rating.accounted) {
         infoLine = infoLine.concat([
-            <p key="scaled-score">Usefulness Score : {(score.usefulnessPercent).toFixed(1)}%</p>,
-            <p key="total-score">Total Score : {(score.totalScore * score.artefactMaxScore).toFixed(1)}/{score.artefactMaxScore}</p>
+            <p key="scaled-score">Usefulness Score : {(rating.usefulness * 100).toFixed(1)}%</p>,
+            <p key="total-score">Total Score : {(rating.ratingScore * rating.artifactMaxScore).toFixed(1)}/{rating.artifactMaxScore}</p>
         ])
     } else {
         infoLine = infoLine.concat([<p key="no-score">No substat available</p>])
@@ -132,16 +107,16 @@ export default function ArtifactCard({equip, score} : {equip: IArtifact, score: 
             Score :
         </div>
         <div key="score-value" className={"text-right basis-2/5"}>
-            {score.accounted ? (score.totalScorePercent).toFixed(0).concat("%") : "-"}
+            {rating.accounted ? (rating.ratingScore * 100).toFixed(0).concat("%") : "-"}
         </div>
     </div>
 
     let stars = []
-    let starCount = Math.floor(score.totalRolls - 2.5)
+    let starCount = Math.floor(rating.totalRolls - 2.5)
     for (let i = 1; i <= starCount; ++i) {
         let starValue = 0.15 * i
             stars.push(<div key={"star-div-".concat(i.toString())}>
-                <Icon key={"star-".concat(i.toString())} n={score.usefulness > starValue ? "star" : "dot"} useTooltip={false} customColor={score.usefulness > starValue ? colorDirector.element : "none"}/>
+                <Icon key={"star-".concat(i.toString())} n={rating.usefulness > starValue ? "star" : "dot"} useTooltip={false} customColor={rating.usefulness > starValue ? colorDirector.element : "none"}/>
             </div>
             )
     }

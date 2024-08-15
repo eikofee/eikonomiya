@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CharacterCard from "../CharacterCard";
 import RuleCard from "../RuleCard";
 import { ColorDirector } from "../../classes/ColorDirector";
@@ -23,37 +23,88 @@ import { ETabMode } from "../enums/ETabMode";
 import TopTabSwitcher from "../TopTabSwitcher";
 import { FullTalentCard } from "../FullTalentCard";
 import PlayerInfoCardSmall from "../playerInfoCards/PlayerInfoCardSmall";
-import { getPlayerInfoLight } from "@/server/DataLoader";
 import { IPlayerInfoWithoutCharacters } from "@/server/gamedata/IPlayerInfo";
+import { apiLogicComputeArtifactRating, IArtifactRating } from "@/server/api/ApiLogicComputeArtifactRating";
 
-export default function CharacterPageRoot({data: characters, currentCharacterName: currentCharacterName, rules, uid, iconfig, defaultEffectCards, playerInfo} : ({data: ICharacterData[], currentCharacterName: string, rules: ICharacterRule[], uid: string, iconfig: IConfigDirector, defaultEffectCards: IEffect[], playerInfo: IPlayerInfoWithoutCharacters})) {
+export default function CharacterPageRoot({
+        characters,
+        currentCharacterName,
+        uid,
+        iconfig,
+        defaultEffectCards,
+        playerInfo
+    } : ({
+        characters: ICharacterData[],
+        currentCharacterName: string,
+        uid: string,
+        iconfig: IConfigDirector,
+        defaultEffectCards: IEffect[],
+        playerInfo: IPlayerInfoWithoutCharacters
+    })) {
     
     let char = buildDefaultICharacterData()
-
     let defaultRule = buildDefaultICharacterRule()
 
     for (let i = 0; i < characters.length; ++i) {
         if (characters[i].name == currentCharacterName) {
             char = characters[i]
-            defaultRule = rules[i]
         }
     }
+
+    const emptyRatings : IArtifactRating[] = []
+    const [ratingLoaded, setRatingLoaded] = useState(false)
+    const [artifactRatings, setArtifactRatings] = useState(emptyRatings)
+    const [rule, setRule] = useState(defaultRule)
+    const cbSetRule = (r: ICharacterRule) => {
+        console.log("rule changed")
+        console.log(r)
+        console.log("---")
+        setRule(r)
+    }
+    useEffect(() => {
+        console.log("called : ")
+        console.log(rule)
+        const f = async () => {
+            try {
+                let url = "/api/rules?mode=edit&characterName=".concat(rule.character,"&uid=", uid)
+                for (let i = 0; i < rule.stats.length; ++i) {
+                    url = url.concat("&", rule.stats[i].name, "=", rule.stats[i].value.toString())
+                }
+
+                console.log(url)
+                await fetch(url)
+
+                const ratings = await apiLogicComputeArtifactRating(char, rule)
+                
+                setArtifactRatings(ratings.content!)
+                setRatingLoaded(true)
+            } catch (e) {
+
+            }
+        }
+
+        f()
+    }, [rule])
+
+    useEffect(() => {
+        const f = async () => {
+            try {
+                console.log("called")
+                // const r = await loadRule(uid, char.name)
+                const r = await fetch("/api/rules?characterName=".concat(char.name,"&uid=", uid))
+                const ans = await r.json()
+                setRule(ans["rule"])
+            } catch (e) {
+
+            }
+        }
+        f()
+    }, [])
 
     let colorDirector = new ColorDirector(char.element)
     let config = new ConfigDirector(iconfig)
 
-    const [rule, setRule] = useState(defaultRule)
     const [tabMode, setTabMode] = useState(ETabMode.ARTIFACTS)
-
-    async function saveRuleCallback() {
-        let url = "/api/rules?mode=rate&characterName=".concat(rule.character,"&uid=", uid)
-        for (let i = 0; i < rule.stats.length; ++i) {
-            url = url.concat("&", rule.stats[i].name, "=", rule.stats[i].value.toString())
-        }
-
-        await fetch(url)
-    }
-
 
     const effectCb = (a: ICharacterData, b: IStatBag) => {
         let effectList = []
@@ -123,7 +174,7 @@ export default function CharacterPageRoot({data: characters, currentCharacterNam
     }
 
     if (anomalyStats.length > 0) {
-        let content = <div className="bg-inherit">
+        let content = <div>
             <div className="pl-2 font-semibold bg-red-400 rounded-t-md">Missing values after stats processing</div>
                 <ul>
                     {anomalyStats}
@@ -136,7 +187,9 @@ export default function CharacterPageRoot({data: characters, currentCharacterNam
     switch (tabMode) {
         case ETabMode.ARTIFACTS:
         default:
-            topTabContent = <FullEquipCard character={characterData} rule={rule}/>
+            if (ratingLoaded) {
+                topTabContent = <FullEquipCard character={characterData} artifactRatings={artifactRatings}/>
+            }
             break;
         
         case ETabMode.TALENT_VALUES:
@@ -149,8 +202,8 @@ export default function CharacterPageRoot({data: characters, currentCharacterNam
             <div className="flex flex-col relative h-15">
                 <div className={"flex flex-row gap-1 h-full"}>
                     <div className="flex flex-row gap-1 h-full w-full">
-                        <NavigationComponent currentCharacter={characterData} characterList={characters} characterRules={rules} uid={uid} popupId={popupId} setPopupId={setPopupId}/>
-                        <RuleCard rule={rule} characterData={characterData} setRuleCallback={setRule} saveRuleCallback={saveRuleCallback} popupId={popupId} setPopupId={setPopupId}/>
+                        <NavigationComponent currentCharacter={characterData} characterList={characters} uid={uid} popupId={popupId} setPopupId={setPopupId}/>
+                        <RuleCard rule={rule} characterData={characterData} setRuleCallback={cbSetRule} popupId={popupId} setPopupId={setPopupId}/>
                         <TopTabSwitcher currentMode={tabMode} currentModeCallback={setTabMode} />
                     </div>
                     <PlayerInfoCardSmall info={playerInfo} />

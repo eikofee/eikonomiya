@@ -1,12 +1,13 @@
 "use client";
 import { ICharacterData } from "@/server/gamedata/ICharacterData"
 import { ImgApi } from "./ImgApi"
-import { ICharacterRule } from "../interfaces/ICharacterRule"
+import { buildDefaultICharacterRule, ICharacterRule } from "../interfaces/ICharacterRule"
 import Icon from "./Icon"
-import { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 import { ConfigContext } from "./ConfigContext"
+import { apiLogicComputeArtifactRating, IArtifactRating } from "@/server/api/ApiLogicComputeArtifactRating";
 
-export default function CharacterSelectButton({uid, character, rule, useHref, useLargeFont, useBackground, borderColor}: {uid: string, character: ICharacterData, rule: ICharacterRule, useHref: boolean, useLargeFont: boolean, useBackground: boolean, borderColor: string}) {
+export default function CharacterSelectButton({uid, character, useHref, useLargeFont, useBackground, borderColor}: {uid: string, character: ICharacterData, useHref: boolean, useLargeFont: boolean, useBackground: boolean, borderColor: string}) {
 
     const {config} = useContext(ConfigContext)
     let textSize = "text-sm"
@@ -37,37 +38,61 @@ export default function CharacterSelectButton({uid, character, rule, useHref, us
         updateIndicator = <div className="text-xs[8px] px-1">{text}</div>
     }
 
-    let artes = []
-    let artesNames = ["fleur", "plume", "sablier", "coupe", "couronne"]
-    for (let i = 0 ; i < rule.currentRating.length; ++i) {
-        let colorValue = !useBackground ? "bg-red-600" : "fill-red-600"
-        let currentValue = rule.currentRating[i]
-        if (!rule.currentRated[i]) {
-            colorValue = !useBackground ? "bg-gray-500" : "fill-gray-500"
-        } else {
 
-            if (currentValue > config.artifactRating.low) {
-                colorValue = !useBackground ? "bg-yellow-600" : "fill-yellow-600"
-            }
-            
-            if (currentValue > config.artifactRating.med) {
-                colorValue = !useBackground ? "bg-green-600" : "fill-green-600"
-            }
+    const emptyRatings : IArtifactRating[] = []
+    const [rule, setRule] = useState(buildDefaultICharacterRule())
+    const [ratings, setRatings] = useState(emptyRatings)
+
+    useEffect(() => {
+        const f = async () => {
+            const r = await apiLogicComputeArtifactRating(character, rule)
+            setRatings(r.content!)
         }
 
-        if (useBackground) {
-            artes.push(<Icon n={artesNames[i]} customStyle={colorValue} customInfo={(rule.currentRated[i] ? (currentValue * 100).toFixed(0).concat("%") : "N/A")}/>)
-        } else {
-            artes.push(<div className={"w-1/5 h-[6px] rounded-full ".concat(colorValue)}></div>)
+        f()
+    }, [rule])
+
+    useEffect(() => {
+        const f = async () => {
+            const r = await fetch("/api/rules?characterName=".concat(character.name, "&uid=", uid))
+            setRule((await r.json())["rule"])
+        }
+
+        f()
+    }, [])
+
+    let artes = []
+    let artesNames = ["fleur", "plume", "sablier", "coupe", "couronne"]
+    if (ratings.length > 0) {
+        for (let i = 0 ; i < ratings.length; ++i) {
+            let colorValue = !useBackground ? "bg-red-600" : "fill-red-600"
+            let currentValue = ratings[i].ratingScore
+            if (!ratings[i].accounted) {
+                colorValue = !useBackground ? "bg-gray-500" : "fill-gray-500"
+            } else {
+                if (currentValue > config.artifactRating.low) {
+                    colorValue = !useBackground ? "bg-yellow-600" : "fill-yellow-600"
+                }
+                
+                if (currentValue > config.artifactRating.med) {
+                    colorValue = !useBackground ? "bg-green-600" : "fill-green-600"
+                }
+            }
+        
+            if (useBackground) {
+                artes.push(<Icon n={artesNames[i]} customStyle={colorValue} customInfo={(ratings[i].accounted ? (currentValue * 100).toFixed(0).concat("%") : "N/A")}/>)
+            } else {
+                artes.push(<div className={"w-1/5 h-[6px] rounded-full ".concat(colorValue)}></div>)
+            }
         }
     }
 
     let arteline = <div className="text-xs absolute flex flex-row gap-1 p-1 bottom-1 left-20 text-ellipsis h-6 bg-slate-100/70 rounded-md">
-        {artes}
+        {ratings.length > 0 ? artes : []}
     </div>
     if (!useBackground) {
         arteline = <div className="text-xs absolute flex flex-row gap-1 p-1 top-10 -right-2 left-20 text-ellipsis h-[14px] rounded-md bg-slate-100/70">
-        {artes}
+        {ratings.length > 0 ? artes : []}
     </div>
     }
     let content = <div className="items-center h-20 w-full flex flex-row cursor-pointer relative">

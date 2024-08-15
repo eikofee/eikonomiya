@@ -49,6 +49,6 @@ export default async function Page({ params }: { params: { character: string, ui
     }
 
     return (
-            <CharacterPageRoot data={characters} currentCharacterName={characterName} rules={rules} uid={uid} iconfig={configDirector} defaultEffectCards={effectList} playerInfo={playerInfo}/>
+            <CharacterPageRoot characters={characters} currentCharacterName={characterName} uid={uid} iconfig={configDirector} defaultEffectCards={effectList} playerInfo={playerInfo}/>
     )
 }

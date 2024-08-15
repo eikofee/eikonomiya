@@ -13,7 +13,7 @@ import { ERarity } from "./enums/ERarity";
 import { EStat, stringToEStat } from "./enums/EStat";
 import { promises as fsPromises, stat } from 'fs';
 import path from "path";
-import { ICharacterRule } from "@/app/interfaces/ICharacterRule";
+import { buildDefaultICharacterRule, ICharacterRule } from "@/app/interfaces/ICharacterRule";
 import { EEffectType } from "./enums/EEffectType";
 import { IStatTuple } from "./IStatTuple";
 import { addOptions } from "./IEffectOptions";
@@ -919,13 +919,11 @@ export class Updater {
                     })
                 }
 
-                await writeRule(uid, {
-                    version: process.env.BUILD_VERSION!,
-                    character: characterName,
-                    ruleName: "defaultRuleName",
-                    stats: rule,
-                    currentRating: [0,0,0,0,0],
-                    currentRated: [false, false, false, false, false]})
+                const res = buildDefaultICharacterRule()
+                res.character = characterName
+                res.stats = rule
+
+                await writeRule(uid, res)
             }
 
         }

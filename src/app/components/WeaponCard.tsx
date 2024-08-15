@@ -8,7 +8,7 @@ import Tooltip from "./Tooltip";
 import { ImgApi } from "./ImgApi";
 import Card, { ECardSize } from "./Card";
 
-export default function WeaponCard({equip, rule} : {equip: IWeapon, rule: ICharacterRule}) {
+export default function WeaponCard({equip} : {equip: IWeapon}) {
 
 
     let subLine = <p></p>

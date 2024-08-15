@@ -2,7 +2,7 @@ import path from "path";
 import {promises as fsPromises} from 'fs';
 import fs from 'fs';
 import { ICharacterData } from "./gamedata/ICharacterData";
-import { ICharacterRule } from "@/app/interfaces/ICharacterRule";
+import { buildDefaultICharacterRule, ICharacterRule } from "@/app/interfaces/ICharacterRule";
 import { IStatTuple } from "./gamedata/IStatTuple";
 import { buildDefaultIPlayerInfo, IPlayerInfoWithoutCharacters, readIPlayerInfoWithoutCharacters } from "./gamedata/IPlayerInfo";
 import { parseAllEffects, parseCharacterData, parseEffect } from "./DataParser";
@@ -209,22 +209,67 @@ export async function loadRules(uid: string) : Promise<ICharacterRule[]>{
                 })
             }
 
-            for (let j = 0; j < jsonData["currentRating"].length; ++j) {
-                rating.push(jsonData["currentRating"][j])
-            }
+            // for (let j = 0; j < jsonData["currentRating"].length; ++j) {
+            //     rating.push(jsonData["currentRating"][j])
+            // }
 
-            for (let j = 0; j < jsonData["currentRated"].length; ++j) {
-                rated.push(jsonData["currentRated"][j])
-            }
+            // for (let j = 0; j < jsonData["currentRated"].length; ++j) {
+            //     rated.push(jsonData["currentRated"][j])
+            // }
 
-            res.push({
-                version: jsonData["version"],
-                ruleName: "defaultRuleName",
-                character: jsonData["character"],
-                stats: values,
-                currentRating: rating,
-                currentRated: rated
-            })
+            const currentRule = buildDefaultICharacterRule()
+            currentRule.version = jsonData["version"]
+            currentRule.character = jsonData["character"]
+            currentRule.stats = values
+
+            res.push(currentRule)
+        }
+    }
+
+    return res
+}
+
+
+export async function loadRule(uid: string, characterName: string) : Promise<ICharacterRule>{
+    let res = buildDefaultICharacterRule()
+    const p = await buildPathToDataFolder(uid, "/rules")
+    if (p.status) {
+        const fileList = await fsPromises.readdir(p.path)
+        for (let i = 0; i < fileList.length; ++i) {
+            let f = fileList[i]
+            if (f == characterName) {
+
+                let jsonData = JSON.parse((await fsPromises.readFile(p.path.concat("/", f))).toString())
+                const upgrade = upgradeRuleDataFile(jsonData)
+                if (upgrade.edited) {
+                    await writeRule(uid, upgrade.content)
+                }
+                
+                jsonData = upgrade.content
+                let values : IStatTuple[] = []
+                let rating : number[] = []
+                let rated : boolean[] = []
+                for (let j = 0; j < jsonData["stats"].length; ++j) {
+                    values.push({
+                        name: jsonData["stats"][j]["name"],
+                        value: jsonData["stats"][j]["value"],
+                    })
+                }
+                
+                // for (let j = 0; j < jsonData["currentRating"].length; ++j) {
+                //     rating.push(jsonData["currentRating"][j])
+                // }
+                
+                // for (let j = 0; j < jsonData["currentRated"].length; ++j) {
+                //     rated.push(jsonData["currentRated"][j])
+                // }
+                
+                const currentRule = buildDefaultICharacterRule()
+                currentRule.version = jsonData["version"]
+                currentRule.character = jsonData["character"]
+                currentRule.stats = values
+                res = currentRule
+            }
         }
     }
 

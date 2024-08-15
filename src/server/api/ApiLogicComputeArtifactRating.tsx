@@ -1,13 +1,23 @@
 import { ICharacterRule } from "@/app/interfaces/ICharacterRule";
 import { ICharacterData } from "../gamedata/ICharacterData";
-import { IArtifactCardInfo } from "@/app/components/ArtifactCard";
 import { EArtifact } from "../gamedata/enums/EArtifact";
 import { EStat, statIsPercentage } from "../gamedata/enums/EStat";
 import { IArtifact } from "../gamedata/IArtifact";
 import { IStatTuple } from "../gamedata/IStatTuple";
 import { IApiResult } from "@/app/interfaces/IApiResult";
 
-export async function apiLogicComputeArtifactRating(character: ICharacterData, rule: ICharacterRule) : Promise<IApiResult<ICharacterRule>> {
+export interface IArtifactRating {
+        individualRolls: number[],          // roll sum for each substat
+        totalRolls: number,                 // total number of rolls (70%-100%) on the artifact
+        potentialAll: number,               // rolls (70-100) scaled to 100% with 100% = 100% roll * 9
+        potentialValuable: number,          // same but excluding flat, non-EM stats
+        usefulness: number,                 // same but only including rule stats
+        ratingScore: number,                 // scaled down to max rule stat available (same as usefulness if rule stats count >= 4)
+        artifactMaxScore: number,           // maximum score obtainable on that artifact considering the rules
+        accounted: boolean                  // true if there is at least one available substat from the rules in the artifact
+}
+
+export async function apiLogicComputeArtifactRating(character: ICharacterData, rule: ICharacterRule) : Promise<IApiResult<IArtifactRating[]>> {
     
     let mvs: IStatTuple[] = []
     for (let i = 0; i < rule.stats.length; ++i) {
@@ -38,30 +48,28 @@ export async function apiLogicComputeArtifactRating(character: ICharacterData, r
             accounted = false
         }
 
-        let artefactMaxScore = 0
+        let artifactMaxScore = 0
         if (wishStatCount > 0) {
-            artefactMaxScore = 6 + Math.min(3, wishStatCount - 1)
+            artifactMaxScore = 6 + Math.min(3, wishStatCount - 1)
         }
 
+        const rolls = []
         for (let i = 0; i < a.subStats.length; ++i) {
+            rolls.push(a.subStats[i].rollValue)
             score += a.subStats[i].rollValue * getRuleValue(a.subStats[i].name)
             totalRolls += a.subStats[i].rollValue
             if (statIsPercentage(a.subStats[i].name) || a.subStats[i].name == EStat.EM) {
                 potentialValuable += a.subStats[i].rollValue
             }
         }
-        const res: IArtifactCardInfo = {
-            rule: rule,
+        const res: IArtifactRating = {
+            individualRolls: rolls,
             totalRolls: totalRolls,
             potentialAll: totalRolls / 9,
-            potentialAllPercent: totalRolls / 9 * 100,
             potentialValuable: potentialValuable / 9,
-            potentialValuablePercent: potentialValuable / 9 * 100,
             usefulness: score / 9,
-            usefulnessPercent: score / 9 * 100,
-            totalScore: score / artefactMaxScore,
-            totalScorePercent: score / artefactMaxScore * 100,
-            artefactMaxScore: artefactMaxScore,
+            artifactMaxScore: artifactMaxScore,
+            ratingScore: score / artifactMaxScore,
             accounted: accounted
         }
 
@@ -80,12 +88,10 @@ export async function apiLogicComputeArtifactRating(character: ICharacterData, r
     }
 
     const arteScores = artes.map(x => computeArtifactScoreInfo(x))
-    rule.currentRating = arteScores.map(x => x.totalScorePercent/100)
-    rule.currentRated = arteScores.map(x => x.accounted)
 
-    const res : IApiResult<ICharacterRule> = {
+    const res : IApiResult<IArtifactRating[]> = {
         success: true,
-        content: rule
+        content: arteScores
     }
     
     return res

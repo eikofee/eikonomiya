@@ -91,7 +91,7 @@ export default function StatCard({character, statbag} : {character: ICharacterDa
         }
     }
 
-    let content = <div className="bg-inherit">
+    let content = <div>
         <div className="flex flex-row justify-between">
             <div className="pl-2 font-semibold">{"Basic Stats"}</div>
             <button onClick={toggleExpand} className={"pr-2 text-sm text-right cursor-pointer ".concat(colorDirector.textAccent(3))}>{expanded ? "Collapse" : "Expand"}</button>

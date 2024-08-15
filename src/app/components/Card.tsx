@@ -65,7 +65,7 @@ export default function Card({
         rounded-md
         border
         backdrop-blur-xl
-        bg-white/25
+        bg-white/40
     `
     const colorBase = colorDirector.borderAccent(3)
     const growBase = grow ? "grow" : ""

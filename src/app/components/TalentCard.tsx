@@ -14,7 +14,7 @@ export default function TalentCard({character, talent} : {character: ICharacterD
 
     let talentLine = (name : string, value : number, attribute : ENumericFieldAttribute, isPercentage: boolean) =>{
         return <li className="flex justify-between place-items-center">
-            <div className="w-full flex flex-row items-center px-1">
+            <div className="w-full flex flex-row items-center p-1">
                             <div className="text-left text-sm">
                                 {name}
                             </div>
@@ -42,7 +42,7 @@ export default function TalentCard({character, talent} : {character: ICharacterD
     <div className={"text-right place-self-end self-center h-1/2 rounded-md text-xs mr-2 p-1 text-white ".concat(colorDirector.bgAccent(EAccentType.STRONG))}>{eTalentTypeToTag(talent.type)}</div>
 </div>
 
-    let content = <div className="bg-inherit">
+    let content = <div>
         {title}
         <ul key="talent-list">
             {ls}

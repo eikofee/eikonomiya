@@ -48,7 +48,7 @@ export default function EffectCard({effect: effect, effectUpdateCallback: effect
                 </div>
     let title = effect.text == "" ? child : <Tooltip child={child} info={effect.text} />
 
-    let content = <div className="bg-inherit">
+    let content = <div>
         {title}
         {controller}
         <ul key="effect-list">

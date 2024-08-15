@@ -1,6 +1,6 @@
 "use client";
 
-import { ICharacterRule } from "../interfaces/ICharacterRule";
+import { buildDefaultICharacterRule, ICharacterRule } from "../interfaces/ICharacterRule";
 import Card from "./Card";
 import Icon from "./Icon";
 import { EStat, eStatToReadable, statIsPercentage, stringToEStat } from "@/server/gamedata/enums/EStat";
@@ -11,7 +11,7 @@ import { getTotalStatRollValue, ICharacterData } from "@/server/gamedata/ICharac
 
 
 
-export default function RuleCard({rule, characterData, setRuleCallback, saveRuleCallback, popupId, setPopupId}: {rule: ICharacterRule, characterData: ICharacterData, setRuleCallback: (_x : ICharacterRule) => void, saveRuleCallback: () => void, popupId: number, setPopupId: (x: number) => void}) {
+export default function RuleCard({rule, characterData, setRuleCallback, popupId, setPopupId}: {rule: ICharacterRule, characterData: ICharacterData, setRuleCallback: (_x : ICharacterRule) => void, popupId: number, setPopupId: (x: number) => void}) {
     const thisId = 2
     let ls = []
     const {colorDirector} = useContext(ConfigContext)
@@ -31,13 +31,10 @@ export default function RuleCard({rule, characterData, setRuleCallback, saveRule
                     value: newValues[i],
                 })
             }
-            let newRule : ICharacterRule = {
-                character: rule.character,
-                ruleName: rule.ruleName,
-                stats: stats,
-                currentRating: rule.currentRating,
-                version: process.env.CURRENT_VERSION!
-            }
+            const newRule = buildDefaultICharacterRule()
+            newRule.character = rule.character
+            newRule.ruleName = rule.ruleName
+            newRule.stats = stats
             
             setRuleCallback(newRule)
         }
@@ -77,19 +74,11 @@ export default function RuleCard({rule, characterData, setRuleCallback, saveRule
         </svg>
     </div>
 
-    const [textSaveButton, setTextSaveButton] = useState("Save Rule")
-
     let toggleHiddableContent = () => {
         if (popupId == thisId) {
-            setTextSaveButton("Save Rule")
         }
 
         setPopupId(popupId == thisId ? 0 : thisId)
-    }
-
-    let saveRuleCb = () => {
-        saveRuleCallback()
-        setTextSaveButton("Rule Saved")
     }
     
     let content =
@@ -108,9 +97,6 @@ export default function RuleCard({rule, characterData, setRuleCallback, saveRule
                     <div className=" w-96 -translate-x-1/4 translate-y-1 absolute rounded-md border flex flex-col backdrop-blur-xl bg-white/25 p-2 z-10 border-slate-400">
                         <div className="flex flex-wrap">
                             {ls}
-                        </div>
-                        <div className={"w-full text-center justify-around h-full px-2 rounded-md cursor-pointer ".concat(colorDirector.bgAccent(5))} onClick={saveRuleCb}>
-                            {textSaveButton}
                         </div>
                     </div>
                 </div>

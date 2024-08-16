@@ -54,8 +54,8 @@ export default function CharacterSelectButton({uid, character, useHref, useLarge
 
     useEffect(() => {
         const f = async () => {
-            const r = await fetch("/api/rules?characterName=".concat(character.name, "&uid=", uid))
-            setRule((await r.json())["rule"])
+            const r = await fetch("/api/rules?character=".concat(character.name, "&uid=", uid))
+            setRule(await r.json())
         }
 
         f()

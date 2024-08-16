@@ -11,12 +11,10 @@ export async function apiLogicLoadTalentsKeys(name: string) : Promise<IApiResult
     let subPath = name.toLowerCase().replace(" ", "").replaceAll("_", "/")
     const res : IApiResult<IApiTalentsKeys> = {success: false}
     const p = await buildPathToDataFolder("gamedata", "characters", subPath, ".yml")
-    if (p.status) {
-        const a = yaml.parse((await fsPromises.readFile(p.path)).toString())
-        const item = yamlToIGoTalentsKeys(a)
-        res.content = item
-        res.success = true
-    }
+    const a = yaml.parse((await fsPromises.readFile(p)).toString())
+    const item = yamlToIGoTalentsKeys(a)
+    res.content = item
+    res.success = true
 
     return res
 }

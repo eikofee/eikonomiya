@@ -56,24 +56,18 @@ export default function CharacterPageRoot({
     const [artifactRatings, setArtifactRatings] = useState(emptyRatings)
     const [rule, setRule] = useState(defaultRule)
     const cbSetRule = (r: ICharacterRule) => {
-        console.log("rule changed")
-        console.log(r)
-        console.log("---")
         setRule(r)
     }
     useEffect(() => {
-        console.log("called : ")
-        console.log(rule)
         const f = async () => {
             try {
-                let url = "/api/rules?mode=edit&characterName=".concat(rule.character,"&uid=", uid)
-                for (let i = 0; i < rule.stats.length; ++i) {
-                    url = url.concat("&", rule.stats[i].name, "=", rule.stats[i].value.toString())
+                let url = "/api/rules"
+                const form = {
+                    uid: uid,
+                    rule: rule
                 }
 
-                console.log(url)
-                await fetch(url)
-
+                await fetch(url, {method: "POST", body: JSON.stringify(form)})
                 const ratings = await apiLogicComputeArtifactRating(char, rule)
                 
                 setArtifactRatings(ratings.content!)
@@ -89,11 +83,9 @@ export default function CharacterPageRoot({
     useEffect(() => {
         const f = async () => {
             try {
-                console.log("called")
-                // const r = await loadRule(uid, char.name)
-                const r = await fetch("/api/rules?characterName=".concat(char.name,"&uid=", uid))
+                const r = await fetch("/api/rules?character=".concat(char.name,"&uid=", uid))
                 const ans = await r.json()
-                setRule(ans["rule"])
+                setRule(ans)
             } catch (e) {
 
             }

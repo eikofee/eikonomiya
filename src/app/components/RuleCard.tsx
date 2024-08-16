@@ -5,7 +5,7 @@ import Card from "./Card";
 import Icon from "./Icon";
 import { EStat, eStatToReadable, statIsPercentage, stringToEStat } from "@/server/gamedata/enums/EStat";
 import { ConfigContext } from "./ConfigContext";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { IStatTuple } from "@/server/gamedata/IStatTuple";
 import { getTotalStatRollValue, ICharacterData } from "@/server/gamedata/ICharacterData";
 
@@ -16,6 +16,11 @@ export default function RuleCard({rule, characterData, setRuleCallback, popupId,
     let ls = []
     const {colorDirector} = useContext(ConfigContext)
     const [ruleValues, setRuleValues] = useState(rule.stats.map(x => x.value))
+
+
+    useEffect(() => {
+        setRuleValues(rule.stats.map(x => x.value))
+    }, [rule])
 
     function toggleStatImportance(label: number) {
         return () => {

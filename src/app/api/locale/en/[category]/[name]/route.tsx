@@ -1,18 +1,25 @@
 import { apiLogicLoadLocale } from "@/server/api/ApiLogicLoadLocale"
+import { apiResponse, EStatusCode } from "@/server/api/ApiResponseGenerator"
 
 export async function GET(request: Request, {params}: {params: {category: string, name: string}}) {
     const name = params.name
     const category = params.category
-    let content : any = {message: "Data folder not found."}
     if (name != undefined && category != undefined) {
-        const localeItem = await apiLogicLoadLocale(category, name)
-        content = localeItem
+        try {
+            const localeItem = await apiLogicLoadLocale(category, name)
+            if (localeItem.success) {
+                return apiResponse(EStatusCode.SUCCESS, localeItem.content!)
+            } else {
+                return apiResponse(EStatusCode.NOT_FOUND, undefined, "Category '".concat(category, "' does not exist."))
+            }
+        } catch (e) {
+            if (e instanceof Error && e.message.includes(" does not exist")) {
+                return apiResponse(EStatusCode.NOT_FOUND, undefined, "Locale entry of name '".concat(name, "' in category '", category, "' does not exist."))
+            } else {
+                return apiResponse(EStatusCode.INTERNAL_ERROR, undefined, e as string)
+            }
+        }
     }
 
-    return Response.json(content, {headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-        }
-    })
+    return apiResponse(EStatusCode.BAD_REQUEST)
 }

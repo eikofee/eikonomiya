@@ -9,12 +9,10 @@ export async function apiLogicLoadTalentsValues(name: string) : Promise<IApiResu
     let subPath = name.toLowerCase().replace(" ", "").replaceAll("_", "/")
     const res : IApiResult<IApiTalentsValues> = {success: false}
     const p = await buildPathToDataFolder("gamedata", "characters", subPath, ".json")
-    if (p.status) {
-        const a = JSON.parse((await fsPromises.readFile(p.path)).toString())
-        const item = jsonToIGoTalentsValues(a)
-        res.content = item
-        res.success = true
-    }
+    const a = JSON.parse((await fsPromises.readFile(p)).toString())
+    const item = jsonToIGoTalentsValues(a)
+    res.content = item
+    res.success = true
 
     return res
 }

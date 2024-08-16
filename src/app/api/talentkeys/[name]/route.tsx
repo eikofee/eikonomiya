@@ -1,17 +1,20 @@
 import { apiLogicLoadTalentsKeys } from "@/server/api/ApiLogicLoadTalentsKeys"
+import { apiResponse, EStatusCode } from "@/server/api/ApiResponseGenerator"
 
 export async function GET(request: Request, {params}: {params: {name: string}}) {
     const name = params.name
-    let content : any = {message: "Data folder not found."}
-    if (name != undefined) {
-        const valuesItem = await apiLogicLoadTalentsKeys(name)
-        content = valuesItem
+    if (name == undefined) {
+        return apiResponse(EStatusCode.BAD_REQUEST)
     }
 
-    return Response.json(content, {headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    try {
+        const valuesItem = await apiLogicLoadTalentsKeys(name)
+        return apiResponse(EStatusCode.SUCCESS, valuesItem.content!)
+    } catch (e) {
+        if (e instanceof Error && e.message.includes(" does not exist")) {
+            return apiResponse(EStatusCode.NOT_FOUND, undefined, "Talent entry of name '".concat(name, "' does not exist."))
+        } else {
+            return apiResponse(EStatusCode.INTERNAL_ERROR, undefined, e as string)
         }
-    })
+    }
 }

@@ -8,7 +8,13 @@ export enum EStatusCode {
     INTERNAL_ERROR = 500,
 }
 
-export function apiResponse(statusCode: EStatusCode = EStatusCode.SUCCESS, content? : any, text? : string, isImage : boolean = false) {
+export enum EDataType {
+    JSON,
+    PNG,
+    TXT
+}
+
+export function apiResponse(statusCode: EStatusCode = EStatusCode.SUCCESS, content? : any, text? : string, dataType : EDataType = EDataType.JSON) {
     if (text == undefined) {
         switch (statusCode) {
             case EStatusCode.SUCCESS:
@@ -40,10 +46,18 @@ export function apiResponse(statusCode: EStatusCode = EStatusCode.SUCCESS, conte
             status: statusCode,
     })
 
-    if (isImage) {
-        res.headers.set("Content-Type", "image/png")
-    } else {
-        res.headers.set("Content-Type", "application/json")
+    switch (dataType) {
+        case EDataType.PNG:
+            res.headers.set("Content-Type", "image/png")
+            break;
+        
+        case EDataType.JSON:
+            res.headers.set("Content-Type", "application/json")
+            break;
+
+        case EDataType.TXT:
+            res.headers.set("t", "text/plain")
+            break;
     }
 
 

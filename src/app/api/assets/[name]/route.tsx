@@ -1,4 +1,4 @@
-import { EStatusCode, apiResponse } from '@/server/api/ApiResponseGenerator';
+import { EDataType, EStatusCode, apiResponse } from '@/server/api/ApiResponseGenerator';
 import { buildPathToDataFolder } from '@/server/DataLoader';
 import fs from 'fs';
 
@@ -11,7 +11,7 @@ export async function GET(request: Request, {params}: {params: {name: string}}) 
             try {
                 const p = await buildPathToDataFolder("gamedata", "assets", subPath, extensions[i])
                 const asset = fs.readFileSync(p)
-                return apiResponse(EStatusCode.SUCCESS, asset,undefined, true)
+                return apiResponse(EStatusCode.SUCCESS, asset,undefined, EDataType.PNG)
             } catch (e) {
                 
             }

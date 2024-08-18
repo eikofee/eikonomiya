@@ -1,7 +1,6 @@
 "use server";
 import { getPlayerInfoLight, loadAllEffects, loadCharacters, loadConfigFile, loadRules } from '@/server/DataLoader';
 import CharacterPageRoot from '../../../components/rootComponents/CharacterPageRoot';
-import { Updater } from '@/server/gamedata/Updater';
 
 
 export default async function Page({ params }: { params: { character: string, uid: string } }) {
@@ -27,9 +26,6 @@ export default async function Page({ params }: { params: { character: string, ui
             </div>
         )
     }
-    const u = new Updater(uid)
-    await u.initialize()
-
     
     const allEffectList = await loadAllEffects()
     let effectList = []

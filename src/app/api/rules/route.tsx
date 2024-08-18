@@ -19,7 +19,7 @@ export async function GET(request: Request) {
             }
         } catch (e) {
             if (e instanceof Error && e.message.includes(" does not exist")) {
-                return apiResponse(EStatusCode.NOT_FOUND, "UID '".concat(uid, "' is not found"))
+                return apiResponse(EStatusCode.NOT_FOUND, `UID '${uid}' not found`)
             } else {
                 return apiResponse(EStatusCode.INTERNAL_ERROR, undefined, e as string)
             }
@@ -35,9 +35,9 @@ export async function GET(request: Request) {
                 try {
                     const rules = await apiLogicGetRules(uid)
                     if (rules.success) {
-                        return apiResponse(EStatusCode.NOT_FOUND, undefined, "Character '".concat(character, "' is not found for UID '", uid, "'"))
+                        return apiResponse(EStatusCode.NOT_FOUND, undefined, `Character '${character}' not found for UID '${uid}'`)
                     } else {
-                        return apiResponse(EStatusCode.NOT_FOUND, "UID '".concat(uid, "' is not found"))
+                        return apiResponse(EStatusCode.NOT_FOUND, `UID '${uid}' not found`)
                     }
                 } catch (e) {
                     return apiResponse(EStatusCode.INTERNAL_ERROR, undefined, e as string)

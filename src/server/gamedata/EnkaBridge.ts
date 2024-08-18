@@ -8,20 +8,18 @@ import { IEnkaCharacterShowcaseEntry, IEnkaPlayerInfo } from "./enkaDataStructur
 import { IEnkaSkill } from "./enkaDataStructures/IEnkaSkill";
 import { IEnkaSkillEntry } from "./enkaDataStructures/IEnkaSkillEntry";
 import { IEnkaWeapon } from "./enkaDataStructures/IEnkaWeapon";
-import { ETarget } from "./enums/ETarget";
 import { ERarity } from "./enums/ERarity";
 import { EStat } from "./enums/EStat";
 import { EWeaponType } from "./enums/EWeaponType";
 import { IEnkaProudMapEntry } from "./enkaDataStructures/IEnkaProudMapEntry";
+import { ELogType, logService } from "../LogService";
 
 export class EnkaBridge {
 
-    uid: string;
     translator: EnkaTranslator;
     headers: Headers;
 
-    constructor(uid: string, translator: EnkaTranslator) {
-        this.uid = uid
+    constructor(translator: EnkaTranslator) {
         this.translator = translator
         this.headers = new Headers({"User-Agent":"eikonomiya-docker/".concat(process.env.EIKONOMIYA_VERSION!)})
     }
@@ -52,6 +50,32 @@ export class EnkaBridge {
         }
 
         return value * statMultiplier
+    }
+
+    private transformArtifactRankToRarity(rankLevel: number) {
+        switch(rankLevel) {
+            case 1: return ERarity.I
+            case 2: return ERarity.II
+            case 3: return ERarity.III
+            case 4: return ERarity.IV
+            default:
+            case 5: return ERarity.V
+        }
+    }
+
+    private transformWeaponIconToWeaponType(icon: string) {
+        const word = ["Sword", "Bow", "Catalyst", "Pole", "Claymore"]
+        const type = [EWeaponType.SWORD, EWeaponType.BOW, EWeaponType.CATALYST, EWeaponType.POLEARM, EWeaponType.CLAYMORE]
+        for (let i = 0; i < word.length; ++i) {
+            const w = word[i]
+            const t = type[i]
+            if (icon.includes(w)) {
+                return t
+            }
+        }
+
+        logService.log(`Weapon '${icon}' not recognized. Setting Unknown as weapon type.`, ELogType.WARN)
+        return EWeaponType.UNKNOWN
     }
 
     private async buildEnkaCharacterData(data: any): Promise<IEnkaCharacterData> {
@@ -140,7 +164,7 @@ export class EnkaBridge {
                     subStats: subStats,
                     name: this.translator.translate(e["flat"]["nameTextMapHash"]),
                     level: e["level"],
-                    rarity: ERarity.V //TODO
+                    rarity: this.transformArtifactRankToRarity(e["flat"]["rankLevel"])
                 }
 
                 artifacts.push(res)
@@ -150,7 +174,7 @@ export class EnkaBridge {
                     id: e["flat"]["icon"],
                     level: e["weapon"]["level"],
 
-                    type: characterCommonData.weapon, //TODO
+                    type: this.transformWeaponIconToWeaponType(e["flat"]["icon"]),
                     mainStat: {
                         name: this.translator.translateArtifactStatName(e["flat"]["weaponStats"][0]["appendPropId"]),
                         value: e["flat"]["weaponStats"][0]["statValue"]
@@ -214,9 +238,9 @@ export class EnkaBridge {
 
     }
 
-    public async loadPlayerData(): Promise<IEnkaPlayerInfo> {
+    public async loadPlayerData(uid: string): Promise<IEnkaPlayerInfo> {
         // const requestTest = await fetch('http://httpbin.org/headers', {cache: "no-cache", headers: this.headers})
-        const fullDataRequest = await fetch("https://enka.network/api/uid/".concat(this.uid), {cache: "no-cache", headers: this.headers})
+        const fullDataRequest = await fetch(`https://enka.network/api/uid/${uid}`, {cache: "no-cache", headers: this.headers})
         if (fullDataRequest.status != 200) {
             switch(fullDataRequest.status) {
                 case 400:

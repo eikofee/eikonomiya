@@ -17,7 +17,7 @@ export default function AddUidWidget() {
             </div>
             <input className="rounded-md pl-2 w-full mr-2 " type="text" value={currentUid} onChange={setUidCb}/>
             <div className="text-sm basis-1/5 mr-1 h-full">
-                <a href={"/uid/".concat(currentUid)}>
+                <a href={`/uid/${currentUid}`}>
                     <button className="h-1/2 w-full rounded-md text-sm mr-1 border bg-slate-300">Add</button>
                 </a>
             </div>

@@ -48,7 +48,7 @@ export async function GET(request: Request) {
             }
 
         default:
-            return apiResponse(EStatusCode.BAD_REQUEST, "Parameter mode '".concat(mode, "' unknown"))
+            return apiResponse(EStatusCode.BAD_REQUEST, `Parameter mode '${mode}' unknown`)
     }
 
 }

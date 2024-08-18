@@ -12,7 +12,7 @@ export async function GET(request: Request, {params}: {params: {name: string}}) 
         return apiResponse(EStatusCode.SUCCESS, valuesItem.content!)
     } catch (e) {
         if (e instanceof Error && e.message.includes(" does not exist")) {
-            return apiResponse(EStatusCode.NOT_FOUND, undefined, "Value entry of name '".concat(name, "' does not exist."))
+            return apiResponse(EStatusCode.NOT_FOUND, undefined, `Value entry of name '${name}' does not exist.`)
         } else {
             return apiResponse(EStatusCode.INTERNAL_ERROR, undefined, e as string)
         }

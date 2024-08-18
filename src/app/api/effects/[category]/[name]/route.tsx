@@ -11,7 +11,7 @@ export async function GET(request: Request, {params}: {params: {category: string
             return apiResponse(EStatusCode.SUCCESS, effect.content!)
         } catch(e) {
             if (e instanceof Error && e.message.includes(" does not exist")) {
-                return apiResponse(EStatusCode.NOT_FOUND, undefined, "Effect '".concat(name, "' in category '", category, "' does not exist."))
+                return apiResponse(EStatusCode.NOT_FOUND, undefined, `Effect '${name}' in category '${category}' does not exist.`)
             } else {
                 return apiResponse(EStatusCode.INTERNAL_ERROR, undefined, e as string)
             }

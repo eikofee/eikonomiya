@@ -8,12 +8,11 @@ import { IArtifact } from "./IArtifact";
 import { StatBag } from "./StatBag";
 import { IEffect } from "./IEffect";
 import { ETarget } from "./enums/ETarget";
-import { ICharacterCommonData } from "./ICharacterCommonData";
 import { ERarity } from "./enums/ERarity";
 import { EStat, stringToEStat } from "./enums/EStat";
-import { promises as fsPromises, stat } from 'fs';
+import { promises as fsPromises } from 'fs';
 import path from "path";
-import { buildDefaultICharacterRule, ICharacterRule } from "@/app/interfaces/ICharacterRule";
+import { buildDefaultICharacterRule } from "@/app/interfaces/ICharacterRule";
 import { EEffectType } from "./enums/EEffectType";
 import { IStatTuple } from "./IStatTuple";
 import { addOptions } from "./IEffectOptions";
@@ -28,11 +27,11 @@ import { ETalentType } from "./enums/ETalentType";
 import { IConstellation } from "./IConstellation";
 import { apiLogicLoadTalentsValues } from "../api/ApiLogicLoadTalentsValues";
 import { INumericField } from "./INumericField";
-import { IScaledNumber } from "./IScaledNumber";
 import { apiLogicLoadTalentsKeys } from "../api/ApiLogicLoadTalentsKeys";
-import { writeRule } from "../DataLoader";
+import { buildPathToDataFolder, writeRule } from "../DataLoader";
 import { INumericFieldValue } from "./INumericFieldValue";
 import { stringToENumericFieldAttribute } from "./enums/ENumericFieldAttribute";
+import { ELogType, logService } from "../LogService";
 
 export enum ELoadStatus {
     SUCCESS,
@@ -46,42 +45,71 @@ export interface ILoadPlayerInfoStatus {
     message: string
 }
 
-export class Updater {
+class Updater {
 
-    uid: string = ""
-    enkaTranslator!: EnkaTranslator
+    private static instance: Updater //singleton
+    private initialized: boolean = false
     bridge!:EnkaBridge
+    translator!: EnkaTranslator
 
-    constructor (uid: string) {
-        this.uid = uid
+    private constructor(){}
+
+    public static getInstance() {
+        if (Updater.instance == undefined) {
+            Updater.instance = new Updater()
+        }
+
+        return Updater.instance
     }
     
-    public async initialize() {
-        this.enkaTranslator = await buildEnkaTranslator()
-        this.bridge = new EnkaBridge(this.uid, this.enkaTranslator)
+    private async initialize() {
+        if (!this.initialized) {
+            this.translator = await buildEnkaTranslator()
+            this.bridge = new EnkaBridge(this.translator)
+            this.initialized = true
+        }
     }
 
     private async getAscensionStatName(name: string) : Promise<EStat> {
+        let sets : any = {}
         try {
             const ascensionRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/character-ascensions.yml")).text()
-            const sets = yaml.parse(ascensionRawData)
+            sets = yaml.parse(ascensionRawData)
+        } catch {
+            logService.log(`Ascension Data unavailable. Setting Unknown ascension stat for '${name}'.`, ELogType.ERROR)
+            return EStat.UNKNOWN
+        }
+        try {
             const statName = sets[name]["stat"]
             return stringToEStat(statName)
         } catch (error) {
+            logService.log(`Ascension stat for character '${name}' not found. Setting Unknown stat.`, ELogType.WARN)
             return EStat.UNKNOWN
         }
     }
     
     private async computeAscensionStatValue(statName: EStat, characterName: string, rarity: ERarity): Promise<number> {
-        const values = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/ascension-values.yml")).text()
-        const sets = yaml.parse(values)
-        const baseValue = sets[stringToEStat(statName)]
-        let rarityMultiplier = 1
-        if (characterName != "Lumine" && characterName != "Aether" && (rarity == ERarity.V || rarity == ERarity.V_RED)) {
-            rarityMultiplier = 1.2
+        let sets : any = {}
+        try {
+            const values = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/ascension-values.yml")).text()
+            sets = yaml.parse(values)
+        } catch (e) {
+            logService.log(`Ascension Values unavailable. Setting ascension value as 0.`, ELogType.ERROR)
+            return 0
         }
 
-        return baseValue * rarityMultiplier;
+        try {
+            const baseValue = sets[stringToEStat(statName)]
+            let rarityMultiplier = 1
+            if (characterName != "Lumine" && characterName != "Aether" && (rarity == ERarity.V || rarity == ERarity.V_RED)) {
+                rarityMultiplier = 1.2
+            }
+
+            return baseValue * rarityMultiplier;
+        } catch (e) {
+            logService.log(`Ascension value for stat '${statName}' not found. Setting value as 0.`, ELogType.WARN)
+            return 0
+        }
     }
 
     private cleanNameForPath(s: string) {
@@ -418,6 +446,7 @@ export class Updater {
             return this.parseEffect(weaponEffectData.content!.cards, weapon.name, weapon.assets.icon, weapon.refinement)
         }
 
+        logService.log(`Weapon Effect for weapon '${weapon.name}' not found. Returning empty effects.`, ELogType.WARN)
         return res;
     }
 
@@ -426,9 +455,10 @@ export class Updater {
         let res : IEffect[] = []
         const charEffects = yaml.parse(characterEffectsRawData)[name]
         if (charEffects != undefined) {
-            return this.parseEffect(charEffects, name, "characters_".concat(this.cleanNameForPath(name), "_face"), 0)
+            return this.parseEffect(charEffects, name, `characters_${this.cleanNameForPath(name)}_face`, 0)
         }
 
+        logService.log(`Character Effect for character '${name}' not found. Returning empty effects.`, ELogType.WARN)
         return res;
     }
 
@@ -442,7 +472,7 @@ export class Updater {
                 equipSets[set] = 1
                 setNames.push(set)
                 const iconNameSplit = arte[i].assets.icon.split("/")
-                iconNameSplit[iconNameSplit.length - 1] = "artifacts_".concat(this.cleanNameForPath(set), "_fleur")
+                iconNameSplit[iconNameSplit.length - 1] = `artifacts_${this.cleanNameForPath(set)}_fleur`
                 iconNames.push(iconNameSplit.join("/"))
             } else {
                 equipSets[set] = equipSets[set] + 1
@@ -462,13 +492,15 @@ export class Updater {
                         res.push(effects[j])
                     }
                 }
+            } else {
+                logService.log(`Artifact Set Effect for set '${set}' not found. Returning empty effects.`, ELogType.WARN)
             }
         }
 
         return res;
     }
 
-    private getCName(name: string, e: EElement) : string {
+    private getTravelerName(name: string, e: EElement) : string {
         if (name == "Lumine" || name == "Aether") {
             switch(e) {
                 case EElement.ANEMO : return "traveler-anemo";
@@ -483,19 +515,27 @@ export class Updater {
         return name
     }
 
-    public async loadPlayerData() : Promise<ILoadPlayerInfoStatus> {
+    public async loadPlayerData(uid: string) : Promise<ILoadPlayerInfoStatus> {
+        if (!this.initialized) {
+            logService.log(`Updater is not initialized, initializing...`)
+            await this.initialize()
+            logService.log(`Done.`)
+        }
+        logService.log(`Starting updating player '${uid}'`)
         let res : ILoadPlayerInfoStatus = {
             status: ELoadStatus.FAILED,
             message: ""
         }
         
         try {
-            const enkaData = await this.bridge.loadPlayerData()
+            const enkaData = await this.bridge.loadPlayerData(uid)
+            console.log("pass")
             let characters : ICharacterData[] = []
             let regionRawData = ""
             try {
                 regionRawData = await (await fetch("https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/regions.yml")).text()
             } catch (e) {
+                logService.log("Updater could not load region data", ELogType.ERROR)
                 throw new Error("[Updater Error] Could not load region data from GitHub (https://raw.githubusercontent.com/eikofee/eikonomiya-data/master/regions.yml).");
             }
 
@@ -503,6 +543,7 @@ export class Updater {
             try {
                 namecardIds = await (await fetch("https://raw.githubusercontent.com/EnkaNetwork/API-docs/master/store/namecards.json")).json()
             } catch (e) {
+                logService.log("Updater could not load namecardIds from Enka github repo", ELogType.ERROR)
                 throw new Error("[Updater Error] Could not load namecards IDs from EnkaNetwork's GitHub (https://raw.githubusercontent.com/EnkaNetwork/API-docs/master/store/namecards.json).")
             }
 
@@ -510,12 +551,13 @@ export class Updater {
             try {
                 reg = yaml.parse(regionRawData)
             } catch (e) {
+                logService.log("Updater could not parse region data", ELogType.ERROR)
                 throw new Error("[Updater Error] Could not parse YAML data from regions.")
             }
 
             for (let i = 0; i < enkaData.charShowcase.length; ++i) {
                 const c = enkaData.charShowcase[i].info
-                const name = this.enkaTranslator.translate(c.commonData.nameId)
+                const name = this.translator.translate(c.commonData.nameId)
                 const ascensionName = await this.getAscensionStatName(name)
                 const ascensionValue = await this.computeAscensionStatValue(ascensionName, name, c.commonData.rarity)
                 let ascendedFactor = 1
@@ -542,13 +584,14 @@ export class Updater {
                 let r = ERegion.UNKNOWN
                 if (reg[name] != undefined) {
                     r = stringToERegion(reg[name])
+                } else {
+                    logService.log(`Region of character '${name}' not found. Setting Unknown region.`, ELogType.WARN)
+                    r = ERegion.UNKNOWN
                 }
 
                 let consts : IConstellation[] = []
-                let cname = this.getCName(name, c.commonData.element)
+                let cname = this.getTravelerName(name, c.commonData.element)
                 const localeInfoRequest = await apiLogicLoadLocale("characters", cname)
-                const talentsValuesInfoRequest = await apiLogicLoadTalentsValues(cname)
-                const talentsKeysInfoRequest = await apiLogicLoadTalentsKeys(cname)
                 if (localeInfoRequest.success) {
                     const constInfo = localeInfoRequest.content!.constellations
                     for (let ii = 0; ii < 6; ++ii) {
@@ -559,6 +602,7 @@ export class Updater {
                                 description: constInfo[ii].description
                             })
                         } else {
+                            logService.log(`Constellation Lv.${ii+1} of character '${cname}' not found. Setting placeholder text.`, ELogType.WARN)
                             consts.push({
                                 name: "MISSING NAME",
                                 level: ii + 1,
@@ -571,7 +615,7 @@ export class Updater {
 
                 const weapon : IWeapon = {
                     type: c.weapon.type,
-                    name: this.enkaTranslator.translate(c.weapon.name),
+                    name: this.translator.translate(c.weapon.name),
                     mainStat: c.weapon.mainStat,
                     level: c.weapon.level,
                     rarity: c.weapon.rarity,
@@ -579,7 +623,7 @@ export class Updater {
                     refinement: c.weapon.refinement == undefined ? 1 : c.weapon.refinement,
                     ascensionLevel: c.weapon.ascensionLevel,
                     assets: {
-                        icon: "weapons_".concat(this.cleanNameForPath(c.weapon.name),"_weapon", c.weapon.ascensionLevel > 1 ? "-awake":"")
+                        icon: `weapons_${this.cleanNameForPath(c.weapon.name)}_weapon${c.weapon.ascensionLevel > 1 ? "-awake":""}`
                     }
                 }
 
@@ -588,14 +632,14 @@ export class Updater {
                     const arte = c.artifacts[j]
                     const a : IArtifact = {
                         type: arte.type,
-                        name: this.enkaTranslator.translate(arte.name),
+                        name: this.translator.translate(arte.name),
                         set: arte.set,
                         level: arte.level,
                         rarity: arte.rarity,
                         mainStat: arte.mainStat,
                         subStats: arte.subStats,
                         assets: {
-                            icon: "artifacts_".concat(this.cleanNameForPath(arte.set), "_", arte.type)
+                            icon: `artifacts_${this.cleanNameForPath(arte.set)}_${arte.type}`
                         }
                     }
 
@@ -674,7 +718,9 @@ export class Updater {
                 let autoFields : INumericField[] = []
                 let skillFields : INumericField[] = []
                 let burstFields : INumericField[] = []
-                if (talentsValuesInfoRequest.success && talentsKeysInfoRequest.success) {
+                try {
+                    const talentsValuesInfoRequest = await apiLogicLoadTalentsValues(cname)
+                    const talentsKeysInfoRequest = await apiLogicLoadTalentsKeys(cname)
                     const values = talentsValuesInfoRequest.content!
                     const keys = talentsKeysInfoRequest.content!
                     
@@ -689,7 +735,7 @@ export class Updater {
                             } else {
                                 index = parseInt(item.v.split("_")[1])
                             }
-
+                            
                             const nv : INumericFieldValue = {
                                 attribute: stringToENumericFieldAttribute(item.a),
                                 leveledValues: values.auto[index],
@@ -698,6 +744,7 @@ export class Updater {
 
                             vs.push(nv)
                         }
+
                         const f : INumericField = {
                             name: keys.auto[i].name,
                             values: vs
@@ -705,7 +752,7 @@ export class Updater {
 
                         autoFields.push(f)
                     }
-
+                
                     let skillKey = 0;
                     for (let i = 0; i < keys.skill.length; ++i) {
                         let vs = []
@@ -723,14 +770,14 @@ export class Updater {
                                 leveledValues: values.skill[index],
                                 flat: item.flat
                             }
-
+                            
                             vs.push(nv)
                         }
                         const f : INumericField = {
                             name: keys.skill[i].name,
                             values: vs
                         }
-
+                        
                         skillFields.push(f)
                     }
 
@@ -751,15 +798,21 @@ export class Updater {
                                 leveledValues: values.burst[index],
                                 flat: item.flat
                             }
-
+                            
                             vs.push(nv)
                         }
                         const f : INumericField = {
                             name: keys.burst[i].name,
                             values: vs
                         }
-
+                        
                         burstFields.push(f)
+                    }
+                } catch (e) {
+                    if (e instanceof Error && e.message.includes(" does not exist")) {
+                        logService.log(`No Talent keys/values found for character '${name}'. Setting empty fields.`, ELogType.WARN)
+                    } else {
+                        logService.log(`Internal error occured when parsing talents for character '${name}'.`, ELogType.ERROR)
                     }
                 }
 
@@ -833,7 +886,7 @@ export class Updater {
             const pi : IPlayerInfo = {
                 version: process.env.BUILD_VERSION!,
                 name: enkaData.name,
-                uid: this.uid,
+                uid: uid,
                 arLevel: enkaData.arLevel,
                 description: enkaData.description,
                 worldLevel: enkaData.worldLevel,
@@ -843,20 +896,27 @@ export class Updater {
                     chamber: enkaData.abysses.chamber
                 },
                 characters: characters,
-                profilePictureCharacterName: "characters_".concat(this.cleanNameForPath(enkaData.profilePicture), "_face"),
+                profilePictureCharacterName: `characters_${this.cleanNameForPath(enkaData.profilePicture)}_face`,
                 namecardName: namecardIds[enkaData.namecardId].icon
             }
 
-            await this.writeData(this.uid, pi)
+            try {
+                await this.writeData(uid, pi)
+            } catch (e){
+                logService.log(`Could not write player '${uid}' data. Reason : ${e as string}`, ELogType.ERROR)
+            }
+
             res.playerInfo = pi
             res.status = ELoadStatus.SUCCESS
-
+            logService.log(`Loading online data for player '${uid}' completed.`)
             return res
         } catch(e: any) {
-                res.status = ELoadStatus.LOCAL_ONLY
-                res.message += e + "\n[Updater Info] Attempting to load local info on player ".concat(this.uid)
+            logService.log(`Updater could not load online data for player ${uid}. Attempting to load local data.`)
+            res.status = ELoadStatus.LOCAL_ONLY
+            res.message += e + "\n[Updater Info] Attempting to load local info on player ".concat(uid)
             try {
-                const p = path.join(process.cwd(), process.env.DATA_PATH!, this.uid, "player")
+                // const p = path.join(process.cwd(), process.env.DATA_PATH!, uid, "player")
+                const p = await buildPathToDataFolder(uid, "player")
                 const data = (await fsPromises.readFile(p)).toString()
                 const resi = readIPlayerInfoWithoutCharacters(JSON.parse((data)))
                 const pi : IPlayerInfo = {
@@ -876,6 +936,7 @@ export class Updater {
                 
                 return res
             } catch (ee: any) {
+                logService.log(`Could not load local data for plater '${uid}'`, ELogType.ERROR)
                 res.message += "\n" + ee + "\n[Updater Error] : Could not load online or local player data."
                 return res
             }
@@ -929,3 +990,5 @@ export class Updater {
         }
     }
 }
+
+export const updater = Updater.getInstance()

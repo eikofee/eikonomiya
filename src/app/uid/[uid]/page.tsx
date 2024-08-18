@@ -1,8 +1,5 @@
-import { ELoadStatus, ILoadPlayerInfoStatus, Updater } from "@/server/gamedata/Updater";
+import { ELoadStatus, ILoadPlayerInfoStatus, updater } from "@/server/gamedata/Updater";
 import { getPlayerInfoList, loadCharacters, loadConfigFile, loadRules } from "@/server/DataLoader";
-import CharacterSelectButton from "../../components/CharacterSelectButton";
-import PlayerInfoCardBig from "@/app/components/playerInfoCards/PlayerInfoCard";
-import MarkdownDescription from "@/app/components/MarkdownDescription";
 import PlayerPageRoot from "@/app/components/rootComponents/PlayerPageRoot";
 
 export default async function Page({ params }: { params: { uid: string } }) {
@@ -16,10 +13,8 @@ export default async function Page({ params }: { params: { uid: string } }) {
     const configDirector = await loadConfigFile(true)
 
     if (!isNaN(parseInt(uid))) {
-        const u = new Updater(uid)
-        await u.initialize()
         
-        loadStatus = await u.loadPlayerData()
+        loadStatus = await updater.loadPlayerData(uid)
         if (loadStatus.status != ELoadStatus.FAILED) {
             playerInfo = loadStatus.playerInfo!
         }

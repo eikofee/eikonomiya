@@ -36,7 +36,7 @@ export async function buildPathToDataFolder(...p: string[]): Promise<string> {
     if (fs.existsSync(base)) {
         return base
     } else {
-        throw new Error ("Path ".concat(base, " does not exist."))
+        throw new Error (`Path '${base}' does not exist.`)
     }
 }
 

@@ -1,9 +1,17 @@
 import { IPlayerInfo, IPlayerInfoWithoutCharacters } from "@/server/gamedata/IPlayerInfo";
 import { ImgApi } from "../ImgApi";
 import { toApiName } from "@/app/utils";
+import Icon from "../Icon";
 
-export default function PlayerInfoCardBig({info} : {info: IPlayerInfo | IPlayerInfoWithoutCharacters}) {
+export default function PlayerInfoCardBig({info, refreshCallback} : {info: IPlayerInfo | IPlayerInfoWithoutCharacters, refreshCallback? : () => void}) {
     let content = <div className="items-center h-full w-full flex flex-row relative">
+        {refreshCallback == undefined ? "":
+        <div className="flex flex-row absolute gap-x-2 right-0 top-4 justify-end items-end w-8 h-8">
+            <div className="cursor-pointer" onClick={refreshCallback}>
+                <Icon n="refresh" customInfo="Refresh info from EnkaNetwork"/>
+            </div>
+        </div>
+        }
                         <div className="absolute inset-y-0 -left-2 overflow-hidden">
                             <ImgApi className="h-full w-full" src={toApiName(info.profilePictureCharacterName)} alt={""} s={256} />
                         </div>

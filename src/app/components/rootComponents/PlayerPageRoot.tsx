@@ -18,20 +18,30 @@ export default function PlayerPageRoot({uid, config} : {uid: string, config: Con
     const [characters, setCharacters] = useState([])
     const [charactersLoaded, setCharactersLoaded] = useState(false)
 
-    useEffect(() => {
-        const f = async () => {
-            try {
-                const r = await fetch(`/api/uid/${uid}`)
-                const data = await r.json()
-                setPlayerInfo(data)
-                setPlayerInfoLoaded(true)
-            } catch (e) {
+    const [useUpdate, setUseUpdate] = useState(false)
 
-            }
+    const refreshCallback = () => {
+        setUseUpdate(true)
+        setPlayerInfoLoaded(false)
+    }
+
+    const updatePlayerInfo = async () => {
+        try {
+            const r = await fetch(`/api/uid/${uid}${useUpdate ? "?update=true":""}`)
+            const data = await r.json()
+            setPlayerInfo(data)
+            setPlayerInfoLoaded(true)
+            setUseUpdate(false)
+        } catch (e) {
+
         }
+    }
 
-        f()
-    }, [])
+    useEffect(() => {
+        if (!playerInfoLoaded) {
+            updatePlayerInfo()
+        }
+    }, [playerInfoLoaded])
 
     useEffect(() => {
         const f = async() => {
@@ -61,11 +71,12 @@ export default function PlayerPageRoot({uid, config} : {uid: string, config: Con
         }
     }
 
-    
     let content = <div className={"pl-1 w-full h-screen flex flex-col place-content-center items-center"}>
-        {playerInfoLoaded ? <PlayerInfoCardBig info={playerInfo} /> : <div>Fetching player info...</div>}
+        {playerInfoLoaded ? <PlayerInfoCardBig info={playerInfo} refreshCallback={refreshCallback}/> : <div>Fetching player info...</div>}
+        {!playerInfoLoaded && playerInfo.name != "default" ? [<PlayerInfoCardBig info={playerInfo} refreshCallback={refreshCallback}/>, <div className="absolute inset-0 z-10 backdrop-grayscale bg-white/30"></div>] : ""}
         <div className="grid grid-cols-auto-fit-fr-medium max-w-[1600px] gap-2 rounded-md border backdrop-blur-xl bg-white/25 p-2 w-3/4 border-slate-400">
             {charactersLoaded ? charList : <div>Fetching characters...</div>}
+            {playerInfoLoaded ? "" : <div className="absolute inset-0 z-10 backdrop-grayscale bg-white/30"></div>}
         </div>
     </div>
 

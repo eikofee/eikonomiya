@@ -25,6 +25,7 @@ import { FullTalentCard } from "../FullTalentCard";
 import PlayerInfoCardSmall from "../playerInfoCards/PlayerInfoCardSmall";
 import { IPlayerInfoWithoutCharacters } from "@/server/gamedata/IPlayerInfo";
 import { apiLogicComputeArtifactRating, IArtifactRating } from "@/server/api/ApiLogicComputeArtifactRating";
+import LogButton from "../LogButton";
 
 export default function CharacterPageRoot({
         characters,
@@ -198,7 +199,10 @@ export default function CharacterPageRoot({
                         <RuleCard rule={rule} characterData={characterData} setRuleCallback={cbSetRule} popupId={popupId} setPopupId={setPopupId}/>
                         <TopTabSwitcher currentMode={tabMode} currentModeCallback={setTabMode} />
                     </div>
-                    <PlayerInfoCardSmall info={playerInfo} />
+                    <div className="flex flex-row gap-1 h-full w-full place-content-end">
+                        <PlayerInfoCardSmall info={playerInfo} />
+                        <LogButton popupId={popupId} setPopupId={setPopupId}/>
+                    </div>
                 </div>
                 <div>
                 </div>

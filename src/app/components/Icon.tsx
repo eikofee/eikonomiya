@@ -137,6 +137,22 @@ const refreshIcon = () => {
     ]
 }
 
+const logIcon = () => {
+    return [
+        <path xmlns="http://www.w3.org/2000/svg" d="M6 22 H18 " stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>,
+        <path xmlns="http://www.w3.org/2000/svg" d="M6 22 H18 " stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>,
+        <path xmlns="http://www.w3.org/2000/svg" d="M13 2.75 L19 8.5" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>,
+        <path xmlns="http://www.w3.org/2000/svg" d="M13 2.5 V9" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>,
+        <path xmlns="http://www.w3.org/2000/svg" d="M19 9 V22" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>,
+        <path xmlns="http://www.w3.org/2000/svg" d="M13 9 H19" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>,
+        <path xmlns="http://www.w3.org/2000/svg" d="M13 2.5 H6" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>,
+        <path xmlns="http://www.w3.org/2000/svg" d="M5 2.5 V22" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>,
+        <path xmlns="http://www.w3.org/2000/svg" d="M8 17 H15" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>,
+        <path xmlns="http://www.w3.org/2000/svg" d="M8 13 H15" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>,
+        <path xmlns="http://www.w3.org/2000/svg" d="M8 9 H9" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        ]
+}
+
 export enum EIconColorType {
     ELEMENT,
     ACTIVE,
@@ -351,6 +367,9 @@ export default function Icon({n, useTooltip = true, customColor = "", customColo
             break;
         case "refresh":
             content = refreshIcon()
+            break;
+        case "logs":
+            content = logIcon()
             break;
         default:
             content = defaultDotIcon()

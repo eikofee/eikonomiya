@@ -516,7 +516,7 @@ class Updater {
         return name
     }
 
-    public async loadPlayerData(uid: string) : Promise<ILoadPlayerInfoStatus> {
+    public async loadPlayerData(uid: string, useCache: boolean = false) : Promise<ILoadPlayerInfoStatus> {
         if (!this.initialized) {
             logService.log(`Updater is not initialized, initializing...`)
             await this.initialize()
@@ -529,8 +529,10 @@ class Updater {
         }
         
         try {
+            if (useCache) {
+                throw Error("Skip update")
+            }
             const enkaData = await this.bridge.loadPlayerData(uid)
-            console.log("pass")
             let characters : ICharacterData[] = []
             let regionRawData = ""
             try {

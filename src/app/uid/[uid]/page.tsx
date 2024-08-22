@@ -12,30 +12,27 @@ export default async function Page({ params }: { params: { uid: string } }) {
 
     const configDirector = await loadConfigFile(true)
 
-    if (!isNaN(parseInt(uid))) {
-        
-        loadStatus = await updater.loadPlayerData(uid)
-        if (loadStatus.status != ELoadStatus.FAILED) {
-            playerInfo = loadStatus.playerInfo!
-        }
-    } else {
-        return (
-            <div className="bg-blue-500 w-full">
-            Given UID is not a number : <code>{uid}</code>
-        </div>
-        )
-    }
+    // if (!isNaN(parseInt(uid))) {
+    //     loadStatus = await updater.loadPlayerData(uid)
+    //     if (loadStatus.status != ELoadStatus.FAILED) {
+    //         playerInfo = loadStatus.playerInfo!
+    //     }
+    // } else {
+    //     return (
+    //         <div className="bg-blue-500 w-full">
+    //         Given UID is not a number : <code>{uid}</code>
+    //     </div>
+    //     )
+    // }
     
-    if (playerInfo == undefined) {
-        return (
-            <div className="bg-blue-500 w-full">
-            Fetching data, please wait...
-        </div>
-        )
-    }
+    // if (playerInfo == undefined) {
+    //     return (
+    //         <div className="bg-blue-500 w-full">
+    //         Fetching data, please wait...
+    //     </div>
+    //     )
+    // }
     
-    playerInfo.characters = await loadCharacters(uid)
-    const characters = playerInfo.characters
 
-    return <PlayerPageRoot playerInfo={playerInfo} characters={characters} config={configDirector} />
+    return <PlayerPageRoot uid={uid} config={configDirector} />
 }

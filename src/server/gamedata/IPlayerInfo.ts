@@ -5,6 +5,11 @@ interface IAbyssesInfo {
     chamber: number
 }
 
+interface ITheaterInfo {
+    act: number,
+    stars: number
+}
+
 export interface IPlayerInfo {
     version: string,
     name: string,
@@ -14,6 +19,7 @@ export interface IPlayerInfo {
     worldLevel: number,
     achievementCount: number,
     abysses: IAbyssesInfo,
+    theater: ITheaterInfo,
     characters: ICharacterData[],
     profilePictureCharacterName: string,
     namecardName: string,
@@ -28,6 +34,7 @@ export interface IPlayerInfoWithoutCharacters {
     worldLevel: number,
     achievementCount: number,
     abysses: IAbyssesInfo,
+    theater: ITheaterInfo,
     profilePictureCharacterName: string,
     namecardName: string,
 }
@@ -50,6 +57,10 @@ export function copyIPlayerInfo(x: IPlayerInfo): IPlayerInfo {
             floor: x.abysses.floor,
             chamber: x.abysses.chamber
         },
+        theater: {
+            act: x.theater.act,
+            stars: x.theater.stars
+        },
         characters: chars,
         profilePictureCharacterName: x.profilePictureCharacterName,
         namecardName: x.namecardName
@@ -70,6 +81,10 @@ export function buildDefaultIPlayerInfo() : IPlayerInfo {
         abysses: {
             floor: 0,
             chamber: 0
+        },
+        theater: {
+            act: 0,
+            stars: 0,
         },
         characters: [],
         profilePictureCharacterName: "",
@@ -92,6 +107,10 @@ export function copyIPlayerInfoWithoutCharacters(x: IPlayerInfo | IPlayerInfoWit
             floor: x.abysses.floor,
             chamber: x.abysses.chamber
         },
+        theater: {
+            act: x.theater.act,
+            stars: x.theater.stars
+        },
         profilePictureCharacterName: x.profilePictureCharacterName,
         namecardName: x.namecardName
     }
@@ -111,6 +130,10 @@ export function readIPlayerInfoWithoutCharacters(x: any) {
         abysses: {
             floor: parseInt(x["abysses"]["floor"]),
             chamber: parseInt(x["abysses"]["chamber"])
+        },
+        theater: {
+            act: parseInt(x["theater"]["act"]),
+            stars: parseInt(x["theater"]["stars"]),
         },
         profilePictureCharacterName: x["profilePictureCharacterName"],
         namecardName: x["namecardName"]

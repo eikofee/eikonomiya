@@ -19,6 +19,10 @@ export default function PlayerInfoCardBig({info} : {info: IPlayerInfo | IPlayerI
                                 <ImgApi className="w-12" src={"generic_abyssesL"} alt={""} s={128} />
                                 <div>{info.abysses.floor}-{info.abysses.chamber}</div>
                             </div>
+                            <div className="flex flex-col w-18 text-l text-ellipsis bg-slate-100/70 rounded-md p-1 justify-center text-center">
+                                <ImgApi className="w-12" src={"generic_abyssesL"} alt={""} s={128} />
+                                <div>{info.theater.act}-{info.theater.stars}</div>
+                            </div>
                         </div>
                     </div>
     return <div className="w-1/4 min-h-[150px] min-w-[600px] transition ease-in-out group rounded-md border bg-white/25 px-3 z-10 mb-2" style={{

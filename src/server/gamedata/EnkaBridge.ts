@@ -296,6 +296,18 @@ export class EnkaBridge {
             }
         }
         
+        let theaterInfo = {
+            act: 0,
+            stars: 0,
+            mode: 0,
+        }
+        if (playerInfo["theaterAct"] != undefined) {
+            theaterInfo.act = playerInfo["theaterAct"],
+            theaterInfo.stars = playerInfo["theaterStars"],
+            theaterInfo.mode = playerInfo["theaterMode"]
+        } else {
+            logService.log(`Theater info is missing for uid '${uid}'`)
+        }
         
         const res: IEnkaPlayerInfo = {
             name: playerInfo["nickname"],
@@ -308,6 +320,7 @@ export class EnkaBridge {
                 floor: playerInfo["towerFloorIndex"],
                 chamber: playerInfo["towerLevelIndex"]
             },
+            theater: theaterInfo,
             charShowcase: charShowcase,
             cardShowcase: playerInfo["showNameCardIdList"],
             profilePicture: profilePictureCharacterName

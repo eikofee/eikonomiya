@@ -12,9 +12,9 @@ export default function PlayerInfoCardSmall({info} : {info: IPlayerInfo | IPlaye
                             {info.name}
                         </div>
                         <div className="flex flex-row absolute gap-x-2 left-[75px] -right-2 bottom-2 h-1/3 items-stretch">
-                            <SmallField key="field-count" content={[<ImgApi key="i1" className="h-full w-full" src={"generic_achievementsL"} alt={""} s={128} />, <div key="i2" className="w-full">{info.achievementCount}</div>]} />
-                            <SmallField key="field-abysses" content={[<ImgApi key="i1" className="h-full w-full" src={"generic_abyssesL"} alt={""} s={128} />, <div key="i2" className="w-full">{info.abysses.floor}-{info.abysses.chamber}</div>]} />
-                            <SmallField key="field-theater" content={[<ImgApi key="i1" className="h-full w-full" src={"generic_abyssesL"} alt={""} s={128} />, <div key="i2" className="w-full">???</div>]} />
+                            <SmallField key="field-count" content={[<ImgApi key="i1" className="h-full " src={"generic_achievementsL"} alt={""} s={128} />, <div key="i2" className="w-full">{info.achievementCount}</div>]} />
+                            <SmallField key="field-abysses" content={[<ImgApi key="i1" className="h-full" src={"generic_abyssesL"} alt={""} s={128} />, <div key="i2" className="w-full">{info.abysses.floor}-{info.abysses.chamber}</div>]} />
+                            <SmallField key="field-theater" content={[<ImgApi key="i1" className="h-full" src={"generic_abyssesL"} alt={""} s={128} />, <div key="i2" className="w-full">{info.theater.act}-{info.theater.stars}</div>]} />
                         </div>
                     </div>
     return <div className="min-h-[75px] min-w-[300px] transition ease-in-out group rounded-md border bg-white/25 px-3 cursor-pointer z-10 hover:shadow-lg" style={{

@@ -32,6 +32,7 @@ import { buildPathToDataFolder, writeRule } from "../DataLoader";
 import { INumericFieldValue } from "./INumericFieldValue";
 import { stringToENumericFieldAttribute } from "./enums/ENumericFieldAttribute";
 import { ELogType, logService } from "../LogService";
+import { error } from "console";
 
 export enum ELoadStatus {
     SUCCESS,
@@ -895,6 +896,10 @@ class Updater {
                     floor: enkaData.abysses.floor,
                     chamber: enkaData.abysses.chamber
                 },
+                theater: {
+                    act: enkaData.theater.act,
+                    stars: enkaData.theater.stars
+                },
                 characters: characters,
                 profilePictureCharacterName: `characters_${this.cleanNameForPath(enkaData.profilePicture)}_face`,
                 namecardName: namecardIds[enkaData.namecardId].icon
@@ -912,6 +917,7 @@ class Updater {
             return res
         } catch(e: any) {
             logService.log(`Updater could not load online data for player ${uid}. Attempting to load local data.`)
+            logService.log(`Reason : ${e as string}`)
             res.status = ELoadStatus.LOCAL_ONLY
             res.message += e + "\n[Updater Info] Attempting to load local info on player ".concat(uid)
             try {
@@ -928,6 +934,7 @@ class Updater {
                     worldLevel: resi.worldLevel,
                     achievementCount: resi.achievementCount,
                     abysses: resi.abysses,
+                    theater: resi.theater,
                     characters: [],
                     profilePictureCharacterName: resi.profilePictureCharacterName,
                     namecardName: resi.namecardName

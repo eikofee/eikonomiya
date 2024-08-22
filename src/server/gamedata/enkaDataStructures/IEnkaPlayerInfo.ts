@@ -5,6 +5,12 @@ interface IEnkaAbyssesInfo {
     chamber: number
 }
 
+interface IEnkaTheaterInfo {
+    act: number,
+    stars: number,
+    mode: number //difficulty ? useless then ?
+}
+
 export interface IEnkaCharacterShowcaseEntry {
     avatarId: TEnkaCharacterId,
     level: number,
@@ -19,6 +25,7 @@ export interface IEnkaPlayerInfo {
     namecardId: TEnkaNamecardId,
     achievementCount: number,
     abysses: IEnkaAbyssesInfo,
+    theater: IEnkaTheaterInfo,
     charShowcase: IEnkaCharacterShowcaseEntry[],
     cardShowcase: TEnkaNamecardId[],
     profilePicture: TEnkaCharacterId,

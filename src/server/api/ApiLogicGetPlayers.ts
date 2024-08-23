@@ -1,5 +1,5 @@
 import { IApiResult } from "@/app/interfaces/IApiResult";
-import { IPlayerInfo, IPlayerInfoWithoutCharacters } from "../gamedata/IPlayerInfo";
+import { IPlayerInfoWithoutCharacters } from "../gamedata/IPlayerInfo";
 import { getPlayerInfoList } from "../DataLoader";
 
 export async function apiLogicGetPlayers() {

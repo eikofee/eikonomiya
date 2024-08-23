@@ -35,20 +35,20 @@ export default function LogButton({popupId, setPopupId}:{popupId: number, setPop
 
     const [logs, setLogs] = useState([<p>Fetching logs...</p>])
 
-    useEffect(() => {
-        const f = async () => {
-            try {
-                const r = await fetch("/api/logs")
-                const ans = await r.text()
-                const logArray = ans.split("\n")
-                const split = logArray.slice(-250)
-                setLogs(split.map(x => <p>{x}</p>))
-            } catch (e) {
-                setLogs([<p>Failed to fetch logs : {e as string}</p>])
-            }
+    const getLogs = async () => {
+        try {
+            const r = await fetch("/api/logs")
+            const ans = await r.text()
+            const logArray = ans.split("\n")
+            const split = logArray.slice(-250).reverse()
+            setLogs(split.map(x => <p>{x}</p>))
+        } catch (e) {
+            setLogs([<p>Failed to fetch logs : {e as string}</p>])
         }
+    }
 
-        f()
+    useEffect(() => {
+        getLogs()
     }, [])
 
     let button = <div className="" >
@@ -70,13 +70,16 @@ export default function LogButton({popupId, setPopupId}:{popupId: number, setPop
 
     if (thisId != popupId) {
         return (
-                <div className="h-full flex flex-row">
+                <div className="h-full flex flex-row gap-2">
                     <Card key="current-char" content={content} wfull={true}/>
                 </div>
         )
     } else {
-        return <div className="relative h-full">
-            <div className="flex h-full flex-row">
+        return <div className="h-full">
+            <div className="flex h-full flex-row gap-2">
+                    <div className="w-8 h-8 cursor-pointer" onClick={getLogs}>
+                        <Icon n="refresh" useTooltip={false}/>
+                    </div>
                     <Card key="current-char" content={content} wfull={true}/>
             </div>
             <div className={contentClassName}>
